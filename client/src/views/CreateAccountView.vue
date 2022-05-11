@@ -45,7 +45,7 @@
 
 <script>
 export default {
-name:'DashboardView'
+name:'CreateAccountView'
 
 }
 </script>
