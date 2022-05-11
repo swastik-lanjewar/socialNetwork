@@ -16,6 +16,12 @@ const routes = [
     path: '/create-account',
     name: 'CreateAccountView',
     component: () => import('../views/CreateAccountView.vue')
+  },
+  //404 redirect
+  {
+    path:'/:catchall(.*)',
+    name:'Error404View',
+    component: () => import('../views/ErrorView.vue')
   }
 ]
 
