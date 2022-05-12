@@ -1,0 +1,15 @@
+POST http://localhost:3000/
+Content-Type: application/json
+
+{
+    "user":{
+        "username":"aniket01",
+        "email":"singhdharmvir81@gmail.com",
+        "password":"pc"
+    }
+}
+
+
+###
+
+GET http://localhost:3000/?name="aniket"
