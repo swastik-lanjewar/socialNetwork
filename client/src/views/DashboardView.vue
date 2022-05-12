@@ -57,22 +57,18 @@
            <div class="border-b-2">
                <input type="text" placeholder="Write Something...">
            </div>
-           <div>
+           <div class="flex justify-around pt-1 m-0">
                <button>
-                   <i class="fab fa-solid fa-photo"></i>
-                   Photo
+                   <i class="fab fa-solid fa-image"></i>
                </button>
                <button>
-                   <i class="fab fa-solid fa-photo"></i>
-                   Video
+                   <i class="fab fa-solid fa-video"></i>
                </button>
                <button>
-                   <i class="fab fa-solid fa-date"></i>
-                   Event
+                   <i class="fab fa-solid fa-calendar"></i>
                </button>
                <button>
                    <i class="fab fa-solid fa-location"></i>
-                   Location
                </button>
            </div>
        </div>
@@ -100,12 +96,32 @@
     </section>
 
     <aside class="w-1/4">
-        asie
+      
+      <div class="pl-3">
+          <h2 class="font-bold pl-5">people you may know</h2>
+          <div class="pl-9 shadow-md rounded-md p-4 w-full items-end">
+          <div class="flex justify-between items-center">
+              <img  >
+              <h2>aniket singh</h2>
+              <button class="bg-blue-500  rounded-md m-2 pr-2 pl-2 " >connect</button>
+          </div>
+          <div ><button class="bg-blue-500 rounded-md m-2 pr-2 pl-2">connect</button>
+          </div>
+          <div><button class="bg-blue-500 rounded-md m-2 pr-2 pl-2" >connect</button>
+          </div>
+          </div>
+      </div>
+      <div class="shadow-md rounded-md p-4 w-full pl-3">
+          <div>
+              <h2 class="font-bold pl-5">join discussion</h2>
+          </div>
+      </div>
+          
     </aside>
 </main>
 
 </div>
->>>>>>> d06c6f8f364f55ec726238b7cbc43dcef7b3b050
+
 </template>
 
 <script>
