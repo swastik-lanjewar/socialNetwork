@@ -1,5 +1,6 @@
 <template>
-    <h1 class="text-8xl">Dashboard is there</h1>         
+ <div>
+ </div>
 </template>
 
 <script>
