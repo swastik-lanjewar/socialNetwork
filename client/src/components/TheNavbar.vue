@@ -69,17 +69,17 @@ data(){
             {
                 name:"friends",
                 icon:"fa-user-group",
-                link:"/"
+                link:"/people"
             },
             {
                 name:"notification",
                 icon:"fa-bell",
-                link:"/"
+                link:"/notification"
             },
             {
                 name:"message",
                 icon:"fa-comment",
-                link:"/"
+                link:"/message"
             },
         ]
     }
