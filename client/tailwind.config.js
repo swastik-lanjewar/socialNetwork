@@ -3,6 +3,7 @@ module.exports = {
   presets: [],
   darkMode: 'media', // or 'class'
   theme: {
+    
     screens: {
       sm: '640px',
       md: '768px',
@@ -621,6 +622,9 @@ module.exports = {
       min: 'min-content',
       max: 'max-content',
       fit: 'fit-content',
+      90: '90vh',
+      10: '10vh',
+      chatWindow:'89%',
     }),
     maxWidth: ({ theme, breakpoints }) => ({
       none: 'none',
@@ -650,6 +654,7 @@ module.exports = {
       min: 'min-content',
       max: 'max-content',
       fit: 'fit-content',
+      90:'90vh',
     },
     minWidth: {
       0: '0px',
