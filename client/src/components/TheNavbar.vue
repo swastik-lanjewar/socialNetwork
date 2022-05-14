@@ -6,9 +6,12 @@
     <div class="w-1/5 hidden md:block">
       <ul class="flex justify-around text-blue-800">
         <li v-for="item in navItems" :key="item.name">
-          <router-link :to="item.link">
+          <router-link v-if="item.link" :to="item.link">
             <i :class="'fab fa-solid ' + item.icon"></i>
           </router-link>
+          <button v-else :@="item.action">
+            <i :class="'fab fa-solid ' + item.icon"></i>
+          </button>
         </li>
       </ul>
     </div>
@@ -82,7 +85,7 @@ export default {
         {
           name: "notification",
           icon: "fa-bell",
-          link: "/notification",
+          action: "",
         },
         {
           name: "message",
