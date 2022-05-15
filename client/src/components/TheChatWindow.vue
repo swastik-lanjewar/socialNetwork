@@ -20,10 +20,10 @@
         </button>
       </div>
 
-      <section class="p-2 flex-row overflow-auto flex-grow">
+      <section class="p-2 flex-row overflow-auto flex-grow" v-if="greeting">
         <div class="rounded-lg bg-blue-100 w-fit p-1 px-4 my-2">
           <p>
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Ad, velit!
+            {{ greeting }}
           </p>
           <p class="text-xs">10:21 PM</p>
         </div>
@@ -54,11 +54,26 @@
 </template>
 
 <script>
+import io from 'socket.io-client'
 export default {
   name: "TheChatWindow",
   data() {
-    return {};
+    return {
+      socket:{},
+      greeting:null
+    }
   },
+  created(){
+    console.log('Working')
+     this.socket = io('http://localhost:3000', {
+        transports: ['websocket'],
+      }, )
+      this.socket.on('greeting', (data)=>{
+        this.greeting = data.msg
+        console.log(data)
+      })
+  },
+
 };
 </script>
 

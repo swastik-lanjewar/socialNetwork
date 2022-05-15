@@ -35,34 +35,32 @@ router.post('/create-account', (req, res) => {
 })
 
 router.post('/login', (req, res) => {
-    console.log(req.body)
-    res.json({message: "login"})
-    // //log in the user
-    // const { email, password } = req.body;
-    // user.findOne({ email }).then(user => { 
-    //     if(!user) {
-    //         return res.status(400).json({
-    //             message: "User not found"
-    //         })
-    //     }
-    //     // check if password is correct
-    //     if(!bcrypt.compareSync(password, user.password)) {
-    //         return res.status(400).json({
-    //             message: "Invalid User Credentials"
-    //         })
-    //     }
-    //     // generate a token
-    //     const token = jwt.sign({
-    //         id: user._id,
-    //         name: user.name,
-    //         username: user.username,
-    //         email: user.email
-    //     }, process.env.SECRET_KEY, { expiresIn: '1h' })
-    //     res.status(200).json({
-    //         message: "User logged in successfully",
-    //         token
-    //     })
-    // })
-} )
+    const { email, password } = req.body;
+    user.findOne({ email }).then(user => { 
+        if(!user) {
+            return res.status(400).json({
+                message: "User not found"
+            })
+        }
+        // check if password is correct
+        if(!bcrypt.compareSync(password, user.password)) {
+            return res.status(400).json({
+                message: "Invalid User Credentials"
+            })
+        }
+        // generate a token
+        const token = jwt.sign({
+            id: user._id,
+            name: user.name,
+            username: user.username,
+            email: user.email
+        }, process.env.SECRET_KEY, { expiresIn: '1h' })
+        
+        res.status(200).json({
+            message: "User logged in successfully",
+            token
+        })
+    })
+})
 
 module.exports = router

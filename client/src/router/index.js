@@ -5,22 +5,34 @@ const routes = [
   {
     path: '/',
     name: 'DashboardView',
-    component: HomeView
+    component: HomeView,
+    meta: {
+      requiresAuth: true
+    }
   },
   {
     path: '/login',
     name: 'LoginView',
-    component: () => import('../views/LoginView.vue')
+    component: () => import('../views/LoginView.vue'),
+    meta: {
+      requiresGuest: true
+    }
   },
   {
     path: '/create-account',
     name: 'CreateAccountView',
-    component: () => import('../views/CreateAccountView.vue')
+    component: () => import('../views/CreateAccountView.vue'),
+    meta: {
+      requiresGuest: true
+    }
   },
   {
     path: '/message',
     name: 'ChatView',
-    component: () => import('../views/ChatView.vue')
+    component: () => import('../views/ChatView.vue'),
+    meta: {
+      requiresAuth: true
+    }
   },
   //404 redirect
   {
@@ -34,5 +46,20 @@ const router = createRouter({
   history: createWebHistory(process.env.BASE_URL),
   routes
 })
+
+router.beforeEach((to, from, next) => {
+  const requiresAuth = to.matched.some(record => record.meta.requiresAuth)
+  const requiresGuest = to.matched.some(record => record.meta.requiresGuest)
+
+  if (requiresAuth && !localStorage.getItem('token')) {
+    next('/login')
+  } else if (requiresGuest && localStorage.getItem('token')) {
+    next('/')
+  } else {
+    next()
+  }
+})
+
+
 
 export default router
