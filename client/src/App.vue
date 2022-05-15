@@ -9,7 +9,15 @@
 import TheNavbar from '@/components/TheNavbar.vue'
 export default {
   components: { TheNavbar },
-    name:'App'
+    name:'App',
+    data(){
+      return {
+     
+      }
+    },
+    created(){
+   
+    },
 }
 </script>
 
