@@ -20,8 +20,8 @@
         </button>
       </div>
 
-      <section class="p-2 flex-row overflow-auto flex-grow" v-if="greeting">
-        <div class="rounded-lg bg-blue-100 w-fit p-1 px-4 my-2">
+      <section class="p-2 flex-row overflow-auto flex-grow" >
+        <div class="rounded-lg bg-blue-100 w-fit p-1 px-4 my-2 " v-if="greeting">
           <p>
             {{ greeting }}
           </p>
@@ -54,7 +54,7 @@
 </template>
 
 <script>
-import io from 'socket.io-client'
+// import io from 'socket.io-client'
 export default {
   name: "TheChatWindow",
   data() {
@@ -63,16 +63,16 @@ export default {
       greeting:null
     }
   },
-  created(){
-    console.log('Working')
-     this.socket = io('http://localhost:3000', {
-        transports: ['websocket'],
-      }, )
-      this.socket.on('greeting', (data)=>{
-        this.greeting = data.msg
-        console.log(data)
-      })
-  },
+  // created(){
+  //   console.log('Working')
+  //    this.socket = io('http://localhost:3000', {
+  //       transports: ['websocket'],
+  //     }, )
+  //     this.socket.on('greeting', (data)=>{
+  //       this.greeting = data.message
+  //       console.log(data)
+  //     })
+  // },
 
 };
 </script>
