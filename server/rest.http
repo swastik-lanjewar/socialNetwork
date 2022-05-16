@@ -1,4 +1,4 @@
-POST http://localhost:3000/
+POST http://localhost:3000/create-account
 Content-Type: application/json
 
 {
@@ -9,7 +9,6 @@ Content-Type: application/json
     }
 }
 
+#####
 
-###
-
-GET http://localhost:3000/?name="aniket"
+GET http://localhost:3000/message/
