@@ -28,9 +28,22 @@ router.post('/create-account', (req, res) => {
         })
 
     }).catch(err => {
-        res.status(500).json({
-            message: "Error creating user",
-        })
+        // error of duplicate email 
+        if (err.code === 11000) {
+            if(err.errmsg.includes("email")){
+                res.status(400).json({
+                    message: "Email already exists"
+                })
+            } else if(err.errmsg.includes("username")){
+                res.status(400).json({
+                    message: "Username already exists"
+                })
+            }
+        } else {
+            res.status(500).json({
+                message: "Error creating user"
+            })
+        }
     })
 })
 
