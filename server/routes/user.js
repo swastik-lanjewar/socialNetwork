@@ -39,7 +39,7 @@ router.post('/login', (req, res) => {
     user.findOne({ email }).then(user => { 
         if(!user) {
             return res.status(400).json({
-                message: "User not found"
+                message: "Invalid User Credentials"
             })
         }
         // check if password is correct

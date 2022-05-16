@@ -4,10 +4,11 @@
   >
     <form
       @submit.prevent="login"
+       ref="loginForm"
       class="rounded bg-white w-fit h-fit p-6 shadow-md"
-      ref="loginForm"
     >
       <h1 class="text-2xl mb-4">Social Network | Login</h1>
+      
       <div class="mb-4">
         <label for="email" class="block text-gray-700 text-sm font-bold mb-2">
           Email
@@ -39,50 +40,60 @@
         <button
           type="submit"
           name="submit"
-          class="
-            bg-blue-400
-            hover:bg-blue-700
-            text-white
-            w-full
-            font-bold
-            py-2
-            px-4
-            rounded
-          "
+          class="btn-submit"
+          :disabled="loading"
         >
-          Login
+          <span v-if="!loading">Login</span>
+          <TheSpinner v-else text="Please wait..."></TheSpinner>
         </button>
       </div>
       <p>Don't have account? <a class="text-blue-600">Create Account</a></p>
     </form>
+    <TheAlertSnackbar ref="alertSnackbar"/>
   </section>
 </template>
 
 <script>
+import TheSpinner from "../components/utils/TheSpinner.vue";
+import TheAlertSnackbar from "../components/utils/TheAlertSnackbar.vue";
 export default {
   name: "LoginView",
   data() {
     return {
       email: "",
       password: "",
-      pending:false,
+      loading: false,
     };
   },
   methods: {
     login() {
-      this.pending = true;
-      this.$store.dispatch("login", {
-        email: this.email,
-        password: this.password,
-      }).then((res) => {
-        // set the token in the local storage
-        localStorage.setItem("token", res.data.token);
-        this.$router.push("/");
-      }).catch(() => {
-        this.pending = false;
-      });
+      this.loading = true;
+      this.$store
+        .dispatch("login", {
+          email: this.email,
+          password: this.password,
+        })
+        .then((res) => {
+          this.clearInputs()
+          this.loading = false;
+          localStorage.setItem("token", res.data.token);
+          this.$router.push("/");
+        })
+        .catch((error) => {
+          this.loading = false;
+          this.clearInputs()
+          this.$refs.alertSnackbar.show(
+            "error",
+            error.response.data.message
+          );
+        });
     },
+    clearInputs(){
+      this.email = '';
+      this.password = '';
+    }
   },
+  components: { TheSpinner, TheAlertSnackbar },
 };
 </script>
 

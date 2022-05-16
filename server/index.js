@@ -9,24 +9,33 @@ const userRoutes = require('./routes/user')
 
 app.use(cors())
 app.use(express.json())
-app.use(express.urlencoded({extended:true}))
+app.use(express.urlencoded({
+    extended: true
+}))
 
 // database configuration
 const db = require("./config/db.config.js")
 mongoose.connect(db.mongoURI, {
-    useNewUrlParser:true,
-    useUnifiedTopology:true,
-})
-.then(()=>console.log("connected to mongodb"))
-.catch(err=>console.log(err))
+        useNewUrlParser: true,
+        useUnifiedTopology: true,
+    })
+    .then(() => console.log("connected to mongodb"))
+    .catch(err => console.log(err))
 
 const http = require('http').Server(app)
 const io = require('socket.io')(http)
 
- io.on("connection", (socket) => {
-     console.log('a user connected')
-    // greet the new user
-    socket.emit('greeting', { msg: 'Greetings, from server Node, brought to you by Sockets! -Server' })
+io.on("connection", (socket) => {
+    console.log('a user connected')
+
+    // greeting a new client
+    socket.emit('greeting', {
+        message: 'Welcom to the Social Network App! You are connected!'
+    })
+
+    socket.on('disconnect', () => {
+        console.log('user disconnected')
+    })
 })
 
 http.listen(PORT, () => {
