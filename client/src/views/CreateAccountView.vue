@@ -131,7 +131,7 @@ export default {
           .then((res) => {
             this.clearInputs()
             this.loading = false
-            this.$refs.alertSnackbar.show("sucess", "Account Created ");
+            this.$refs.alertSnackbar.show("success", "Account Created ");
             localStorage.setItem("token", res.data.token);
             this.$router.push("/");
           })

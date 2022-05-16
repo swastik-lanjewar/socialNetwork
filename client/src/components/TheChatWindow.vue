@@ -21,9 +21,9 @@
       </div>
 
       <section class="p-2 flex-row overflow-auto flex-grow" >
-        <div class="rounded-lg bg-blue-100 w-fit p-1 px-4 my-2 " v-if="greeting">
+        <div class="rounded-lg bg-blue-100 w-fit p-1 px-4 my-2 " v-for="chat in conversation" :key="chat.message" >
           <p>
-            {{ greeting }}
+            {{ chat.message }}
           </p>
           <p class="text-xs">10:21 PM</p>
         </div>
@@ -43,8 +43,9 @@
             type="text"
             placeholder="Write Something..."
             class="w-full focus:outline-none"
+            v-model="message"
           />
-          <button class="bg-blue-400 px-4 py-2 rounded-md text-white">
+          <button class="bg-blue-400 px-4 py-2 rounded-md text-white" @click="sendMessage">
             Send
           </button>
         </label>
@@ -54,25 +55,39 @@
 </template>
 
 <script>
-// import io from 'socket.io-client'
+import io from 'socket.io-client'
 export default {
   name: "TheChatWindow",
   data() {
     return {
       socket:{},
-      greeting:null
+      greeting:null,
+      message:'',
+      conversation:[
+      
+      ]
     }
   },
-  // created(){
-  //   console.log('Working')
-  //    this.socket = io('http://localhost:3000', {
-  //       transports: ['websocket'],
-  //     }, )
-  //     this.socket.on('greeting', (data)=>{
-  //       this.greeting = data.message
-  //       console.log(data)
-  //     })
-  // },
+  methods:{
+    sendMessage(){
+      this.socket.emit('message', {message:this.message})
+    }
+  },
+  created(){
+    console.log('Working')
+     this.socket = io('http://localhost:3000', {
+        transports: ['websocket'],
+      }, )
+      this.socket.on('greeting', (data)=>{
+        this.greeting = data.message
+        console.log(data)
+      })
+
+      this.socket.on('chat', (data)=>{
+        console.log(data.message)
+        this.conversation.push(data)
+      })
+  },
 
 };
 </script>

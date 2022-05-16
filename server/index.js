@@ -30,7 +30,11 @@ io.on("connection", (socket) => {
 
     // greeting a new client
     socket.emit('greeting', {
-        message: 'Welcom to the Social Network App! You are connected!'
+        message: 'Welcome to the Social Network App! You are connected!'
+    })
+
+    socket.on('message', (data)=>{
+        socket.broadcast.emit('chat', data)
     })
 
     socket.on('disconnect', () => {
