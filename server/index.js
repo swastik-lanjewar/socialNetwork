@@ -37,6 +37,10 @@ io.on("connection", (socket) => {
         socket.broadcast.emit('chat', data)
     })
 
+    socket.on('typing', (data) => {
+        socket.broadcast.emit('typing', data)
+    })
+
     socket.on('disconnect', () => {
         console.log('user disconnected')
     })
