@@ -1,4 +1,5 @@
-# client
+# SocialNetwork - client
+This is vue.js frontend for the social network app.it has been implemented ysing tailwind css.
 
 ## Project setup
 
