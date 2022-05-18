@@ -160,7 +160,12 @@
                 <h2 class="font-semibold">{{ discussion.title }}</h2>
                 <p class="text-gray-500">{{ discussion.posts }}</p>
               </div>
-              <img class="w-1/12 rounded-full" :src="discussion.link" alt="" />
+              <div class="flex -space-x-4">
+                  <img class="w-8 h-8 border-2 border-white rounded-full dark:border-gray-800" :src="discussion.link" alt="">
+                  <img class="w-8 h-8 border-2 border-white rounded-full dark:border-gray-800" :src="discussion.link" alt="">
+                  <img class="w-8 h-8 border-2 border-white rounded-full dark:border-gray-800" :src="discussion.link" alt="">
+                  <a class="flex items-center justify-center w-8 h-8 text-xs font-medium text-white bg-gray-700 border-2 border-white rounded-full hover:bg-gray-600 dark:border-gray-800" href="#">+99</a>
+              </div>
             </li>
           </ul>
         </section>
@@ -201,26 +206,34 @@ export default {
         {
           title: "#javacript",
           posts: 500,
-          link: "https:source.unsplash.com/random/200x200/?profile",
+          link: "https://source.unsplash.com/random/200x200/?profile",
         },
         {
           title: "#globawarming",
           posts: 20,
-          link: "https:source.unsplash.com/random/200x200/?profile",
+          link: "https://source.unsplash.com/random/200x200/?profile",
         },
         {
           title: "#tech_bubble_bursting",
           posts: 530,
-          link: "https:source.unsplash.com/random/200x200/?profile",
+          link: "https://source.unsplash.com/random/200x200/?profile",
         },
         {
           title: "#puppu_pagal_hai",
           posts: 675,
-          link: "https:source.unsplash.com/random/200x200/?profile",
+          link: "https://source.unsplash.com/random/200x200/?profile",
         },
       ],
     };
   },
+  // created(){
+  //   const token = localStorage.getItem('token');
+  //   this.store.dispatch('getUserProfile', { token }).then((res)=>{
+  //     console.log(res)
+  //   }).catch((err)=>{
+  //     console.log(err)
+  //   })
+  // },
   components: { TheProfileSidebar },
 };
 </script>

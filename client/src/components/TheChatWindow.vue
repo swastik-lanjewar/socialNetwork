@@ -79,6 +79,7 @@ export default {
       })
     },  
     sendMessage(){
+      if(this.message.length <= 0) return 
       this.conversation.push({
         received:false,
         data:this.message,

@@ -29,7 +29,16 @@ export default createStore({
         })
       })
     },
-
+    // get user profile
+    getUserProfile(state, payload) { 
+      return new Promise((resolve, reject) => { 
+        axios.get('http://localhost:3000/user/profile', payload).then(response => { 
+          resolve(response)
+        }).catch(error => {
+          reject(error)
+        })
+      })
+    }
   },
   modules: {
   }
