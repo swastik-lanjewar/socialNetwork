@@ -11,4 +11,12 @@ Content-Type: application/json
 
 #####
 
-GET http://localhost:3000/user/
+GET http://localhost:3000/user/62808c9414b0ac323d364317
+
+
+#####
+
+PUT http://localhost:3000/user/aniket01
+#####
+
+DELETE http://localhost:3000/user/aniket01
