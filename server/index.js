@@ -4,6 +4,7 @@ const app = express();
 const PORT = 3000 || process.env.PORT
 const cors = require("cors")
 const mongoose = require('mongoose')
+const authRoutes = require('./routes/auth')
 const userRoutes = require('./routes/user')
 
 
@@ -52,4 +53,5 @@ http.listen(PORT, () => {
 })
 
 // use the routes
-app.use('/', userRoutes)
+app.use('/auth', authRoutes)
+app.use('/user', userRoutes)
