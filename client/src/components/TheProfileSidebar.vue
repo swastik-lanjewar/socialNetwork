@@ -7,8 +7,8 @@
         />
       </div>
       <div class="ml-5">
-        <h2 class="font-bold">Jin Keguar</h2>
-        <p>Manager</p>
+        <h2 class="font-bold">{{ username }}</h2>
+        <p>{{ name }}</p>
       </div>
     </div>
     <div class="rounded-md shadow-md p-4 my-4">
@@ -25,7 +25,7 @@
       <div>
         <h2 class="font-semibold">Bio</h2>
         <p>
-          Lorem ipsum dolor sit amet consectetur, adipisicing elit. Vel, facere.
+         {{ bio }}
         </p>
       </div>
       <div></div>
@@ -50,6 +50,20 @@
 <script>
 export default {
   name: "TheProfileSidebar",
+  props: {
+    username: {
+      type: String,
+      required: true
+    },
+    name: {
+      type: String,
+      required: true
+    },
+    bio: {
+      type: String,
+      required: true
+    }
+  },
 };
 </script>
 

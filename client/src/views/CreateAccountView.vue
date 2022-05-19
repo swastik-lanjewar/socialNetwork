@@ -118,7 +118,7 @@ export default {
   methods: {
     createAccount() {
       if (this.password === this.cpassword) {
-        this.loading = true
+        this.loading = true;
         const user = {
           name: this.name,
           username: this.username,
@@ -129,8 +129,8 @@ export default {
         this.$store
           .dispatch("createAccount", user)
           .then((res) => {
-            this.clearInputs()
-            this.loading = false
+            this.clearInputs();
+            this.loading = false;
             this.$refs.alertSnackbar.show("success", "Account Created ");
             localStorage.setItem("token", res.data.token);
             // commit the mutation to set the user
@@ -138,21 +138,22 @@ export default {
             this.$router.push("/");
           })
           .catch((err) => {
-            this.clearInputs()
-            this.loading = false
+            this.clearInputs();
+            this.loading = false;
             this.$refs.alertSnackbar.show("error", err.response.data.message);
             console.log(err);
           });
       }
     },
-    clearInputs(){
-      this.name = ""
-      this.username =  ""
-      this.email = ""
-      this.password = ""
-      this.cpassword = ""
-    }
+    clearInputs() {
+      this.name = "";
+      this.username = "";
+      this.email = "";
+      this.password = "";
+      this.cpassword = "";
+    },
   },
+ 
   components: { TheSpinner, TheAlertSnackbar },
 };
 </script>
