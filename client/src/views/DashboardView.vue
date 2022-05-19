@@ -226,14 +226,14 @@ export default {
       ],
     };
   },
-  // created(){
-  //   const token = localStorage.getItem('token');
-  //   this.store.dispatch('getUserProfile', { token }).then((res)=>{
-  //     console.log(res)
-  //   }).catch((err)=>{
-  //     console.log(err)
-  //   })
-  // },
+  created(){
+    const token = localStorage.getItem('token');
+    this.$store.dispatch('getUserData', { token }).then((res)=>{
+      console.log(res)
+    }).catch((err)=>{
+      console.log(err)
+    })
+  },
   components: { TheProfileSidebar },
 };
 </script>
