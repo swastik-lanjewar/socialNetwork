@@ -20,10 +20,11 @@ router.post('/create-account', (req, res) => {
             username: user.username,
             email: user.email
         }, process.env.SECRET_KEY, { expiresIn: '1h' })
-        
+        user.password = undefined;
         res.status(200).json({
             message: "User created successfully",
-            token
+            token, 
+            user
         })
 
     }).catch(err => {
@@ -67,10 +68,11 @@ router.post('/login', (req, res) => {
             username: user.username,
             email: user.email
         }, process.env.SECRET_KEY, { expiresIn: '1h' })
-        
+        user.password = undefined;
         res.status(200).json({
             message: "User logged in successfully",
-            token
+            token, 
+            user
         })
     })
 })
