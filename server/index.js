@@ -6,6 +6,7 @@ const cors = require("cors")
 const mongoose = require('mongoose')
 const authRoutes = require('./routes/auth')
 const userRoutes = require('./routes/user')
+const postRoutes = require('./routes/post')
 
 app.use(cors())
 app.use(express.json())
@@ -54,3 +55,4 @@ http.listen(PORT, () => {
 // use the routes
 app.use('/auth', authRoutes)
 app.use('/user', userRoutes)
+app.use('/post', postRoutes)
