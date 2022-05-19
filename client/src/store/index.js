@@ -3,10 +3,14 @@ import axios from '@/http-common'
 
 export default createStore({
   state: {
+    user: {},
   },
   getters: {
   },
   mutations: {
+    SET_USER(state, user) { 
+      state.user = user
+    },
   },
   actions: {
     //action to create a new account of the user 

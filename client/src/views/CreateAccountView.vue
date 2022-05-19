@@ -133,6 +133,8 @@ export default {
             this.loading = false
             this.$refs.alertSnackbar.show("success", "Account Created ");
             localStorage.setItem("token", res.data.token);
+            // commit the mutation to set the user
+            this.$store.commit("SET_USER", res.data.user);
             this.$router.push("/");
           })
           .catch((err) => {
