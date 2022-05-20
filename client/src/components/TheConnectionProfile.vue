@@ -59,7 +59,7 @@ export default {
   },
   methods:{
     connect(){
-      this.$store.dispatch("connect", this.user).then((res) => {
+      this.$store.dispatch("connectUser", {userId: this.user._id}).then((res) => {
         console.log(res)
       }).catch((err) => {
         console.log(err);

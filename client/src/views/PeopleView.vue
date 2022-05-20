@@ -46,7 +46,10 @@ export default {
     this.$store.dispatch("getAllUsers").then((res) => {
       this.$store.commit('SET_USERS', res.data.users)
     }).catch((err) => {
-      console.log(err);
+      // delelete the token and redirect to login
+      if(err.response.status === 401){
+        this.$store.dispatch('logout')
+      }
     });
   }
 };

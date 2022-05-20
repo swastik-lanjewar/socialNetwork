@@ -43,6 +43,13 @@ export default createStore({
         })
       })
     },
+    // action to logout the user
+    logout() {
+      // remove token from local storage
+      localStorage.removeItem('token')
+      // remove user from state
+      this.state.user = {}
+    },
 
     // action to get all the users
     getAllUsers() { 
@@ -64,7 +71,7 @@ export default createStore({
     connectUser(state, payload) { 
       const token = localStorage.getItem('token')
       return new Promise((resolve, reject) => { 
-        axios.post('http://localhost:3000/user/connect', payload, {
+        axios.post(`http://localhost:3000/user/${payload.userId}/connect`, payload, {
           headers: {
             Authorization: `Bearer ${token}`
           }

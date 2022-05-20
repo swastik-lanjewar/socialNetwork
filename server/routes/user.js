@@ -181,19 +181,19 @@ router.post("/:id/connect", (req, res) => {
             $push: {
                 connections: decoded.id
             }
-        }).then(user => { 
+        }).then(userOne => { 
             // find the user and add the id to the connections array of the user
             user.findByIdAndUpdate(decoded.id, {
                 $push: {
                     connections: req.params.id
                 }
-            }).then(user => {
+            }).then(userTwo => { 
                 res.status(200).json({
                     message: "Connected"
                 })
-            }).catch(err => { 
+            }).catch(err => {
                 res.status(500).json({
-                    message: "Error connecting user"
+                    message: "Error connecting"
                 })
             })
                 
