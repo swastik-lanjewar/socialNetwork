@@ -21,18 +21,22 @@
       </div>
 
       <section class="p-2 flex-row overflow-auto flex-grow" >
-        <div class="rounded-lg bg-blue-100 w-fit p-1 px-4 my-2 " v-for="chat in conversation" :key="chat.message" >
-          <p>
-            {{ chat.message }}
-          </p>
-          <p class="text-xs">10:21 PM</p>
-        </div>
-
-        <div class="flex w-full justify-end">
-          <div class="rounded-lg bg-blue-100 w-fit p-1 px-4 my-2 text-right">
-            <p>Lorem ipsum dolor sit amet.</p>
-            <p class="text-xs">10:21 PM</p>
+       
+        <div 
+        :class="{'flex w-full justify-end':message.received !== true}"
+        v-for="message in conversation"
+        :key="message.data"
+        >
+          <div 
+          class="rounded-lg bg-blue-100 w-fit p-1 px-4 my-2 "
+          :class="{'text-right':message.received !== true}"
+          >
+            <p> {{ message.data }}</p>
+            <p class="text-xs">{{ message.time }}</p>
           </div>
+        </div>
+        <div v-show="isTyping">
+          typing...
         </div>
       </section>
 
@@ -44,6 +48,7 @@
             placeholder="Write Something..."
             class="w-full focus:outline-none"
             v-model="message"
+            @keypress="typing"
           />
           <button class="bg-blue-400 px-4 py-2 rounded-md text-white" @click="sendMessage">
             Send
@@ -63,14 +68,26 @@ export default {
       socket:{},
       greeting:null,
       message:'',
-      conversation:[
-      
-      ]
+      conversation:[],
+      isTyping:false,
     }
   },
   methods:{
+    typing(){
+      this.socket.emit('typing',{
+        userid:this.userid,
+      })
+    },  
     sendMessage(){
+      if(this.message.length <= 0) return 
+      this.conversation.push({
+        received:false,
+        data:this.message,
+        userid:'',
+        time:'10:21 PM'
+      })
       this.socket.emit('message', {message:this.message})
+      this.message = ''
     }
   },
   created(){
@@ -85,7 +102,21 @@ export default {
 
       this.socket.on('chat', (data)=>{
         console.log(data.message)
-        this.conversation.push(data)
+        this.conversation.push({
+          received:true,
+          data:data.message,
+          userid:'',
+          time:'10:21 PM'
+        })
+      })
+
+      this.socket.on('typing', (data)=>{
+        console.log(data)
+        this.isTyping = true
+
+        setTimeout(()=>{
+          this.isTyping = false
+        },500)
       })
   },
 

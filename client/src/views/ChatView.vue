@@ -4,6 +4,8 @@
 
     <TheChatWindow />
 
+    
+
     <aside class="w-1/4 mr-7 hidden md:block">
       <div class="rounded-md shadow-md p-2 overflow-y-auto">
         <h3 class="font-semibold m-2">Conversations</h3>
@@ -40,6 +42,7 @@
 <script>
 import TheChatWindow from "@/components/TheChatWindow.vue";
 import TheProfileSidebar from "@/components/TheProfileSidebar.vue";
+
 export default {
   name: "ChatView",
   data() {

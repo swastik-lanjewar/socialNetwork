@@ -4,8 +4,9 @@ const app = express();
 const PORT = 3000 || process.env.PORT
 const cors = require("cors")
 const mongoose = require('mongoose')
+const authRoutes = require('./routes/auth')
 const userRoutes = require('./routes/user')
-
+const postRoutes = require('./routes/post')
 
 app.use(cors())
 app.use(express.json())
@@ -37,6 +38,10 @@ io.on("connection", (socket) => {
         socket.broadcast.emit('chat', data)
     })
 
+    socket.on('typing', (data) => {
+        socket.broadcast.emit('typing', data)
+    })
+
     socket.on('disconnect', () => {
         console.log('user disconnected')
     })
@@ -48,4 +53,6 @@ http.listen(PORT, () => {
 })
 
 // use the routes
-app.use('/', userRoutes)
+app.use('/auth', authRoutes)
+app.use('/user', userRoutes)
+app.use('/post', postRoutes)
