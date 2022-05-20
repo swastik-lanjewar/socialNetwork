@@ -79,6 +79,7 @@ export default {
           localStorage.setItem("token", res.data.token); 
           this.$store.commit("SET_USER", res.data.user);
           this.$router.push("/");
+          console.log(res)
         })
         .catch((error) => {
           this.loading = false;

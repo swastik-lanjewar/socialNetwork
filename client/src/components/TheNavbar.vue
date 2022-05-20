@@ -1,5 +1,5 @@
 <template>
-  <nav class="flex justify-between p-3 shadow mb-3 max-h-10">
+  <nav class="flex justify-between p-3 shadow mb-3 max-h-10  ">
     <div class="ml-7">
       <h3 class="font-bold text-blue-800 tracking-wide">SOCIAL NETWORK</h3>
     </div>
