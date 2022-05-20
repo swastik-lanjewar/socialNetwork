@@ -39,8 +39,9 @@
             rounded-lg
             hover:bg-blue-800
           "
+          @click="connect"
         >
-          Add friend
+          connect
         </button>
       </div>
     </div>
@@ -56,6 +57,15 @@ export default {
       required: true,
     },
   },
+  methods:{
+    connect(){
+      this.$store.dispatch("connect", this.user).then((res) => {
+        console.log(res)
+      }).catch((err) => {
+        console.log(err);
+      });
+    }
+  }
 };
 </script>
 

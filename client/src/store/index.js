@@ -58,7 +58,23 @@ export default createStore({
           reject(error)
         })
       })
-    }
+    },
+
+    // action to connect to a user
+    connectUser(state, payload) { 
+      const token = localStorage.getItem('token')
+      return new Promise((resolve, reject) => { 
+        axios.post('http://localhost:3000/user/connect', payload, {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        }).then(response => { 
+          resolve(response)
+        }).catch(error => {
+          reject(error)
+        })
+      })
+    },
     
   },
   modules: {
