@@ -126,5 +126,38 @@ router.delete("/:id", (req, res) => {
     })
 })
 
+// GET ALL USERS
+router.get("/", (req, res) => { 
+    // the request header has the token then we can verify it
+    if (!req.headers.authorization) {
+        return res.status(401).json({
+            message: "Unauthorized"
+        })
+    }
+    // get the user if the user has valid token 
+    const token = req.headers.authorization.split(" ")[1]
+    jwt.verify(token, process.env.SECRET_KEY, (err, decoded) => {
+        if (err) {
+            return res.status(401).json({
+                message: "Unauthorized"
+            })
+        }
+        user.find().then(users => {
+            if (!users) {
+                return res.status(404).json({
+                    message: "No users found"
+                })
+            }
+            res.status(200).json({
+                message: "Users found",
+                users: users
+            })
+        }).catch(err => {
+            res.status(500).json({
+                message: "Error getting users"
+            })
+        })
+    })
+})
 
 module.exports = router
