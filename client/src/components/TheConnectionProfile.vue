@@ -18,13 +18,13 @@
         alt="Bonnie image"
       />
       <h5 class="mb-1 text-xl font-medium text-gray-900 dark:text-white">
-        Bonnie Green
+        {{ user.username }}
       </h5>
       <span class="text-sm text-gray-500 dark:text-gray-400"
-        >Visual Designer</span
+        >{{ user.name }}</span
       >
       <div class="flex mt-4 space-x-3 lg:mt-6 items-center">
-        <span class="font-semibold">14 Connections</span>
+        <span class="font-semibold">{{ user.connections.length }} Connections</span>
         <button
           href="#"
           class="
@@ -50,6 +50,12 @@
 <script>
 export default {
   name: "TheConnectionProfile",
+  props: {
+    user: {
+      type: Object,
+      required: true,
+    },
+  },
 };
 </script>
 

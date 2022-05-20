@@ -5,14 +5,22 @@ import createPersistedState from "vuex-persistedstate";
 export default createStore({
   state: {
     user: {},
+    users:[],
   },
   getters: {
     user: state => state.user,
+    users: state => state.users,
   },
   mutations: {
     SET_USER(state, user) { 
       state.user = user
     },
+    SET_TOKEN(state, token) { 
+      state.token = token
+    },
+    SET_USERS(state, users) { 
+      state.users = users
+    }
   },
   actions: {
     //action to create a new account of the user 
@@ -35,12 +43,14 @@ export default createStore({
         })
       })
     },
-    // get user profile
-    getUserData(state, payload) { 
+
+    // action to get all the users
+    getAllUsers() { 
+      const token = localStorage.getItem('token')
       return new Promise((resolve, reject) => { 
-        axios.get(`http://localhost:3000/user/${payload.userId}`, {
+        axios.get('http://localhost:3000/user/', {
           headers: {
-            Authorization: `Bearer ${payload.token}`
+            Authorization: `Bearer ${token}`
           }
         }).then(response => { 
           resolve(response)
@@ -49,6 +59,7 @@ export default createStore({
         })
       })
     }
+    
   },
   modules: {
   },

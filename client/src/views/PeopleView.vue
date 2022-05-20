@@ -10,19 +10,19 @@
       class="
         w-full
         md:w-1/2
-        grid grid-cols-2
-        gap-3
+        sm:grid grid-cols-2
+        sm:gap-3
         px-6
         min-h-scrollPost
         max-h-scrollPost
         overflow-y-scroll
       "
     >
-        <TheConnectionProfile />
-        <TheConnectionProfile />
-        <TheConnectionProfile />
-        <TheConnectionProfile />
-        <TheConnectionProfile />
+      <div v-for="people in users" :key="people._id">
+
+        <TheConnectionProfile :user="people" />
+        
+      </div>
     </section>
 
     <aside class="w-1/4 mr-7 hidden md:block">
@@ -40,8 +40,15 @@ export default {
   name: "PeopleView",
   components: { TheDiscussions, TheProfileSidebar, TheConnectionProfile },
   computed: {
-    ...mapGetters(["user", "getAllUsers"]),
+    ...mapGetters(["user", "users"]),
   },
+  created(){
+    this.$store.dispatch("getAllUsers").then((res) => {
+      this.$store.commit('SET_USERS', res.data.users)
+    }).catch((err) => {
+      console.log(err);
+    });
+  }
 };
 </script>
 
