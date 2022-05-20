@@ -31,7 +31,7 @@
           class="rounded-lg bg-blue-100 w-fit p-1 px-4 my-2 "
           :class="{'text-right':message.received !== true}"
           >
-            <p> {{ message.data }}</p>
+            <p class="w-full text-left"> {{ message.data }}</p>
             <p class="text-xs">{{ message.time }}</p>
           </div>
         </div>
@@ -61,6 +61,7 @@
 
 <script>
 import io from 'socket.io-client'
+import { mapGetters } from 'vuex';
 export default {
   name: "TheChatWindow",
   data() {
@@ -119,7 +120,9 @@ export default {
         },500)
       })
   },
-
+  computed:{
+    ...mapGetters(['user'])
+  }
 };
 </script>
 

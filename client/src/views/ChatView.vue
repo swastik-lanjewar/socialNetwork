@@ -1,6 +1,10 @@
 <template>
   <main class="flex justify-between p-3 min-h-90 max-h-90">
-    <TheProfileSidebar />
+   <TheProfileSidebar
+      :username="user.username"
+      :name="user.name"
+      :bio="user.bio"
+    />
 
     <TheChatWindow />
 
@@ -42,7 +46,7 @@
 <script>
 import TheChatWindow from "@/components/TheChatWindow.vue";
 import TheProfileSidebar from "@/components/TheProfileSidebar.vue";
-
+import { mapGetters } from "vuex";
 export default {
   name: "ChatView",
   data() {
@@ -139,6 +143,9 @@ export default {
         },
       ],
     };
+  },
+  computed:{
+    ...mapGetters(['user']),
   },
   components: { TheChatWindow, TheProfileSidebar },
 };
