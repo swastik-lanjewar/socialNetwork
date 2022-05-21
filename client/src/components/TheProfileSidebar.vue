@@ -7,8 +7,8 @@
         />
       </div>
       <div class="ml-5">
-        <h2 class="font-bold">{{ username }}</h2>
-        <p>{{ name }}</p>
+        <h2 class="font-bold">{{ user.username }}</h2>
+        <p>{{ user.name }}</p>
       </div>
     </div>
     <div class="rounded-md shadow-md p-4 my-4">
@@ -18,14 +18,14 @@
           <h1 class="font-semibold text-gray-600">Posts</h1>
         </div>
         <div class="text-center">
-          <h1 class="font-semibold text-gray-800">4</h1>
+          <h1 class="font-semibold text-gray-800">{{user.connections.length}}</h1>
           <h1 class="font-semibold text-gray-600">Friends</h1>
         </div>
       </div>
       <div>
         <h2 class="font-semibold">Bio</h2>
         <p>
-         {{ bio }}
+         {{ user.bio }}
         </p>
       </div>
       <div></div>
@@ -48,21 +48,12 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex';
 export default {
   name: "TheProfileSidebar",
-  props: {
-    username: {
-      type: String,
-      required: true
-    },
-    name: {
-      type: String,
-      required: true
-    },
-    bio: {
-      type: String,
-      required: true
-    }
+ 
+  computed:{
+    ...mapGetters(['user'])
   },
 };
 </script>

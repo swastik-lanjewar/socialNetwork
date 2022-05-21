@@ -8,10 +8,8 @@
 
     <TheChatWindow />
 
-    
-
     <aside class="w-1/4 mr-7 hidden md:block">
-      <TheConversation :conversations="conversations" />
+      <TheConversation :conversations="conversations"/>
     </aside>
   </main>
 </template>

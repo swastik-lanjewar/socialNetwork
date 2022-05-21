@@ -7,13 +7,17 @@ export default createStore({
     user: {},
     users: [],
     connections: [],
-    conversations:[],
+    conversations: [],
+    currentConversation: null,
+    messages:[]
   },
   getters: {
     user: state => state.user,
     users: state => state.users,
     connections: state => state.connections,
     conversations: state => state.conversations,
+    currentConversation: state => state.currentConversation,
+    messages: state => state.messages
   },
   mutations: {
     SET_USER(state, user) { 
@@ -27,6 +31,12 @@ export default createStore({
     },
     SET_CONVERSATIONS(state, conversations) { 
       state.conversations = conversations
+    },
+    SET_CURRENT_CONVERSATION(state, id) { 
+      state.currentConversation = id
+    },
+    SET_MESSAGES(state, messages) { 
+      state.messages = messages
     }
   },
   actions: {
@@ -120,6 +130,12 @@ export default createStore({
           reject(error)
         })
       })
+    },
+
+    //action to get all the messages of a conversation
+    getMessages(state, payload) { 
+      const token = localStorage.getItem('token')
+      console.log(token, payload)
     }
     
   },

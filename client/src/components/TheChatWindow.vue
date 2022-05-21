@@ -92,7 +92,7 @@ export default {
     }
   },
   created(){
-    console.log('Working')
+    
      this.socket = io('http://localhost:3000', {
         transports: ['websocket'],
       }, )
@@ -121,7 +121,7 @@ export default {
       })
   },
   computed:{
-    ...mapGetters(['user'])
+    ...mapGetters(['user', 'currentConversation'])
   }
 };
 </script>
