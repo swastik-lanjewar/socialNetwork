@@ -104,6 +104,22 @@ export default createStore({
           reject(error)
         })
       })
+    },
+
+    // action to create a new conversation
+    createConversation(state, payload) { 
+      const token = localStorage.getItem('token')
+      return new Promise((resolve, reject) => { 
+        axios.post('http://localhost:3000/conversation/', {participants:[payload.receiverId]}, {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        }).then(response => { 
+          resolve(response)
+        }).catch(error => {
+          reject(error)
+        })
+      })
     }
     
   },

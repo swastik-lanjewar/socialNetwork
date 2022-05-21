@@ -30,7 +30,7 @@ router.post("/", (req, res) => {
                 })
             }).catch(err => {
                 return res.status(500).json({
-                    message: "Internal Server Error"
+                    message: "Error creating conversation",
                 })
             })
         }).catch(err => { 
@@ -40,6 +40,7 @@ router.post("/", (req, res) => {
         })
     })
 })
+
 // get convesation of a user by id
 router.get("/", (req, res) => {
     // check if the user has a valid token 
