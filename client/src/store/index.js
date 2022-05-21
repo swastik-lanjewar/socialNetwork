@@ -5,18 +5,20 @@ import createPersistedState from "vuex-persistedstate";
 export default createStore({
   state: {
     user: {},
-    users:[],
+    users: [],
+    connections: [],
   },
   getters: {
     user: state => state.user,
     users: state => state.users,
+    connections: state => state.connections,
   },
   mutations: {
     SET_USER(state, user) { 
       state.user = user
     },
-    SET_TOKEN(state, token) { 
-      state.token = token
+    SET_CONNECTION(state, connection) {
+      state.connections = connection
     },
     SET_USERS(state, users) { 
       state.users = users

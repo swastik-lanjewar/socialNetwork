@@ -39,9 +39,12 @@
             rounded-lg
             hover:bg-blue-800
           "
+          :disabled="isConnected"
+          :class="{ 'disabled:opacity-50 disabled:cursor-not-allowed': isConnected }"
           @click="connect"
         >
-          connect
+          <TheSpinner v-if="pending" text=" " />
+          {{ isConnected ? "Connected" : "Connect" }}
         </button>
       </div>
     </div>
@@ -49,23 +52,34 @@
 </template>
 
 <script>
+import TheSpinner from './utils/TheSpinner.vue';
 export default {
-  name: "TheConnectionProfile",
-  props: {
-    user: {
-      type: Object,
-      required: true,
+    name: "TheConnectionProfile",
+    props: {
+        user: {
+            type: Object,
+            required: true,
+            pending:false,
+        },
     },
-  },
-  methods:{
-    connect(){
-      this.$store.dispatch("connectUser", {userId: this.user._id}).then((res) => {
-        console.log(res)
-      }).catch((err) => {
-        console.log(err);
-      });
-    }
-  }
+    computed: {
+        isConnected() {
+            return this.user.connections.includes(this.$store.state.user._id);
+        }
+    },
+    methods: {
+        connect() {
+          this.pending = true;
+            this.$store.dispatch("connectUser", { userId: this.user._id }).then((res) => {
+                this.pending = false;
+                console.log(res);
+            }).catch((err) => {
+              this.pending = false;
+              console.log(err);
+            });
+        }
+    },
+    components: { TheSpinner }
 };
 </script>
 
