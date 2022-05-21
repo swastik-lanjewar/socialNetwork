@@ -148,9 +148,18 @@ router.get("/", (req, res) => {
                     message: "No users found"
                 })
             }
+            // don not send the password and timestamp
+            const usersData = users.map(user => { 
+                const {
+                    password,
+                    updatedAt,
+                    ...other
+                } = user._doc
+                return other
+            })
             res.status(200).json({
                 message: "Users found",
-                users: users
+                users: usersData
             })
         }).catch(err => {
             res.status(500).json({
@@ -176,6 +185,21 @@ router.post("/:id/connect", (req, res) => {
                 message: "Unauthorized"
             })
         }
+
+        // the user is already connected to the other user then return an error
+        user.findById(req.params.id).then(user => { 
+            if (user.connectedUsers.includes(decoded.id)) {
+                return res.status(400).json({
+                    message: "User already connected"
+                })
+            }
+        }).catch(err => { 
+            return res.status(500).json({
+                message: "Error getting user"
+            })
+        })
+
+
         // find the user and add the id to the connections array of the user
         user.findByIdAndUpdate(req.params.id, {
             $push: {

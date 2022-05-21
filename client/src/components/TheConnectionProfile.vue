@@ -39,12 +39,15 @@
             rounded-lg
             hover:bg-blue-800
           "
-          :disabled="isConnected"
+          :disabled="isConnected || me"
           :class="{ 'disabled:opacity-50 disabled:cursor-not-allowed': isConnected }"
           @click="connect"
         >
           <TheSpinner v-if="pending" text=" " />
+        <span v-if="me != true">
           {{ isConnected ? "Connected" : "Connect" }}
+        </span>
+          {{ me ? " (You)" : "" }}
         </button>
       </div>
     </div>
@@ -59,7 +62,10 @@ export default {
         user: {
             type: Object,
             required: true,
-            pending:false,
+        },
+        me: {
+            type: Boolean,
+            required: true,
         },
     },
     computed: {
@@ -67,6 +73,12 @@ export default {
             return this.user.connections.includes(this.$store.state.user._id);
         }
     },
+    data(){
+        return {
+            pending: false
+        }
+    },
+
     methods: {
         connect() {
           this.pending = true;

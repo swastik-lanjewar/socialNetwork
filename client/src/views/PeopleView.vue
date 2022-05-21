@@ -14,7 +14,7 @@
         overflow-y-scroll
       ">
       <div v-for="people in users" :key="people._id">
-        <TheConnectionProfile :user="people" v-if="people._id != user._id" />
+        <TheConnectionProfile :user="people" :me="(people._id == user._id)" />
       </div>
     </section>
 
