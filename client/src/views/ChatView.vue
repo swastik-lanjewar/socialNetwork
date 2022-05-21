@@ -11,34 +11,7 @@
     
 
     <aside class="w-1/4 mr-7 hidden md:block">
-      <div class="rounded-md shadow-md p-2 overflow-y-auto">
-        <h3 class="font-semibold m-2">Conversations</h3>
-        <ul>
-          <li
-            v-for="(item, index) in pre_conv"
-            :key="index"
-            class="
-              p-2
-              flex
-              justify-start
-              items-center
-              hover:bg-sky-400 hover:text-white
-              cursor-pointer
-              rounded-md
-              border-b border-gray-100
-            "
-          >
-            <img class="w-1/6 rounded-full mr-4" :src="item.avatar" alt="" />
-            <div class="w-full">
-              <button>{{ item.user }}</button>
-              <div class="w-full flex justify-between items-center">
-                <p class="text-sm text-gray-700">Hi!</p>
-                <span class="text-xs text-gray-500">10:31 AM</span>
-              </div>
-            </div>
-          </li>
-        </ul>
-      </div>
+      <TheConversation :conversations="conversations" />
     </aside>
   </main>
 </template>
@@ -47,6 +20,7 @@
 import TheChatWindow from "@/components/TheChatWindow.vue";
 import TheProfileSidebar from "@/components/TheProfileSidebar.vue";
 import { mapGetters } from "vuex";
+import TheConversation from "@/components/TheConversation.vue";
 export default {
   name: "ChatView",
   data() {
@@ -145,9 +119,16 @@ export default {
     };
   },
   computed:{
-    ...mapGetters(['user']),
+    ...mapGetters(['user', 'conversations']),
   },
-  components: { TheChatWindow, TheProfileSidebar },
+  created(){
+    this.$store.dispatch('getConversations').then(res => {
+      this.$store.commit("SET_CONVERSATIONS", res.data.conversations);
+    }).catch(err => {
+      console.log(err)
+    })
+  },
+  components: { TheChatWindow, TheProfileSidebar, TheConversation },
 };
 </script>
 

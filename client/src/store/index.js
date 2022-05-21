@@ -7,11 +7,13 @@ export default createStore({
     user: {},
     users: [],
     connections: [],
+    conversations:[],
   },
   getters: {
     user: state => state.user,
     users: state => state.users,
     connections: state => state.connections,
+    conversations: state => state.conversations,
   },
   mutations: {
     SET_USER(state, user) { 
@@ -22,6 +24,9 @@ export default createStore({
     },
     SET_USERS(state, users) { 
       state.users = users
+    },
+    SET_CONVERSATIONS(state, conversations) { 
+      state.conversations = conversations
     }
   },
   actions: {
@@ -84,6 +89,22 @@ export default createStore({
         })
       })
     },
+
+    // action to get all the conversation of the user 
+    getConversations() {
+      const token = localStorage.getItem('token')
+      return new Promise((resolve, reject) => { 
+        axios.get('http://localhost:3000/conversation/', {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        }).then(response => { 
+          resolve(response)
+        }).catch(error => {
+          reject(error)
+        })
+      })
+    }
     
   },
   modules: {
