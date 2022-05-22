@@ -11,7 +11,7 @@ router.post("/", (req, res) => {
                 message: "Unthorized Access"
             })
         }
-        const newConversation = new conversation({ participants: [decoded.id, ...req.body.participants] })
+        const newConversation = new conversation({ participants: [...req.body.participants, decoded.id] })
         newConversation.save().then(conversation => {
             res.status(200).json({
                 message: "Conversation created",
