@@ -34,6 +34,14 @@ const routes = [
       requiresAuth: true
     }
   },
+  {
+    path: '/people',
+    name: 'PeopleView',
+    component: () => import('../views/PeopleView.vue'),
+    meta: {
+      requiresAuth: true
+    }
+  },
   //404 redirect
   {
     path:'/:catchall(.*)',

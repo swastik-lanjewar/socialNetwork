@@ -126,5 +126,107 @@ router.delete("/:id", (req, res) => {
     })
 })
 
+// GET ALL USERS
+router.get("/", (req, res) => { 
+    // the request header has the token then we can verify it
+    if (!req.headers.authorization) {
+        return res.status(401).json({
+            message: "Unauthorized"
+        })
+    }
+    // get the user if the user has valid token 
+    const token = req.headers.authorization.split(" ")[1]
+    jwt.verify(token, process.env.SECRET_KEY, (err, decoded) => {
+        if (err) {
+            return res.status(401).json({
+                message: "Unauthorized"
+            })
+        }
+        user.find().then(users => {
+            if (!users) {
+                return res.status(404).json({
+                    message: "No users found"
+                })
+            }
+            // don not send the password and timestamp
+            const usersData = users.map(user => { 
+                const {
+                    password,
+                    updatedAt,
+                    ...other
+                } = user._doc
+                return other
+            })
+            res.status(200).json({
+                message: "Users found",
+                users: usersData
+            })
+        }).catch(err => {
+            res.status(500).json({
+                message: "Error getting users"
+            })
+        })
+    })
+})
+
+// connect to a user
+router.post("/:id/connect", (req, res) => {
+    // the request header has the token then we can verify it
+    if (!req.headers.authorization) {
+        return res.status(401).json({
+            message: "Unauthorized"
+        })
+    }
+    // get the user if the user has valid token 
+    const token = req.headers.authorization.split(" ")[1]
+    jwt.verify(token, process.env.SECRET_KEY, (err, decoded) => {
+        if (err) {
+            return res.status(401).json({
+                message: "Unauthorized"
+            })
+        }
+
+        // the user is already connected to the other user then return an error
+        user.findById(req.params.id).then(user => { 
+            if (user.connectedUsers.includes(decoded.id)) {
+                return res.status(400).json({
+                    message: "User already connected"
+                })
+            }
+        }).catch(err => { 
+            return res.status(500).json({
+                message: "Error getting user"
+            })
+        })
+
+
+        // find the user and add the id to the connections array of the user
+        user.findByIdAndUpdate(req.params.id, {
+            $push: {
+                connections: decoded.id
+            }
+        }).then(userOne => { 
+            // find the user and add the id to the connections array of the user
+            user.findByIdAndUpdate(decoded.id, {
+                $push: {
+                    connections: req.params.id
+                }
+            }).then(userTwo => { 
+                res.status(200).json({
+                    message: "Connected"
+                })
+            }).catch(err => {
+                res.status(500).json({
+                    message: "Error connecting"
+                })
+            })
+                
+        }).catch(err => { 
+            res.status(500).json({
+                message: "Error connecting user"
+            })
+        })
+    })
+})
 
 module.exports = router

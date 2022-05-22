@@ -135,6 +135,7 @@ export default {
             localStorage.setItem("token", res.data.token);
             // commit the mutation to set the user
             this.$store.commit("SET_USER", res.data.user);
+            // this.$store.commit("SET_TOKEN", res.data.token);
             this.$router.push("/");
           })
           .catch((err) => {

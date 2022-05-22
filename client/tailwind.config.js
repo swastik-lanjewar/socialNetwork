@@ -624,7 +624,8 @@ module.exports = {
       fit: 'fit-content',
       90: '90vh',
       10: '10vh',
-      chatWindow:'89%',
+      chatWindow: '89%',
+      scrollPost:'89vh'
     }),
     maxWidth: ({ theme, breakpoints }) => ({
       none: 'none',
@@ -654,7 +655,8 @@ module.exports = {
       min: 'min-content',
       max: 'max-content',
       fit: 'fit-content',
-      90:'90vh',
+      90: '90vh',
+      scrollPost:'89vh'
     },
     minWidth: {
       0: '0px',
