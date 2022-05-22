@@ -15,7 +15,7 @@
           rounded-md
           border-b border-gray-100
         "
-        @click="selectConversation(item._id)"
+        @click="selectConversation(item, item._id)"
       >
         <img
           class="w-1/6 rounded-full mr-4"
@@ -49,8 +49,17 @@ export default {
         const receiverId = participants.filter(participant => participant !== this.user._id);
         return this.connections.find(connection => connection._id === receiverId[0]).username;
       },
-      selectConversation(id){
-        this.$store.commit("SET_CURRENT_CONVERSATION", id);
+      selectConversation(conversation, id){
+        console.log(conversation,"is selected by the user");
+        this.$store.commit("SET_CURRENT_CONVERSATION", conversation);
+
+        // fetch the messages of the selected conversation
+        this.$store.dispatch("getMessages", {id}).then(res=>{
+          console.log(res);
+        }).catch(err =>{
+          console.log(err)
+        })
+
       },
   }
 };

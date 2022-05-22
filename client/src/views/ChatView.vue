@@ -6,11 +6,15 @@
       :bio="user.bio"
     />
 
-    <TheChatWindow />
+    <TheChatWindow v-if="currentConversation" />
+    <div class="text-4xl font-bold text-gray-300 capitalize" v-else>
+      Please select a conversation
+    </div>
 
     <aside class="w-1/4 mr-7 hidden md:block">
       <TheConversation :conversations="conversations"/>
     </aside>
+
   </main>
 </template>
 
@@ -22,7 +26,7 @@ import TheConversation from "@/components/TheConversation.vue";
 export default {
   name: "ChatView",
   computed:{
-    ...mapGetters(['user', 'conversations']),
+    ...mapGetters(['user', 'conversations', 'currentConversation']),
   },
   created(){
     this.$store.dispatch('getConversations').then(res => {

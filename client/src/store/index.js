@@ -32,8 +32,8 @@ export default createStore({
     SET_CONVERSATIONS(state, conversations) { 
       state.conversations = conversations
     },
-    SET_CURRENT_CONVERSATION(state, id) { 
-      state.currentConversation = id
+    SET_CURRENT_CONVERSATION(state, conversation) { 
+      state.currentConversation = conversation
     },
     SET_MESSAGES(state, messages) { 
       state.messages = messages
@@ -135,7 +135,36 @@ export default createStore({
     //action to get all the messages of a conversation
     getMessages(state, payload) { 
       const token = localStorage.getItem('token')
-      console.log(token, payload)
+      return new Promise((resolve, reject) => { 
+        axios.get(`http://localhost:3000/message/${payload}`,{
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        }).then(response => { 
+          resolve(response)
+        }).catch(error => {
+          reject(error)
+        })
+      })
+    }, 
+  
+    saveMessages(state, payload) {
+      const token = localStorage.getItem('token')
+      return new Promise((resolve, reject) => { 
+        axios.post(`http://localhost:3000/message/`, {
+          conversationId: payload.conversationId,
+          sender: payload.sender,
+          text:payload.text
+        },{
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        }).then(response => { 
+          resolve(response)
+        }).catch(error => {
+          reject(error)
+        })
+      })
     }
     
   },
