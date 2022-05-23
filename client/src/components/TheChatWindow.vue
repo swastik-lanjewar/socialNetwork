@@ -30,7 +30,7 @@
 
         <div class="flex w-full justify-end">
           <div class="rounded-lg bg-blue-100 w-fit p-1 px-4 my-2 text-right">
-            <p>Lorem ipsum dolor sit amet. </p>
+            <p>Lorem ipsum dolor sit amet.</p>
             <p class="text-xs">10:21 PM</p>
           </div>
         </div>

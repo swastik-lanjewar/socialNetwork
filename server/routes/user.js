@@ -1,77 +1,230 @@
-const express = require("express");
-const router = express.Router();
-const user = require("../models/user.model")
-const bcrypt = require("bcryptjs")
+const router = require("express").Router()
+const user = require("../models/user")
 const jwt = require("jsonwebtoken")
+const bcrypt = require("bcryptjs")
 
-router.post('/create-account', (req, res) => {
-    const { name, username, email, password } = req.body;
-    const newUser = new user({
-        name,
-        username,
-        email,
-        password: bcrypt.hashSync(password, 16)
-    })
-
-    newUser.save().then(user => {
-        // NOW WE HAVE TO GENERATE A TOKEN
-        const token = jwt.sign({
-            id: user._id,
-            name: user.name,
-            username: user.username,
-            email: user.email
-        }, process.env.SECRET_KEY, { expiresIn: '1h' })
-        
-        res.status(200).json({
-            message: "User created successfully",
-            token
+// GET A USER BY ID
+router.get("/:id", (req, res) => {
+    // the request header has the token then we can verify it
+    if (!req.headers.authorization) {
+        return res.status(401).json({
+            message: "Unauthorized"
         })
+    }
+    // get the user if the user has valid token 
+    const token = req.headers.authorization.split(" ")[1]
 
-    }).catch(err => {
-        // error of duplicate email 
-        if (err.code === 11000) {
-            if(err.errmsg.includes("email")){
-                res.status(400).json({
-                    message: "Email already exists"
-                })
-            } else if(err.errmsg.includes("username")){
-                res.status(400).json({
-                    message: "Username already exists"
-                })
-            }
-        } else {
-            res.status(500).json({
-                message: "Error creating user"
+    jwt.verify(token, process.env.SECRET_KEY, (err, decoded) => {
+        if (err) {
+            return res.status(401).json({
+                message: "Unauthorized"
             })
         }
+        user.findById(req.params.id).then(user => {
+            if (!user) {
+                return res.status(404).json({
+                    message: "User not found"
+                })
+            }
+            // if the user is found, do not send the password and timestamp
+            const {
+                password,
+                updsatedAt,
+                ...other
+            } = user._doc
+            res.status(200).json({
+                message: "User found",
+                user: other
+            })
+
+        }).catch(err => {
+            res.status(500).json({
+                message: "Error getting user"
+            })
+        })
     })
 })
 
-router.post('/login', (req, res) => {
-    const { email, password } = req.body;
-    user.findOne({ email }).then(user => { 
-        if(!user) {
-            return res.status(400).json({
-                message: "Invalid User Credentials"
+
+// UPDATE A USER BY ID
+router.put("/:id", (req, res) => {
+    // the request header has the token then we can verify it
+    if (!req.headers.authorization) {
+        return res.status(401).json({
+            message: "Unauthorized"
+        })
+    }
+    // get the user if the user has valid token 
+    const token = req.headers.authorization.split(" ")[1]
+    jwt.verify(token, process.env.SECRET_KEY, (err, decoded) => {
+        if (err) {
+            return res.status(401).json({
+                message: "Unauthorized"
             })
         }
-        // check if password is correct
-        if(!bcrypt.compareSync(password, user.password)) {
-            return res.status(400).json({
-                message: "Invalid User Credentials"
+        // if the user is updating their password then hash it 
+        if (req.body.password) {
+            req.body.password = bcrypt.hashSync(req.body.password, 16)
+        }
+        user.findByIdAndUpdate(req.params.id, req.body, {
+            new: true
+        }).then(user => {
+            if (!user) {
+                return res.status(404).json({
+                    message: "User not found"
+                })
+            }
+            // if the user is found, do not send the password and timestamp
+            const {
+                password,
+                updatedAt,
+                ...userData
+            } = user._doc
+            res.status(200).json({
+                message: "User updated",
+                user: userData
+            })
+        }).catch(err => {
+            res.status(500).json({
+                message: "Error updating user"
+            })
+        })
+    })
+})
+
+
+// DELETE A USER BY ID
+router.delete("/:id", (req, res) => {
+    // the request header has the token then we can verify it
+    if (!req.headers.authorization) {
+        return res.status(401).json({
+            message: "Unauthorized"
+        })
+    }
+    // get the user if the user has valid token 
+    const token = req.headers.authorization.split(" ")[1]
+    jwt.verify(token, process.env.SECRET_KEY, (err, decoded) => {
+        if (err) {
+            return res.status(401).json({
+                message: "Unauthorized"
             })
         }
-        // generate a token
-        const token = jwt.sign({
-            id: user._id,
-            name: user.name,
-            username: user.username,
-            email: user.email
-        }, process.env.SECRET_KEY, { expiresIn: '1h' })
-        
-        res.status(200).json({
-            message: "User logged in successfully",
-            token
+        user.findByIdAndDelete(req.params.id).then(user => {
+            if (!user) {
+                return res.status(404).json({
+                    message: "User not found"
+                })
+            }
+            res.status(200).json({
+                message: "User deleted"
+            })
+        }).catch(err => {
+            res.status(500).json({
+                message: "Error deleting user"
+            })
+        })
+    })
+})
+
+// GET ALL USERS
+router.get("/", (req, res) => { 
+    // the request header has the token then we can verify it
+    if (!req.headers.authorization) {
+        return res.status(401).json({
+            message: "Unauthorized"
+        })
+    }
+    // get the user if the user has valid token 
+    const token = req.headers.authorization.split(" ")[1]
+    jwt.verify(token, process.env.SECRET_KEY, (err, decoded) => {
+        if (err) {
+            return res.status(401).json({
+                message: "Unauthorized"
+            })
+        }
+        user.find().then(users => {
+            if (!users) {
+                return res.status(404).json({
+                    message: "No users found"
+                })
+            }
+            // don not send the password and timestamp
+            const usersData = users.map(user => { 
+                const {
+                    password,
+                    updatedAt,
+                    ...other
+                } = user._doc
+                return other
+            })
+            res.status(200).json({
+                message: "Users found",
+                users: usersData
+            })
+        }).catch(err => {
+            res.status(500).json({
+                message: "Error getting users"
+            })
+        })
+    })
+})
+
+// connect to a user
+router.post("/:id/connect", (req, res) => {
+    // the request header has the token then we can verify it
+    if (!req.headers.authorization) {
+        return res.status(401).json({
+            message: "Unauthorized"
+        })
+    }
+    // get the user if the user has valid token 
+    const token = req.headers.authorization.split(" ")[1]
+    jwt.verify(token, process.env.SECRET_KEY, (err, decoded) => {
+        if (err) {
+            return res.status(401).json({
+                message: "Unauthorized"
+            })
+        }
+
+        // the user is already connected to the other user then return an error
+        user.findById(req.params.id).then(user => { 
+            if (user.connectedUsers.includes(decoded.id)) {
+                return res.status(400).json({
+                    message: "User already connected"
+                })
+            }
+        }).catch(err => { 
+            return res.status(500).json({
+                message: "Error getting user"
+            })
+        })
+
+
+        // find the user and add the id to the connections array of the user
+        user.findByIdAndUpdate(req.params.id, {
+            $push: {
+                connections: decoded.id
+            }
+        }).then(userOne => { 
+            // find the user and add the id to the connections array of the user
+            user.findByIdAndUpdate(decoded.id, {
+                $push: {
+                    connections: req.params.id
+                }
+            }).then(userTwo => { 
+                res.status(200).json({
+                    message: "Connected"
+                })
+            }).catch(err => {
+                res.status(500).json({
+                    message: "Error connecting"
+                })
+            })
+                
+        }).catch(err => { 
+            res.status(500).json({
+                message: "Error connecting user"
+            })
         })
     })
 })

@@ -76,7 +76,9 @@ export default {
         .then((res) => {
           this.clearInputs()
           this.loading = false;
-          localStorage.setItem("token", res.data.token);
+          localStorage.setItem("token", res.data.token); 
+          this.$store.commit("SET_USER", res.data.user);
+          // this.$store.commit("SET_TOKEN", res.data.token);
           this.$router.push("/");
         })
         .catch((error) => {
