@@ -45,22 +45,29 @@ export default {
       ...mapGetters(['user', 'connections']),
   },
   methods:{
+    
       receiver(participants){
         const receiverId = participants.filter(participant => participant !== this.user._id);
         return this.connections.find(connection => connection._id === receiverId[0]).username;
       },
+
       selectConversation(conversation, id){
-        console.log(conversation,"is selected by the user");
         this.$store.commit("SET_CURRENT_CONVERSATION", conversation);
 
+        // Check if the messages are already loaded in the store of this current conversation
+        this.$store.state.messages.filter(message => message.conversationId == id).length == 0 ?
+          this.loadMessages(id) :
+          console.log("messages already loaded");
+      },
+
+      loadMessages(id){
         // fetch the messages of the selected conversation
         this.$store.dispatch("getMessages", {id}).then(res=>{
-          console.log(res);
+          this.$store.commit("SET_MESSAGES", {conversationId: id, messages:res.data})
         }).catch(err =>{
           console.log(err)
-        })
-
-      },
+        })    
+      }
   }
 };
 </script>

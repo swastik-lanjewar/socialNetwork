@@ -35,9 +35,9 @@ export default createStore({
     SET_CURRENT_CONVERSATION(state, conversation) { 
       state.currentConversation = conversation
     },
-    SET_MESSAGES(state, messages) { 
-      state.messages = messages
-    }
+    SET_MESSAGES(state, { conversationId, messages }) { 
+      state.messages.push({ conversationId, messages })
+    }, 
   },
   actions: {
     //action to create a new account of the user 
@@ -136,7 +136,7 @@ export default createStore({
     getMessages(state, payload) { 
       const token = localStorage.getItem('token')
       return new Promise((resolve, reject) => { 
-        axios.get(`http://localhost:3000/message/${payload}`,{
+        axios.get(`http://localhost:3000/message/${payload.id}`,{
           headers: {
             Authorization: `Bearer ${token}`
           }

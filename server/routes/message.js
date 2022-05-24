@@ -31,6 +31,7 @@ router.get("/:conversationId", (req, res) => {
         Message.find({conversationId: req.params.conversationId}).then(messages => {
             res.status(200).json(messages)
         }).catch(err => {
+            console.log(err)
             res.status(500).json(err)
         })
     })

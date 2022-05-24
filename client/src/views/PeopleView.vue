@@ -61,7 +61,7 @@ export default {
           conv =  true
         }
       })
-      if(conv) {
+      if(conv == true) {
         this.$router.push("/message")
       }else{
         this.$store.dispatch("createConversation", { receiverId })

@@ -14,7 +14,7 @@
         </button>
       </div>
 
-      <section class="p-2 flex-row overflow-auto flex-grow">
+      <section class="p-2 flex-row overflow-auto flex-grow" ref="chatWindow">
 
         <div :class="{ 'flex w-full justify-end': message.received !== true }" v-for="message in conversation"
           :key="message.data">
@@ -41,7 +41,7 @@
 </template>
 
 <script>
-import io from 'socket.io-client'
+// import io from 'socket.io-client'
 import { mapGetters } from 'vuex';
 export default {
   name: "TheChatWindow",
@@ -55,60 +55,93 @@ export default {
     }
   },
   methods: {
-    typing() {
-      this.socket.emit('typing', {
-        userid: this.userid,
-      })
-    },
+    // typing() {
+    //   this.socket.emit('typing', {
+    //     userid: this.userid,
+    //   })
+    // },
     sendMessage() {
       if (this.message.length <= 0) return
-      this.conversation.push({
-        received: false,
-        data: this.message,
-        userid: '',
-        time: '10:21 PM'
-      })
+      
       // save the message by dispatching
-      this.socket.emit('message', { message: this.message })
-      this.message = ''
+      this.$store.dispatch("saveMessages", {
+        conversationId:this.currentConversation._id,
+        sender:this.user._id,
+        text: this.message
+      }).then(res =>{
+        this.scrollToBottom()
+        console.log(res)
+        this.conversation.push({
+        received: false,
+        data: res.data.text,
+        userid: '',
+        time: res.data.createdAt
+      })
+        // this.socket.emit('message', { message: this.message })
+        // this.message = ''
+      }).catch(err => console.log(err))
+    },
+
+    loadConversation(){
+      // sperad the messages in the conversation
+      this.conversation = this.messages.filter(message => message.conversationId == this.currentConversation._id)[0].messages.map(msg => {
+        return {
+          received: msg.sender == this.user._id,
+          data: msg.text,
+          userid: msg.sender,
+          time: msg.createdAt
+        }
+      })
+    },
+
+    // scroll to the bottom of the chat window
+    scrollToBottom() {
+      this.$nextTick(() => {
+        this.$refs.chatWindow.scrollTop = this.$refs.chatWindow.scrollHeight
+      })
     }
   },
- 
+   
   created() {
 
-    this.socket = io('http://localhost:3000', {
-      transports: ['websocket'],
-    })
-    this.socket.on('greeting', (data) => {
-      this.greeting = data.message
-      console.log(data)
-    })
+    // this.socket = io('http://localhost:3000', {
+    //   transports: ['websocket'],
+    // })
+    // this.socket.on('greeting', (data) => {
+    //   this.greeting = data.message
+    //   console.log(data)
+    // })
 
-    this.socket.on('chat', (data) => {
-      console.log(data.message)
-      this.conversation.push({
-        received: true,
-        data: data.message,
-        userid: '',
-        time: '10:21 PM'
-      })
-    })
+    // this.socket.on('chat', (data) => {
+    //   console.log(data.message)
+    //   this.conversation.push({
+    //     received: true,
+    //     data: data.message,
+    //     userid: '',
+    //     time: '10:21 PM'
+    //   })
+    // })
 
-    this.socket.on('typing', (data) => {
-      console.log(data)
-      this.isTyping = true
+    // this.socket.on('typing', (data) => {
+    //   console.log(data)
+    //   this.isTyping = true
 
-      setTimeout(() => {
-        this.isTyping = false
-      }, 500)
-    })
+    //   setTimeout(() => {
+    //     this.isTyping = false
+    //   }, 500)
+    // })
   },
   computed: {
-    ...mapGetters(['user', 'currentConversation', 'connections']),
+    ...mapGetters(['user', 'currentConversation', 'connections', 'messages']),
     receiverName() {
       const participants = this.currentConversation.participants
       const receiverId = participants.filter(participant => participant != this.user._id)
       return this.connections.find(connection => connection._id == receiverId[0]).username;
+    },
+  },
+  watch:{
+    currentConversation( ){
+       this.loadConversation()
     }
   }
 };
