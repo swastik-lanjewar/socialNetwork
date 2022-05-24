@@ -15,6 +15,7 @@
           rounded-md
           border-b border-gray-100
         "
+        :class="{ 'bg-sky-400 text-white': item._id === currentConversation._id }"
         @click="selectConversation(item, item._id)"
       >
         <img
@@ -42,7 +43,7 @@ export default {
     conversations: Object,
   },
   computed:{
-      ...mapGetters(['user', 'connections']),
+      ...mapGetters(['user', 'connections', 'currentConversation']),
   },
   methods:{
     
