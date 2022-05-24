@@ -9,7 +9,8 @@ export default createStore({
     connections: [],
     conversations: [],
     currentConversation: null,
-    messages:[]
+    messages: [],
+    onlineUsers:[],
   },
   getters: {
     user: state => state.user,
@@ -17,7 +18,8 @@ export default createStore({
     connections: state => state.connections,
     conversations: state => state.conversations,
     currentConversation: state => state.currentConversation,
-    messages: state => state.messages
+    messages: state => state.messages,
+    onlineUsers: state => state.onlineUsers
   },
   mutations: {
     SET_USER(state, user) { 
@@ -38,6 +40,9 @@ export default createStore({
     SET_MESSAGES(state, { conversationId, messages }) { 
       state.messages.push({ conversationId, messages })
     }, 
+    SET_ONLINE_USERS(state, users) {
+      state.onlineUsers = users
+    }
   },
   actions: {
     //action to create a new account of the user 

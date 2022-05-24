@@ -57,6 +57,22 @@ export default {
     TheDiscussions,
     ThePeopelYouMayKnow,
   },
+  created(){
+    this.$store
+      .dispatch("getAllUsers")
+      .then((res) => {
+        this.$store.commit("SET_USERS", res.data.users);
+        const allUsers = this.$store.state.users
+        const connections = allUsers.filter(user => user.connections.includes(this.user._id))
+        this.$store.commit("SET_CONNECTION", connections)
+      })
+      .catch((err) => {
+        // delelete the token and redirect to login
+        if (err.response.status === 401) {
+          this.$store.dispatch("logout");
+        }
+      });
+  }
 };
 </script>
 

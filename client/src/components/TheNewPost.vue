@@ -8,7 +8,7 @@
           placeholder="Write Something..."
           class="w-full focus:outline-none"
         />
-        <button class="bg-blue-400 px-4 py-2 rounded-md text-white">
+        <button class="bg-blue-400 px-4 py-2 rounded-md text-white" @click="createPost">
           POST
         </button>
       </label>
@@ -37,6 +37,11 @@
 <script>
 export default {
   name: "TheNewPost",
+  methods:{
+     createPost(){
+       
+     }
+  }
 };
 </script>
 

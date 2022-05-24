@@ -13,7 +13,7 @@
             class="w-1/12 rounded-full mr-4"
             alt=""
           />
-          <h2 class="font-semibold text-xl">{{ receiver.username }}</h2>
+             <h2 class="font-semibold text-xl">{{ receiver?.username }}</h2>
         </div>
         <button>
           <i class="fab fa-solid fa-ellipsis-vertical"></i>
@@ -34,7 +34,8 @@
             <p class="text-xs">{{ message.time }}</p>
           </div>
         </div>
-        <div v-show="isTyping">typing...</div>
+          <p v-show="isTyping" class="text-green-500 font-semibold"> Typing...</p>
+        
       </section>
       <div class="p-4 border-t border-gray-400">
         <label for="writeSomething" class="flex items-center">
@@ -59,7 +60,7 @@
 </template>
 
 <script>
-// import io from 'socket.io-client'
+import io from 'socket.io-client'
 import { mapGetters } from "vuex";
 export default {
   name: "TheChatWindow",
@@ -68,128 +69,35 @@ export default {
       socket: {},
       greeting: null,
       message: "",
-      conversation: [
-        {
-          data: "lorem ipsum dolor sit amet consectetur adipisicing elit. Qui, quisquam.",
-          time: "12:00",
-          received: true,
-        },
-        {
-          data: "lorem ipsum dolor sit amet consectetur adipisicing elit. Qui, quisquam.",
-          time: "12:01",
-          received: false,
-        },
-        {
-          data: "How are you?",
-          time: "12:02",
-          received: true,
-        },
-        {
-          data: "I am fine",
-          time: "12:03",
-          received: false,
-        },
-        {
-          data: "How are you?",
-          time: "12:04",
-          received: true,
-        },
-        {
-          data: "I am fine",
-          time: "12:05",
-          received: false,
-        },
-        {
-          data: "How are you?",
-          time: "12:06",
-          received: true,
-        },
-        {
-          data: "I am fine",
-          time: "12:07",
-          received: false,
-        },
-        {
-          data: "How are you?",
-          time: "12:08",
-          received: true,
-        },
-        {
-          data: "I am fine",
-          time: "12:09",
-          received: false,
-        },
-        {
-          data: "How are you?",
-          time: "12:10",
-          received: true,
-        },
-        {
-          data: "I am fine",
-          time: "12:11",
-          received: false,
-        },
-        {
-          data: "How are you?",
-          time: "12:12",
-          received: true,
-        },
-        {
-          data: "I am fine",
-          time: "12:13",
-          received: false,
-        },
-        {
-          data: "How are you?",
-          time: "12:14",
-          received: true,
-        },
-        {
-          data: "I am fine",
-          time: "12:15",
-          received: false,
-        },
-        {
-          data: "How are you?",
-          time: "12:16",
-          received: true,
-        },
-        {
-          data: "I am fine",
-          time: "12:17",
-          received: false,
-        },
-      ],
+      conversation: [],
       isTyping: false,
     };
   },
   methods: {
-    // typing() {
-    //   this.socket.emit('typing', {
-    //     userid: this.userid,
-    //     senderId: this.user._id,
-    //     receiverId: this.receiver._id,
-    //   })
-    // },
+    typing() {
+      this.socket.emit('typing', {
+        userid: this.userid,
+        senderId: this.user._id,
+        receiverId: this.receiver._id,
+      })
+    },
     sendMessage() {
       if (this.message.length <= 0) return;
 
-      // this.socket.emit('message', {
-      //   senderId: this.user._id,
-      //   receiverId: this.receiver._id,
-      //   message: this.message,
-      //   time: new Date().toLocaleTimeString(),
-      // })
+      this.socket.emit('message', {
+        senderId: this.user._id,
+        receiverId: this.receiver._id,
+        message: this.message,
+        time: new Date().toLocaleTimeString(),
+      })
       this.conversation.push({
         received: false,
         data: this.message,
         userid: this.user._id,
         time: new Date().toLocaleTimeString(),
       });
-      this.scrollToBottom();
-      console.log("sending message");
 
-      // // save the message by dispatching
+      // save the message by dispatching
       // this.$store.dispatch("saveMessages", {
       //   conversationId:this.currentConversation._id,
       //   sender:this.user._id,
@@ -226,38 +134,38 @@ export default {
 
     // scroll to the bottom of the chat window
     scrollToBottom() {
-      console.log("scroll to bottom");
       this.$nextTick(() => {
         this.$refs.chatWindow.scrollTop = this.$refs.chatWindow.scrollHeight;
       });
     },
   },
 
-  // created() {
-  //   this.socket = io('http://localhost:3000', {
-  //     transports: ['websocket'],
-  //   })
+  created() {
+    this.socket = io('http://localhost:3000', {
+      transports: ['websocket'],
+    })
 
-  //   this.socket.emit("addUser", {userId: this.user._id})
-  //   this.socket.on("getUsers", data => {
-  //     console.log(data)
-  //   })
+    this.socket.emit("addUser", {userId: this.user._id})
+    this.socket.on("getUsers", data => {
+      this.$store.commit("SET_ONLINE_USERS", data)
+    })
 
-  //   this.socket.on('message', (data) => {
-  //     this.conversation.push({
-  //       received: true,
-  //       data: data.message,
-  //       time: data.time
-  //     })
-  //   })
+    this.socket.on('message', (data) => {
+      this.conversation.push({
+        received: true,
+        data: data.message,
+        time: data.time
+      })
+      this.scrollToBottom()
+    })
 
-  //   this.socket.on('typing', () => {
-  //     this.isTyping = true
-  //     setTimeout(() => {
-  //       this.isTyping = false
-  //     }, 500)
-  //   })
-  // },
+    this.socket.on('typing', () => {
+      this.isTyping = true
+      setTimeout(() => {
+        this.isTyping = false
+      }, 500)
+    })
+  },
   computed: {
     ...mapGetters(["user", "currentConversation", "connections", "messages"]),
     receiver() {
