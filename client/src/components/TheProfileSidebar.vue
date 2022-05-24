@@ -32,14 +32,14 @@
     </div>
     <div class="rounded-md shadow-md p-2 my-2">
       <div class="flex flex-row justify-between">
-        <button class="p-1 px-2 border rounded-md text-gray-700 border-black">
+        <button class="px-1 border rounded text-gray-700 border-black">
           Edit Profile
         </button>
-        <button class="p-1 px-2 border rounded-md text-gray-700 border-black">
+        <button class="px-1 border rounded text-gray-700 border-black">
           Contact
         </button>
-        <button class="p-1 px-2 border rounded-md text-gray-700 border-black">
-          Setting
+        <button class="px-1 border rounded text-gray-700 border-black">
+          <router-link to="/settings">Settings</router-link>
         </button>
       </div>
       <div></div>
