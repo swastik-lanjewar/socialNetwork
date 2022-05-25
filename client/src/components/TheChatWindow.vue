@@ -1,5 +1,5 @@
 <template>
-  <section class="w-full md:w-1/2 px-6">
+  <section class="w-full md:w-1/2 md:px-6">
     <!-- // chat window -->
     <div
       class="w-full rounded-md shadow-md h-full flex flex-col justify-evenly"
@@ -13,7 +13,7 @@
             class="w-1/12 rounded-full mr-4"
             alt=""
           />
-             <h2 class="font-semibold text-xl">{{ receiver?.username }}</h2>
+          <h2 class="font-semibold text-xl">{{ receiver?.username }}</h2>
         </div>
         <button>
           <i class="fab fa-solid fa-ellipsis-vertical"></i>
@@ -34,10 +34,9 @@
             <p class="text-xs">{{ message.time }}</p>
           </div>
         </div>
-          <p v-show="isTyping" class="text-green-500 font-semibold"> Typing...</p>
-        
+        <p v-show="isTyping" class="text-green-500 font-semibold">Typing...</p>
       </section>
-      <div class="p-4 border-t border-gray-400">
+      <div class="px-4 py-2 border-t border-gray-400">
         <label for="writeSomething" class="flex items-center">
           <input
             id="writeSomething"
@@ -48,10 +47,10 @@
             @keypress="typing"
           />
           <button
-            class="bg-blue-400 px-4 py-2 rounded-md text-white"
+            class="bg-blue-400 px-4 py-1 rounded-full text-white"
             @click="sendMessage"
           >
-            Send
+            <i class="fa-solid fa-paper-plane"></i>
           </button>
         </label>
       </div>
@@ -60,7 +59,7 @@
 </template>
 
 <script>
-import io from 'socket.io-client'
+import io from "socket.io-client";
 import { mapGetters } from "vuex";
 export default {
   name: "TheChatWindow",
@@ -75,21 +74,21 @@ export default {
   },
   methods: {
     typing() {
-      this.socket.emit('typing', {
+      this.socket.emit("typing", {
         userid: this.userid,
         senderId: this.user._id,
         receiverId: this.receiver._id,
-      })
+      });
     },
     sendMessage() {
       if (this.message.length <= 0) return;
 
-      this.socket.emit('message', {
+      this.socket.emit("message", {
         senderId: this.user._id,
         receiverId: this.receiver._id,
         message: this.message,
         time: new Date().toLocaleTimeString(),
-      })
+      });
       this.conversation.push({
         received: false,
         data: this.message,
@@ -141,30 +140,30 @@ export default {
   },
 
   created() {
-    this.socket = io('http://localhost:3000', {
-      transports: ['websocket'],
-    })
+    this.socket = io("http://localhost:3000", {
+      transports: ["websocket"],
+    });
 
-    this.socket.emit("addUser", {userId: this.user._id})
-    this.socket.on("getUsers", data => {
-      this.$store.commit("SET_ONLINE_USERS", data)
-    })
+    this.socket.emit("addUser", { userId: this.user._id });
+    this.socket.on("getUsers", (data) => {
+      this.$store.commit("SET_ONLINE_USERS", data);
+    });
 
-    this.socket.on('message', (data) => {
+    this.socket.on("message", (data) => {
       this.conversation.push({
         received: true,
         data: data.message,
-        time: data.time
-      })
-      this.scrollToBottom()
-    })
+        time: data.time,
+      });
+      this.scrollToBottom();
+    });
 
-    this.socket.on('typing', () => {
-      this.isTyping = true
+    this.socket.on("typing", () => {
+      this.isTyping = true;
       setTimeout(() => {
-        this.isTyping = false
-      }, 500)
-    })
+        this.isTyping = false;
+      }, 500);
+    });
   },
   computed: {
     ...mapGetters(["user", "currentConversation", "connections", "messages"]),

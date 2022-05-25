@@ -1,6 +1,5 @@
 <template>
-  <main class="flex justify-between p-3">
-    
+  <main class="flex justify-between md:p-3">
     <TheProfileSidebar
       :username="user.username"
       :name="user.name"
@@ -13,7 +12,8 @@
         md:w-1/2
         flex flex-col
         items-center
-        px-6
+        px-1
+        md:px-6
         min-h-scrollPost
         max-h-scrollPost
         overflow-y-scroll
@@ -58,14 +58,16 @@ export default {
     TheDiscussions,
     ThePeopelYouMayKnow,
   },
-  created(){
+  created() {
     this.$store
       .dispatch("getAllUsers")
       .then((res) => {
         this.$store.commit("SET_USERS", res.data.users);
-        const allUsers = this.$store.state.users
-        const connections = allUsers.filter(user => user.connections.includes(this.user._id))
-        this.$store.commit("SET_CONNECTION", connections)
+        const allUsers = this.$store.state.users;
+        const connections = allUsers.filter((user) =>
+          user.connections.includes(this.user._id)
+        );
+        this.$store.commit("SET_CONNECTION", connections);
       })
       .catch((err) => {
         // delelete the token and redirect to login
@@ -73,7 +75,7 @@ export default {
           this.$store.dispatch("logout");
         }
       });
-  }
+  },
 };
 </script>
 
