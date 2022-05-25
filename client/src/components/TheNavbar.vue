@@ -1,5 +1,5 @@
 <template>
-  <nav class="flex justify-between p-3 shadow mb-3 max-h-10  ">
+  <nav class="hidden  md:flex justify-between p-3 shadow mb-3 max-h-10 ">
     <div class="ml-7">
       <h3 class="font-bold text-blue-800 tracking-wide">SOCIAL NETWORK</h3>
     </div>
@@ -13,11 +13,6 @@
       </ul>
     </div>
     <div class="mr-7 flex">
-      <div class="md:hidden">
-        <button>
-          <i class="fab fa-solid fa-bars"></i>
-        </button>
-      </div>
       <label
         for="search"
         class="

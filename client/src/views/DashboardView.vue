@@ -1,5 +1,6 @@
 <template>
   <main class="flex justify-between p-3">
+    
     <TheProfileSidebar
       :username="user.username"
       :name="user.name"
