@@ -8,3 +8,7 @@
 .btn-submit {
   @apply bg-blue-500 hover:bg-blue-700 text-white w-full font-bold py-2 px-4 rounded text-center disabled:opacity-80 disabled:outline-none disabled:cursor-not-allowed disabled:hover:bg-blue-400
 }
+
+.router-link-exact-active {
+  @apply border-b-2 border-sky-500 px-3 py-1 rounded-lg shadow-lg
+}

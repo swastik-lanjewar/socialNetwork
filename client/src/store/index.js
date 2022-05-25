@@ -10,7 +10,9 @@ export default createStore({
     conversations: [],
     currentConversation: null,
     messages: [],
-    onlineUsers:[],
+    onlineUsers: [],
+    timelinePosts: [],
+    posts:[],
   },
   getters: {
     user: state => state.user,
@@ -19,7 +21,9 @@ export default createStore({
     conversations: state => state.conversations,
     currentConversation: state => state.currentConversation,
     messages: state => state.messages,
-    onlineUsers: state => state.onlineUsers
+    onlineUsers: state => state.onlineUsers,
+    timelinePosts: state => state.timelinePosts,
+    posts: state => state.posts,
   },
   mutations: {
     SET_USER(state, user) { 
@@ -42,7 +46,14 @@ export default createStore({
     }, 
     SET_ONLINE_USERS(state, users) {
       state.onlineUsers = users
+    }, 
+    SET_TIMELINE_POSTS(state, posts) {
+      state.timelinePosts = posts
+    },
+    SET_POSTS(state, posts) { 
+      state.posts = posts
     }
+
   },
   actions: {
     //action to create a new account of the user 
@@ -170,7 +181,55 @@ export default createStore({
           reject(error)
         })
       })
-    }
+    },
+
+    // action to create a new post
+    createPost(state, payload) {
+      const token = localStorage.getItem('token')
+      return new Promise((resolve, reject) => { 
+        axios.post(`http://localhost:3000/post/`, payload, {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        }).then(response => { 
+          resolve(response)
+        }).catch(error => {
+          reject(error)
+        })
+      })
+    }, 
+
+    // action to get a users timeline 
+    getTimeline() {
+      const token = localStorage.getItem('token')
+      return new Promise((resolve, reject) => { 
+        axios.get(`http://localhost:3000/post/timeline/`, {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        }).then(response => { 
+          resolve(response)
+        }).catch(error => {
+          reject(error)
+        })
+      })
+    },
+
+    // action to get a users all post 
+    getPosts() {
+      const token = localStorage.getItem('token')
+      return new Promise((resolve, reject) => { 
+        axios.get(`http://localhost:3000/post/`, {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        }).then(response => { 
+          resolve(response)
+        }).catch(error => {
+          reject(error)
+        })
+      })
+    },
     
   },
   modules: {

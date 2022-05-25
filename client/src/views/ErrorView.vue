@@ -3,13 +3,15 @@
     flex
     items-center
     justify-center
-    w-screen
-    h-screen
-    bg-gradient-to-r
+    md:w-screen
+    md:h-screen
+    w-full
+    h-full
+bg-gradient-to-r
     from-indigo-600
     to-blue-400
     ">
-        <div class="px-40 py-20 bg-white rounded-md shadow-xl">
+        <div class="bg-white rounded-md shadow-xl">
             <div class="flex flex-col items-center">
                 <h1 class="font-bold text-blue-600 text-9xl text-center">404
                     <h6 class="mb-2 text-2xl font-bold text-center text-gray-800 md:text-3xl">

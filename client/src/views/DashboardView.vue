@@ -1,13 +1,8 @@
 <template>
   <main class="flex justify-between md:p-3">
-    <TheProfileSidebar
-      :username="user.username"
-      :name="user.name"
-      :bio="user.bio"
-    />
+    <TheProfileSidebar />
 
-    <section
-      class="
+    <section class="
         w-full
         md:w-1/2
         flex flex-col
@@ -17,14 +12,15 @@
         min-h-scrollPost
         max-h-scrollPost
         overflow-y-scroll
-      "
-    >
+      ">
       <TheNewPost />
 
-      <div class="md:grid grid-cols-2 gap-4">
-        <ThePost />
-        <ThePost />
-        <ThePost />
+      <div 
+      class=""
+      v-for="post in posts"
+      :key="post._id"
+      >
+        <ThePost :post="post" />
       </div>
     </section>
 
@@ -45,11 +41,8 @@ import ThePeopelYouMayKnow from "../components/ThePeopelYouMayKnow.vue";
 
 export default {
   name: "DashboardView",
-  data() {
-    return {};
-  },
   computed: {
-    ...mapGetters(["user"]),
+    ...mapGetters(["user", "posts", "timelinePosts"]),
   },
   components: {
     TheProfileSidebar,
@@ -58,23 +51,28 @@ export default {
     TheDiscussions,
     ThePeopelYouMayKnow,
   },
-  created() {
-    this.$store
-      .dispatch("getAllUsers")
-      .then((res) => {
-        this.$store.commit("SET_USERS", res.data.users);
-        const allUsers = this.$store.state.users;
-        const connections = allUsers.filter((user) =>
-          user.connections.includes(this.user._id)
-        );
-        this.$store.commit("SET_CONNECTION", connections);
-      })
-      .catch((err) => {
-        // delelete the token and redirect to login
-        if (err.response.status === 401) {
-          this.$store.dispatch("logout");
-        }
-      });
+  async created() {
+    try {
+      const usersRes = this.$store.dispatch("getAllUsers")
+      this.$store.commit("SET_USERS", usersRes.data?.users)
+
+      const allUsers = this.$store.state.users
+      const connections = allUsers?.filter((user) => user.connections.includes(this.user._id));
+      this.$store.commit("SET_CONNECTION", connections);
+
+      const postsRes = await this.$store.dispatch("getPosts")
+      this.$store.commit("SET_POSTS", postsRes.data?.posts)
+
+      const timelineRes = await this.$store.dispatch("getTimeline")
+      this.$store.commit("SET_TIMELINE_POSTS", timelineRes.data.timeline)
+
+    } catch (error) {
+      console.error(error)
+      if(error.response?.status === 401){
+        localStorage.removeItem("token");
+        this.$router.push("/login");
+      }
+    }
   },
 };
 </script>

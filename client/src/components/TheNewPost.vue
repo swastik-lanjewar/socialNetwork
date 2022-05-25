@@ -2,17 +2,11 @@
   <div class="bg-white shadow-md rounded-md w-full mb-2">
     <div class="border-b border-gray-400 p-4">
       <label for="writeSomething" class="flex">
-        <input
-          id="writeSomething"
-          type="text"
-          placeholder="Write Something..."
-          class="w-full focus:outline-none"
-        />
-        <button
-          class="bg-blue-400 px-4 py-1 rounded-full text-white"
-          @click="createPost"
-        >
-          <i class="fa-solid fa-paper-plane"></i>
+        <input id="writeSomething" type="text" placeholder="Write Something..." class="w-full focus:outline-none"
+          v-model="postContent" />
+        <button class="bg-blue-400 px-4 py-1 rounded-full text-white" @click="createPost">
+          <i class="fa-solid fa-paper-plane" v-if="posting != true"></i>
+          <TheSpinner v-if="posting" text="" />
         </button>
       </label>
     </div>
@@ -38,11 +32,41 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex';
+import TheSpinner from './utils/TheSpinner.vue';
 export default {
   name: "TheNewPost",
-  methods: {
-    createPost() {},
+  data() {
+    return {
+      postContent: "",
+      type: "text",
+      posting: false,
+    };
   },
+  methods: {
+    async createPost() {
+      this.posting = true;
+      if (this.postContent.length > 0) {
+        try {
+          const res = await this.$store.dispatch("createPost", {
+            title: this.postContent,
+            content: this.postContent,
+            type: "text",
+            userId: this.user._id,
+          });
+          this.posting = false;
+          this.postContent = "";
+          console.log(res);
+        } catch (error) {
+          console.log(error);
+        }
+      }
+    },
+  },
+  computed: {
+    ...mapGetters(["user"]),
+  },
+  components: { TheSpinner }
 };
 </script>
 

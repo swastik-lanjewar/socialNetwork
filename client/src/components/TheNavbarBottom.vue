@@ -56,8 +56,11 @@
       </div>
       <div class="rounded-md shadow-md p-2 my-2">
         <div class="flex flex-row justify-between">
-          <button class="px-1 border rounded text-gray-700 border-black">
-            Edit Profile
+          <button
+            class="px-1 border rounded text-gray-700 border-black"
+            @click="logout"
+          >
+            logout
           </button>
           <button class="px-1 border rounded text-gray-700 border-black">
             Contact
@@ -101,7 +104,7 @@ export default {
         {
           name: "notification",
           icon: "fa-bell",
-          link: "",
+          link: "/notification",
         },
         {
           name: "message",
@@ -113,10 +116,10 @@ export default {
   },
   methods: {
     logout() {
-      // delelte the token from local storage
+      this.menubar = false;
       localStorage.removeItem("token");
-      // redirect to login page
       this.$router.push("/login");
+      // delelte the token from local storage
     },
   },
   computed: {

@@ -8,7 +8,7 @@
             src="https://images.unsplash.com/photo-1558898479-33c0057a5d12?crop=entropy&cs=tinysrgb&fit=crop&fm=jpg&h=200&ixid=MnwxfDB8MXxyYW5kb218MHx8cHJvZmlsZXx8fHx8fDE2NTIyNjU3MTU&ixlib=rb-1.2.1&q=80&utm_campaign=api-credit&utm_medium=referral&utm_source=unsplash_source&w=200"
             alt=""
           />
-          <h2 class="pl-2 font-semibold">{{ "username" }}</h2>
+          <h2 class="pl-2 font-semibold">{{ "name"}}</h2>
         </div>
         <button>
           <i class="fab fa-solid fa-ellipsis-vertical"></i>
@@ -21,21 +21,15 @@
           alt=""
         />
       </div>
-      <div class="px-4">
-        <p>
-          <span class="font-semibold">hacker101</span> Lorem ipsum dolor sit,
-          amet consectetur adipisicing elit. Laborum, consequuntur.
-        </p>
-      </div>
       <div class="flex justify-between py-2 px-4">
         <div>
           <button class="mr-4">
-            <div class="flex mr-2 text-gray-700 text-sm mr-3">
+            <div class="flex items-center  text-gray-700 text-sm mr-3">
               <svg
                 fill="none"
                 viewBox="0 0 24 24"
-                class="w-4 h-4 mr-1"
-                stroke="currentColor"
+                class="w-4 h-4 mr-1 fill-red-500"
+                stroke="fill-red-500"
               >
                 <path
                   stroke-linecap="round"
@@ -48,7 +42,7 @@
             </div>
           </button>
           <button class="">
-            <div class="flex mr-2 text-gray-700 text-sm mr-8">
+            <div class="flex items-center  text-gray-700 text-sm mr-8">
               <svg
                 fill="none"
                 viewBox="0 0 24 24"
@@ -70,33 +64,41 @@
           <i class="fab fa-regular fa-bookmark"></i>
         </button>
       </div>
+      <div class="px-4 pb-2">
+        <p class="text-gray-600 text-sm">
+          <span class="font-semibold text-gray-800">hacker101</span> Lorem ipsum
+          dolor sit, amet consectetur adipisicing elit. Laborum, consequuntur.
+        </p>
+        <p class="text-xs text-gray-500">2 hrs ago</p>
+      </div>
     </div>
 
-    <div class="flex bg-white shadow-lg rounded-lg my-2 w-full lg:w-fit">
+    <div class=" bg-white shadow-md rounded-md my-2 ">
       <!--horizantil margin is just for display-->
-      <div class="flex items-start px-4 py-6">
+      <div class="flex justify-between px-4 py-6">
         <img
           class="w-12 h-12 rounded-full object-cover mr-4 shadow"
           src="https://images.unsplash.com/photo-1542156822-6924d1a71ace?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=500&q=60"
           alt="avatar"
         />
-        <div class="">
+        <div class=" w-full ">
           <div class="flex items-center justify-between">
-            <h2 class="text-lg font-semibold text-gray-900 -mt-1">someone</h2>
+            <h2 class="text-lg font-semibold text-gray-900 -mt-1">{{ "name" }}</h2>
             <small class="text-sm text-gray-700">22h ago</small>
           </div>
           <p class="text-gray-700">Joined 12 SEP 2012.</p>
           <p class="mt-3 text-gray-700 text-sm">
-            Lorem ipsum, dolor sit amet conse. Saepe optio minus rem dolor sit
-            amet!
+            {{ post.content}}
+            
           </p>
-          <div class="mt-4 flex items-center">
-            <div class="flex mr-2 text-gray-700 text-sm mr-3">
+          <div class="mt-4 flex items-center justify-around">
+            <button class="flex  text-gray-700 text-sm mr-3">
               <svg
                 fill="none"
                 viewBox="0 0 24 24"
                 class="w-4 h-4 mr-1"
-                stroke="currentColor"
+                :stroke=" post.likes.includes(user._id) ? 'red' : 'currentColor' "
+                :class=" post.likes.includes(user._id) ? 'fill-red-500' : '' "
               >
                 <path
                   stroke-linecap="round"
@@ -105,9 +107,9 @@
                   d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
                 />
               </svg>
-              <span>12</span>
-            </div>
-            <div class="flex mr-2 text-gray-700 text-sm mr-8">
+              <span>{{ post.likes.length }}</span>
+            </button>
+            <button class="flex  text-gray-700 text-sm mr-8">
               <svg
                 fill="none"
                 viewBox="0 0 24 24"
@@ -122,8 +124,8 @@
                 />
               </svg>
               <span>8</span>
-            </div>
-            <div class="flex mr-2 text-gray-700 text-sm mr-4">
+            </button>
+            <button class="flex  text-gray-700 text-sm mr-4">
               <svg
                 fill="none"
                 viewBox="0 0 24 24"
@@ -138,7 +140,7 @@
                 />
               </svg>
               <span>share</span>
-            </div>
+            </button>
           </div>
         </div>
       </div>
@@ -147,6 +149,8 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex';
+
 export default {
   name: "ThePost",
   props: {
@@ -155,6 +159,12 @@ export default {
       // required: true,
     },
   },
+  computed:{
+    ...mapGetters(["user"]),
+  },
+  methods:{
+   
+  }
 };
 </script>
 
