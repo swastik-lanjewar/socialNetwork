@@ -14,14 +14,12 @@
         overflow-y-scroll
       ">
       <TheNewPost />
-
-      <div 
-      class="min:w-full "
+      <ThePost
       v-for="(post, index) in timelinePosts"
-      :key="index"
-      >
-        <ThePost :post="post" />
-      </div>
+       :key="index"
+       :post="post" 
+       />
+  
     </section>
 
     <aside class="w-1/4 mr-7 hidden md:block">

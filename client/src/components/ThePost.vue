@@ -1,10 +1,10 @@
 <template>
-  <div>
-    <div class="shadow-md rounded-md w-full lg:min-w-fit" v-if="post.type != 'text'">
+  <div class="shadow-md rounded-md lg:min-w-fit my-2 px-4 py-6 w-full">
+    <div v-if="post.type != 'text'">
       <div class="flex justify-between p-4">
         <div class="flex items-center">
           <img class="w-1/12 rounded-full" src="https://source.unsplash.com/random/200x200/?people" alt="" />
-          <h2 class="pl-2 font-semibold">{{ "name" }}</h2>
+          <h2 class="pl-2 font-semibold">{{ users?.filter(u => u._id == post.userId)[0].username }}</h2>
         </div>
         <button>
           <i class="fab fa-solid fa-ellipsis-vertical"></i>
@@ -48,8 +48,7 @@
     </div>
 
     <!-- Textual Posts are rendered here -->
-    <div class=" bg-white shadow-md rounded-md my-2 ">
-      <div class="flex justify-between px-4 py-6">
+    <div class="flex">
         <img class="w-12 h-12 rounded-full object-cover mr-4 shadow"
           src="https://source.unsplash.com/random/200x200/?avatar" alt="avatar" />
         <div class=" w-full">
@@ -87,7 +86,6 @@
             </button>
           </div>
         </div>
-      </div>
     </div>
   </div>
 </template>
