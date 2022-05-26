@@ -95,6 +95,7 @@ export default {
         userid: this.user._id,
         time: new Date().toLocaleTimeString(),
       });
+       this.scrollToBottom()
 
       // save the message by dispatching
       // this.$store.dispatch("saveMessages", {

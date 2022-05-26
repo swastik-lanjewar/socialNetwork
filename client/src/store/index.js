@@ -59,7 +59,7 @@ export default createStore({
     //action to create a new account of the user 
     createAccount( state ,payload ) { 
       return new Promise((resolve, reject) => { 
-          axios.post('http://localhost:3000/auth/create-account', payload).then(response => { 
+          axios.post('http://localhost:3000/auth/create-account/', payload).then(response => { 
             resolve(response)
           }).catch(error => {
             reject(error)
@@ -69,7 +69,7 @@ export default createStore({
     // action to login the user
     login(state, payload) { 
       return new Promise((resolve, reject) => { 
-        axios.post('http://localhost:3000/auth/login', payload).then(response => { 
+        axios.post('http://localhost:3000/auth/login/', payload).then(response => {
           resolve(response)
         }).catch(error => {
           reject(error)

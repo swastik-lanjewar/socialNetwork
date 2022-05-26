@@ -53,10 +53,11 @@ export default {
   },
   async created() {
     try {
-      const usersRes = this.$store.dispatch("getAllUsers")
+      const usersRes = await this.$store.dispatch("getAllUsers")
       this.$store.commit("SET_USERS", usersRes.data?.users)
+      console.log(usersRes.data)
 
-      const allUsers = this.$store.state.users
+      const allUsers = await this.$store.state.users
       const connections = allUsers?.filter((user) => user.connections.includes(this.user._id));
       this.$store.commit("SET_CONNECTION", connections);
 

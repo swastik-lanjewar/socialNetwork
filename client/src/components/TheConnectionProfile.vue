@@ -26,7 +26,7 @@
       }}</span>
       <div class="flex mt-4 space-x-3 lg:mt-6 items-center">
         <span class="font-semibold"
-          >{{ user.connections.length }} Connections</span
+          >{{ user.connections?.length }} Connections</span
         >
         <button
           href="#"

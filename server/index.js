@@ -10,7 +10,9 @@ const postRoutes = require('./routes/post')
 const conversationRoutes = require('./routes/conversation')
 const messageRoutes = require('./routes/message')
 
-app.use(cors())
+app.use(cors({
+    origin: 'http://localhost:8080'
+}))
 app.use(express.json())
 app.use(express.urlencoded({
     extended: true
@@ -79,6 +81,9 @@ http.listen(PORT, () => {
 })
 
 // use the routes
+app.get("/", (req, res) => {
+    res.send("Hello World")
+})
 app.use('/auth', authRoutes)
 app.use('/user', userRoutes)
 app.use('/post', postRoutes)
