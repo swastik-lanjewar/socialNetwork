@@ -98,7 +98,10 @@ router.put("/like/:id", (req, res) => {
             }, {
                 new: true
             }).then(post => {
-                res.json(post)
+                res.status(200).json({
+                    message: "Post liked",
+                    post
+                })
             }).catch(err => {
                 res.json({
                     message: err
@@ -126,7 +129,10 @@ router.put("/unlike/:id", (req, res) => {
             }, {
                 new: true
             }).then(post => {
-                res.json(post)
+                res.status(200).json({
+                    message: "Post unliked",
+                    post
+                })
             }).catch(err => {
                 res.json({
                     message: err

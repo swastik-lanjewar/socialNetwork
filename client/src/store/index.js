@@ -59,6 +59,10 @@ export default createStore({
     }, 
     MERGE_TIMELINE_POSTS(state, posts) {
       state.timelinePosts = [...state.timelinePosts, ...posts]
+    }, 
+    UPDATE_LIKED_POST(state, post) {
+      const index = state.timelinePosts.findIndex(p => p._id === post._id)
+      state.timelinePosts.splice(index, 1, post)
     }
 
   },
@@ -83,7 +87,7 @@ export default createStore({
         })
       })
     },
-    
+
     // action to get all the users
     async getAllUsers({ commit}) { 
       const token = localStorage.getItem("token")
@@ -232,6 +236,39 @@ export default createStore({
         console.error(error.message)
       }
     },
+
+    // action to like the post
+    async likePost({ commit}, payload) {
+      const token = localStorage.getItem('token')
+      try { 
+        const response = await axios.put(`http://localhost:3000/post/like/${payload}/`, {}, {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        })
+        commit("UPDATE_LIKED_POST", response.data.post)
+      } catch (error) {
+        console.log(error)
+      }
+    },
+
+    // action to like the post
+    async unlikePost({commit}, payload) {
+      const token = localStorage.getItem('token')
+      try { 
+        const response = await axios.put(`http://localhost:3000/post/unlike/${payload}/`, {}, {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        })
+        commit("UPDATE_LIKED_POST", response.data.post)
+      } catch (error) {
+        console.log(error)
+      }
+    },
+    
+
+
     
   },
   modules: {
