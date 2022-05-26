@@ -40,8 +40,8 @@
       </div>
       <div class="px-4 pb-2">
         <p class="text-gray-600 text-sm">
-          <span class="font-semibold text-gray-800">hacker101</span> Lorem ipsum
-          dolor sit, amet consectetur adipisicing elit. Laborum, consequuntur.
+          <span class="font-semibold text-gray-800">{{ users?.filter(u => u._id == post.userId)[0].username }}</span>
+          {{ post.content }}
         </p>
         <p class="text-xs text-gray-500">2 hrs ago</p>
       </div>
@@ -54,7 +54,7 @@
           src="https://source.unsplash.com/random/200x200/?avatar" alt="avatar" />
         <div class=" w-full">
           <div class="flex items-center justify-between">
-            <h2 class="text-lg font-semibold text-gray-900 -mt-1">{{ "name" }}</h2>
+            <h2 class="text-lg font-semibold text-gray-900 -mt-1">{{ users?.filter(u => u._id == post.userId)[0].username }}</h2>
             <small class="text-sm text-gray-700">22h ago</small>
           </div>
           <p class="text-gray-700">Joined 12 SEP 2012.</p>
@@ -105,7 +105,7 @@ export default {
     },
   },
   computed: {
-    ...mapGetters(["user"]),
+    ...mapGetters(["user", "users"]),
   }
   ,
   methods: {
