@@ -68,24 +68,27 @@ export default createStore({
   },
   actions: {
     //action to create a new account of the user 
-    createAccount( state ,payload ) { 
-      return new Promise((resolve, reject) => { 
-          axios.post('http://localhost:3000/auth/create-account/', payload).then(response => { 
-            resolve(response)
-          }).catch(error => {
-            reject(error)
-          })
-      })
+    async createAccount( {commit} ,payload ) { 
+      try {
+        const response = await axios.post('http://localhost:3000/auth/create-account/', payload)
+        localStorage.setItem('token', response.data.token)
+        commit('SET_USER', response.data.user)
+        return response
+      } catch (error) {
+        return error
+      }
     },
+    
     // action to login the user
-    login(state, payload) { 
-      return new Promise((resolve, reject) => { 
-        axios.post('http://localhost:3000/auth/login/', payload).then(response => {
-          resolve(response)
-        }).catch(error => {
-          reject(error)
-        })
-      })
+    async login({commit}, payload) { 
+      try {
+        const response = await axios.post('http://localhost:3000/auth/login/', payload)
+        commit('SET_USER', response.data.user)      
+        localStorage.setItem('token', response.data.token)
+        return response
+      } catch (error) {
+        return error
+      }
     },
 
     // action to get all the users
@@ -152,18 +155,6 @@ export default createStore({
 
     //action to get all the messages of a conversation
     async getMessages({commit}, payload) { 
-      // const token = localStorage.getItem('token')
-      // return new Promise((resolve, reject) => {
-      //   axios.get(`http://localhost:3000/messa/${payload.id}`,{
-      //     headers: {
-      //       Authorization: `Bearer ${token}`
-      //     }
-      //   }).then(response => {
-      //     resolve(response)
-      //   }).catch(error => {
-      //     reject(error)
-      //   })
-      // })
       const token = localStorage.getItem('token')
       try { 
         const response = await axios.get(`http://localhost:3000/message/${payload.id}`, {
@@ -175,7 +166,6 @@ export default createStore({
       } catch (error) {
         console.error(error)
       }
-
     }, 
   
     saveMessages(state, payload) {
