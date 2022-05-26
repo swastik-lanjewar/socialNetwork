@@ -87,7 +87,7 @@ export default createStore({
     // action to login the user
     async login({ commit }, payload) {
       try {
-        const response = await axios.post('/auth/login/', payload)
+        const response = await axios.post('auth/login/', payload)
         commit('SET_USER', response.data.user)
         localStorage.setItem('token', response.data.token)
         return response
