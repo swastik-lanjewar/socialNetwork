@@ -1,11 +1,11 @@
 <template>
   <div>
-    <div class="shadow-md rounded-md w-full lg:min-w-fit">
+    <div class="shadow-md rounded-md w-full lg:min-w-fit" v-if="post.type != 'text'">
       <div class="flex justify-between p-4">
         <div class="flex items-center">
           <img
             class="w-1/12 rounded-full"
-            src="https://images.unsplash.com/photo-1558898479-33c0057a5d12?crop=entropy&cs=tinysrgb&fit=crop&fm=jpg&h=200&ixid=MnwxfDB8MXxyYW5kb218MHx8cHJvZmlsZXx8fHx8fDE2NTIyNjU3MTU&ixlib=rb-1.2.1&q=80&utm_campaign=api-credit&utm_medium=referral&utm_source=unsplash_source&w=200"
+            src="https://source.unsplash.com/random/200x200/?people"
             alt=""
           />
           <h2 class="pl-2 font-semibold">{{ "name"}}</h2>
@@ -17,7 +17,7 @@
       <div class="">
         <img
           class="w-full"
-          src="https://images.unsplash.com/photo-1558898479-33c0057a5d12?crop=entropy&cs=tinysrgb&fit=crop&fm=jpg&h=200&ixid=MnwxfDB8MXxyYW5kb218MHx8cHJvZmlsZXx8fHx8fDE2NTIyNjU3MTU&ixlib=rb-1.2.1&q=80&utm_campaign=api-credit&utm_medium=referral&utm_source=unsplash_source&w=200"
+          src="https://source.unsplash.com/random/200x200/?avatar"
           alt=""
         />
       </div>
@@ -73,15 +73,15 @@
       </div>
     </div>
 
+    <!-- Textual Posts are rendered here -->
     <div class=" bg-white shadow-md rounded-md my-2 ">
-      <!--horizantil margin is just for display-->
       <div class="flex justify-between px-4 py-6">
         <img
           class="w-12 h-12 rounded-full object-cover mr-4 shadow"
-          src="https://images.unsplash.com/photo-1542156822-6924d1a71ace?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=500&q=60"
+          src="https://source.unsplash.com/random/200x200/?avatar"
           alt="avatar"
         />
-        <div class=" w-full ">
+        <div class=" w-full">
           <div class="flex items-center justify-between">
             <h2 class="text-lg font-semibold text-gray-900 -mt-1">{{ "name" }}</h2>
             <small class="text-sm text-gray-700">22h ago</small>

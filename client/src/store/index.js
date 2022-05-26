@@ -22,7 +22,11 @@ export default createStore({
     currentConversation: state => state.currentConversation,
     messages: state => state.messages,
     onlineUsers: state => state.onlineUsers,
-    timelinePosts: state => state.timelinePosts,
+    timelinePosts: (state) => {
+      return state.timelinePosts.sort((a, b) => { 
+        return new Date(b.createdAt) - new Date(a.createdAt)
+      })
+    },
     posts: state => state.posts,
   },
   mutations: {
@@ -52,6 +56,9 @@ export default createStore({
     },
     SET_POSTS(state, posts) { 
       state.posts = posts
+    }, 
+    MERGE_TIMELINE_POSTS(state, posts) {
+      state.timelinePosts = [...state.timelinePosts, ...posts]
     }
 
   },
@@ -76,28 +83,20 @@ export default createStore({
         })
       })
     },
-    // action to logout the user
-    logout() {
-      // remove token from local storage
-      localStorage.removeItem('token')
-      // remove user from state
-      this.state.user = {}
-    },
-
+    
     // action to get all the users
-    getAllUsers() { 
-      const token = localStorage.getItem('token')
-      return new Promise((resolve, reject) => { 
-        axios.get('http://localhost:3000/user/', {
+    async getAllUsers({ commit}) { 
+      const token = localStorage.getItem("token")
+      try {
+        const response = await axios.get('http://localhost:3000/user/', {
           headers: {
             Authorization: `Bearer ${token}`
           }
-        }).then(response => { 
-          resolve(response)
-        }).catch(error => {
-          reject(error)
         })
-      })
+        commit("SET_USERS", response.data.users)
+      } catch (error) {
+        console.error(error.message)
+      }
     },
 
     // action to connect to a user
@@ -184,51 +183,54 @@ export default createStore({
     },
 
     // action to create a new post
-    createPost(state, payload) {
+    async createPost({state,commit}, payload) {
       const token = localStorage.getItem('token')
-      return new Promise((resolve, reject) => { 
-        axios.post(`http://localhost:3000/post/`, payload, {
+      try {
+        const response = await axios.post(`http://localhost:3000/post/`, payload, {
           headers: {
             Authorization: `Bearer ${token}`
           }
-        }).then(response => { 
-          resolve(response)
-        }).catch(error => {
-          reject(error)
         })
-      })
+        commit("SET_POSTS", [ ...state.posts, response.data.post])
+        commit("SET_TIMELINE_POSTS", [...state.timelinePosts, response.data.post])
+      } catch (error) {
+        console.error(error.messages)
+      }
     }, 
 
     // action to get a users timeline 
-    getTimeline() {
+    async getTimeline({ commit}) {
       const token = localStorage.getItem('token')
-      return new Promise((resolve, reject) => { 
-        axios.get(`http://localhost:3000/post/timeline/`, {
+      try { 
+        const response = await axios.get('http://localhost:3000/post/timeline/', {
           headers: {
             Authorization: `Bearer ${token}`
           }
-        }).then(response => { 
-          resolve(response)
-        }).catch(error => {
-          reject(error)
         })
-      })
+        commit("SET_TIMELINE_POSTS", response.data.timeline)
+
+      } catch (error) {
+        console.error(error.messages)
+      }
     },
 
     // action to get a users all post 
-    getPosts() {
+    async getPosts({commit}) {
+      
       const token = localStorage.getItem('token')
-      return new Promise((resolve, reject) => { 
-        axios.get(`http://localhost:3000/post/`, {
+      try {
+        const response = await axios.get("http://localhost:3000/post/", {
           headers: {
             Authorization: `Bearer ${token}`
           }
-        }).then(response => { 
-          resolve(response)
-        }).catch(error => {
-          reject(error)
         })
-      })
+
+        commit("SET_POSTS", response.data.posts)
+        commit("MERGE_TIMELINE_POSTS", response.data.posts)
+
+      } catch (error) {
+        console.error(error.message)
+      }
     },
     
   },

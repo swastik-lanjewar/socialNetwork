@@ -16,9 +16,9 @@
       <TheNewPost />
 
       <div 
-      class=""
-      v-for="post in posts"
-      :key="post._id"
+      class="min:w-full "
+      v-for="(post, index) in timelinePosts"
+      :key="index"
       >
         <ThePost :post="post" />
       </div>
@@ -53,19 +53,13 @@ export default {
   },
   async created() {
     try {
-      const usersRes = await this.$store.dispatch("getAllUsers")
-      this.$store.commit("SET_USERS", usersRes.data?.users)
-      console.log(usersRes.data)
+      this.$store.dispatch("getTimeline")
+      this.$store.dispatch("getPosts")
+      this.$store.dispatch("getAllUsers")
 
-      const allUsers = await this.$store.state.users
+      const allUsers = this.$store.state.users
       const connections = allUsers?.filter((user) => user.connections.includes(this.user._id));
       this.$store.commit("SET_CONNECTION", connections);
-
-      const postsRes = await this.$store.dispatch("getPosts")
-      this.$store.commit("SET_POSTS", postsRes.data?.posts)
-
-      const timelineRes = await this.$store.dispatch("getTimeline")
-      this.$store.commit("SET_TIMELINE_POSTS", timelineRes.data.timeline)
 
     } catch (error) {
       console.error(error)

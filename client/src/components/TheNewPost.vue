@@ -44,22 +44,17 @@ export default {
     };
   },
   methods: {
-    async createPost() {
+    createPost() {
       this.posting = true;
       if (this.postContent.length > 0) {
-        try {
-          const res = await this.$store.dispatch("createPost", {
+          this.$store.dispatch("createPost", {
             title: this.postContent,
             content: this.postContent,
             type: "text",
             userId: this.user._id,
-          });
-          this.posting = false;
-          this.postContent = "";
-          console.log(res);
-        } catch (error) {
-          console.log(error);
-        }
+          })
+          this.posting = false
+          this.postContent = ""
       }
     },
   },
