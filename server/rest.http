@@ -10,8 +10,7 @@ Authorization:
 
 #####
 
-GET http://localhost:3000/post/timeline/
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYyODUwOWVkNDQ4MDUwYWY3YjU1YzcyNCIsIm5hbWUiOiJUYW5pc2hhIHNpbmdoIiwidXNlcm5hbWUiOiJGYXNoaW9uRGVzaWduZXIiLCJlbWFpbCI6InRhbmlzaGFAZ21haWwuY29tIiwiaWF0IjoxNjUzNDY2NTI4LCJleHAiOjE2NTM0NzAxMjh9.rP4i9y4pGgsqd-zVyarLBbOJS2ZFasadNf9sqJeYeAQ
+GET https://letsbug-social-network.herokuapp.com/
 
 
 #####

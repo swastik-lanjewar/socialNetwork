@@ -75,7 +75,7 @@ export default createStore({
     //action to create a new account of the user 
     async createAccount({ commit }, payload) {
       try {
-        const response = await axios.post('http://localhost:3000/auth/create-account/', payload)
+        const response = await axios.post('/auth/create-account/', payload)
         localStorage.setItem('token', response.data.token)
         commit('SET_USER', response.data.user)
         return response
@@ -87,7 +87,7 @@ export default createStore({
     // action to login the user
     async login({ commit }, payload) {
       try {
-        const response = await axios.post('http://localhost:3000/auth/login/', payload)
+        const response = await axios.post('/auth/login/', payload)
         commit('SET_USER', response.data.user)
         localStorage.setItem('token', response.data.token)
         return response
@@ -100,7 +100,7 @@ export default createStore({
     async getAllUsers({ commit }) {
       const token = localStorage.getItem("token")
       try {
-        const response = await axios.get('http://localhost:3000/user/', {
+        const response = await axios.get('/user/', {
           headers: {
             Authorization: `Bearer ${token}`
           }
@@ -115,7 +115,7 @@ export default createStore({
     connectUser(state, payload) {
       const token = localStorage.getItem('token')
       return new Promise((resolve, reject) => {
-        axios.post(`http://localhost:3000/user/${payload.userId}/connect`, payload, {
+        axios.post(`/user/${payload.userId}/connect`, payload, {
           headers: {
             Authorization: `Bearer ${token}`
           }
@@ -131,7 +131,7 @@ export default createStore({
     async getConversations({ commit }) {
       const token = localStorage.getItem('token')
       try {
-        const response = await axios.get('http://localhost:3000/conversation/', {
+        const response = await axios.get('/conversation/', {
           headers: {
             Authorization: `Bearer ${token}`
           }
@@ -146,7 +146,7 @@ export default createStore({
     createConversation(state, payload) {
       const token = localStorage.getItem('token')
       return new Promise((resolve, reject) => {
-        axios.post('http://localhost:3000/conversation/', { participants: [payload.receiverId] }, {
+        axios.post('/conversation/', { participants: [payload.receiverId] }, {
           headers: {
             Authorization: `Bearer ${token}`
           }
@@ -162,7 +162,7 @@ export default createStore({
     async getMessages({ commit }, payload) {
       const token = localStorage.getItem('token')
       try {
-        const response = await axios.get(`http://localhost:3000/message/${payload.id}`, {
+        const response = await axios.get(`/message/${payload.id}`, {
           headers: {
             Authorization: `Bearer ${token}`
           }
@@ -177,7 +177,7 @@ export default createStore({
       const token = localStorage.getItem('token')
       try {
         console.log(payload)
-        const response = await axios.post(`http://localhost:3000/message/`, {
+        const response = await axios.post(`/message/`, {
           conversationId: payload.conversationId,
           sender: payload.senderId,
           text: payload.message
@@ -200,7 +200,7 @@ export default createStore({
     async createPost({ state, commit }, payload) {
       const token = localStorage.getItem('token')
       try {
-        const response = await axios.post(`http://localhost:3000/post/`, payload, {
+        const response = await axios.post(`/post/`, payload, {
           headers: {
             Authorization: `Bearer ${token}`
           }
@@ -216,7 +216,7 @@ export default createStore({
     async getTimeline({ commit }) {
       const token = localStorage.getItem('token')
       try {
-        const response = await axios.get('http://localhost:3000/post/timeline/', {
+        const response = await axios.get('/post/timeline/', {
           headers: {
             Authorization: `Bearer ${token}`
           }
@@ -233,7 +233,7 @@ export default createStore({
 
       const token = localStorage.getItem('token')
       try {
-        const response = await axios.get("http://localhost:3000/post/", {
+        const response = await axios.get("/post/", {
           headers: {
             Authorization: `Bearer ${token}`
           }
@@ -251,7 +251,7 @@ export default createStore({
     async likePost({ commit }, payload) {
       const token = localStorage.getItem('token')
       try {
-        const response = await axios.put(`http://localhost:3000/post/like/${payload}/`, {}, {
+        const response = await axios.put(`/post/like/${payload}/`, {}, {
           headers: {
             Authorization: `Bearer ${token}`
           }
@@ -266,7 +266,7 @@ export default createStore({
     async unlikePost({ commit }, payload) {
       const token = localStorage.getItem('token')
       try {
-        const response = await axios.put(`http://localhost:3000/post/unlike/${payload}/`, {}, {
+        const response = await axios.put(`/post/unlike/${payload}/`, {}, {
           headers: {
             Authorization: `Bearer ${token}`
           }
@@ -276,9 +276,6 @@ export default createStore({
         console.log(error)
       }
     },
-
-
-
 
   },
   modules: {
