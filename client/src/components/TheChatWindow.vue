@@ -1,18 +1,10 @@
 <template>
   <section class="w-full md:w-1/2 md:px-6">
     <!-- // chat window -->
-    <div
-      class="w-full rounded-md shadow-md h-full flex flex-col justify-evenly"
-    >
-      <div
-        class="p-4 flex justify-between border-b items-center border-gray-400"
-      >
+    <div class="w-full rounded-md shadow-md h-full flex flex-col justify-evenly">
+      <div class="p-4 flex justify-between border-b items-center border-gray-400">
         <div class="flex">
-          <img
-            src="https://images.unsplash.com/photo-1558898479-33c0057a5d12?crop=entropy&cs=tinysrgb&fit=crop&fm=jpg&h=200&ixid=MnwxfDB8MXxyYW5kb218MHx8cHJvZmlsZXx8fHx8fDE2NTIyNjU3MTU&ixlib=rb-1.2.1&q=80&utm_campaign=api-credit&utm_medium=referral&utm_source=unsplash_source&w=200"
-            class="w-1/12 rounded-full mr-4"
-            alt=""
-          />
+          <img src="https://source.unsplash.com/random/50x50/?people" class="w-1/12 rounded-full mr-4" alt="" />
           <h2 class="font-semibold text-xl">{{ receiver?.username }}</h2>
         </div>
         <button>
@@ -21,15 +13,9 @@
       </div>
 
       <section class="p-2 flex-row overflow-auto flex-grow" ref="chatWindow">
-        <div
-          :class="{ 'flex w-full justify-end': message.received !== true }"
-          v-for="(message, index) in conversation"
-          :key="index"
-        >
-          <div
-            class="rounded-lg bg-blue-100 w-fit p-1 px-4 my-2"
-            :class="{ 'text-right': message.received !== true }"
-          >
+        <div :class="{ 'flex w-full justify-end': message.received !== true }" v-for="(message, index) in conversation"
+          :key="index">
+          <div class="rounded-lg bg-blue-100 w-fit p-1 px-4 my-2" :class="{ 'text-right': message.received !== true }">
             <p class="text-left">{{ message.data }}</p>
             <p class="text-xs">{{ timeAgo(message.time) }}</p>
           </div>
@@ -38,18 +24,9 @@
       </section>
       <div class="px-4 py-2 border-t border-gray-400">
         <label for="writeSomething" class="flex items-center">
-          <input
-            id="writeSomething"
-            type="text"
-            placeholder="Write Something..."
-            class="w-full focus:outline-none"
-            v-model="message"
-            @keypress="typing"
-          />
-          <button
-            class="bg-blue-400 px-4 py-1 rounded-full text-white"
-            @click="sendMessage"
-          >
+          <input id="writeSomething" type="text" placeholder="Write Something..." class="w-full focus:outline-none"
+            v-model="message" @keypress="typing" />
+          <button class="bg-blue-400 px-4 py-1 rounded-full text-white" @click="sendMessage">
             <i class="fa-solid fa-paper-plane"></i>
           </button>
         </label>
@@ -89,46 +66,44 @@ export default {
         message: this.message,
         time: new Date()
       });
+
       this.conversation.push({
         received: false,
         data: this.message,
         userid: this.user._id,
         time: new Date()
       });
-       this.scrollToBottom()
-
-      // save the message by dispatching
-      // this.$store.dispatch("saveMessages", {
-      //   conversationId:this.currentConversation._id,
-      //   sender:this.user._id,
-      //   text: this.message
-      // }).then(res =>{
-      //   this.scrollToBottom()
-      //   console.log(res)
-      //   this.conversation.push({
-      //   received: false,
-      //   data: res.data.text,
-      //   userid: '',
-      //   time: res.data.createdAt
-      // })
-      // }).catch(err => console.log(err))
+      this.scrollToBottom()
+      this.saveMessage(this.user._id, this.currentConversation._id, this.message)
 
       this.message = "";
+    },
+
+    async saveMessage(senderId, conversationId, message) {
+      try {
+        await this.$store.dispatch("saveMessages", {
+          senderId,
+          conversationId,
+          message
+        })
+      } catch (error) {
+        console.log(error)
+      }
     },
 
     loadConversation() {
       // sperad the messages in the conversation
       this.conversation = this.messages?.filter(
-          (message) => message.conversationId == this.currentConversation._id
-        )[0]
+        (message) => message.conversationId == this.currentConversation._id
+      )[0]
         .messages.map((msg) => {
           return {
-            received: msg.sender == this.user._id,
+            received: msg.sender !== this.user._id,
             data: msg.text,
             userid: msg.sender,
             time: msg.createdAt,
           };
-        });
+        }).sort((a, b) => a.time - b.time)
     },
 
     // scroll to the bottom of the chat window
@@ -138,7 +113,7 @@ export default {
       });
     },
 
-    timeAgo(createAt){
+    timeAgo(createAt) {
       const time = new Date(createAt);
       const now = new Date();
       const diff = (now.getTime() - time.getTime()) / 1000;
@@ -154,13 +129,13 @@ export default {
       if (diff < 604800) {
         return Math.round(diff / 86400) + ' days ago';
       }
-      if(diff < 2592000){
+      if (diff < 2592000) {
         return Math.round(diff / 604800) + ' weeks ago';
       }
-      if(diff < 31536000){
+      if (diff < 31536000) {
         return Math.round(diff / 2592000) + ' months ago';
       }
-      if(diff < 315360000){
+      if (diff < 315360000) {
         return Math.round(diff / 31536000) + ' years ago';
       }
       return time.toDateString();
