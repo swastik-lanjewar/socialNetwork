@@ -15,7 +15,7 @@ router.post("/", (req, res) => {
             text: req.body.text
         })
         newMessage.save().then(message => {
-            res.json(message)
+            res.status(201).json({ message })
         }).catch(err => {
             res.status(500).json(err)
         })
