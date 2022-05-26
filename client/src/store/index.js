@@ -120,19 +120,18 @@ export default createStore({
     },
 
     // action to get all the conversation of the user 
-    getConversations() {
+    async getConversations({commit}) {
       const token = localStorage.getItem('token')
-      return new Promise((resolve, reject) => { 
-        axios.get('http://localhost:3000/conversation/', {
+      try { 
+        const response = await axios.get('http://localhost:3000/conversation/', {
           headers: {
             Authorization: `Bearer ${token}`
           }
-        }).then(response => { 
-          resolve(response)
-        }).catch(error => {
-          reject(error)
         })
-      })
+        commit("SET_CONVERSATIONS", response.data.conversations)
+      } catch(error) {
+        console.error(error)
+      }
     },
 
     // action to create a new conversation
@@ -152,19 +151,31 @@ export default createStore({
     },
 
     //action to get all the messages of a conversation
-    getMessages(state, payload) { 
+    async getMessages({commit}, payload) { 
+      // const token = localStorage.getItem('token')
+      // return new Promise((resolve, reject) => {
+      //   axios.get(`http://localhost:3000/messa/${payload.id}`,{
+      //     headers: {
+      //       Authorization: `Bearer ${token}`
+      //     }
+      //   }).then(response => {
+      //     resolve(response)
+      //   }).catch(error => {
+      //     reject(error)
+      //   })
+      // })
       const token = localStorage.getItem('token')
-      return new Promise((resolve, reject) => { 
-        axios.get(`http://localhost:3000/message/${payload.id}`,{
+      try { 
+        const response = await axios.get(`http://localhost:3000/message/${payload.id}`, {
           headers: {
             Authorization: `Bearer ${token}`
           }
-        }).then(response => { 
-          resolve(response)
-        }).catch(error => {
-          reject(error)
         })
-      })
+        commit("SET_MESSAGES", { conversationId: payload.id, messages: response.data.messages })
+      } catch (error) {
+        console.error(error)
+      }
+
     }, 
   
     saveMessages(state, payload) {

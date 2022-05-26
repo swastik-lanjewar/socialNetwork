@@ -25,14 +25,7 @@ export default {
     ...mapGetters(["user", "conversations", "currentConversation"]),
   },
   created() {
-    this.$store
-      .dispatch("getConversations")
-      .then((res) => {
-        this.$store.commit("SET_CONVERSATIONS", res.data.conversations);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+    this.$store.dispatch("getConversations")  
   },
   components: { TheChatWindow, TheProfileSidebar, TheConversation },
 };

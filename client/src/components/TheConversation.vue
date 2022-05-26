@@ -17,8 +17,8 @@
           <img class="rounded-full  w-10 h-10 object-cover" 
           src="https://source.unsplash.com/random/200x200/?profile" alt="" />
           <div
-            class="absolute -right-3 bottom-5 h-4 w-4 sm:top-2 rounded-full border-4 border-white bg-green-400 sm:invisible md:visible"
-            title="User is online" 
+            class="absolute -right-3 bottom-5 h-4 w-4 sm:top-2 rounded-full border-2 border-white bg-green-400 sm:invisible md:visible"
+            :title="`${receiver(item.participants)?.username} is online`" 
             v-show="onlineConnections.includes(receiver(item.participants)?._id)"
             >
             </div>
@@ -69,12 +69,7 @@ export default {
     },
 
     loadMessages(id) {
-      // fetch the messages of the selected conversation
-      this.$store.dispatch("getMessages", { id }).then(res => {
-        this.$store.commit("SET_MESSAGES", { conversationId: id, messages: res.data })
-      }).catch(err => {
-        console.log(err)
-      })
+      this.$store.dispatch("getMessages", { id })
     }
   }
 };

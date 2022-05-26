@@ -29,7 +29,10 @@ router.get("/:conversationId", (req, res) => {
         if (err) return res.status(401).json({ message: "Unauthorized" })
         
         Message.find({conversationId: req.params.conversationId}).then(messages => {
-            res.status(200).json(messages)
+            res.status(200).json({
+                message: "messages fetched successfully",
+                messages
+            })
         }).catch(err => {
             console.log(err)
             res.status(500).json(err)

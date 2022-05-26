@@ -23,8 +23,8 @@
       <section class="p-2 flex-row overflow-auto flex-grow" ref="chatWindow">
         <div
           :class="{ 'flex w-full justify-end': message.received !== true }"
-          v-for="message in conversation"
-          :key="message.data"
+          v-for="(message, index) in conversation"
+          :key="index"
         >
           <div
             class="rounded-lg bg-blue-100 w-fit p-1 px-4 my-2"
@@ -118,8 +118,7 @@ export default {
 
     loadConversation() {
       // sperad the messages in the conversation
-      this.conversation = this.messages
-        .filter(
+      this.conversation = this.messages?.filter(
           (message) => message.conversationId == this.currentConversation._id
         )[0]
         .messages.map((msg) => {
