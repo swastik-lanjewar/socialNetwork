@@ -43,7 +43,7 @@
           <span class="font-semibold text-gray-800">{{ users?.filter(u => u._id == post.userId)[0].username }}</span>
           {{ post.content }}
         </p>
-        <p class="text-xs text-gray-500">2 hrs ago</p>
+        <p class="text-xs text-gray-500">{{ timeAgo(post.createdAt) }}</p>
       </div>
     </div>
 
@@ -55,12 +55,11 @@
         <div class=" w-full">
           <div class="flex items-center justify-between">
             <h2 class="text-lg font-semibold text-gray-900 -mt-1">{{ users?.filter(u => u._id == post.userId)[0].username }}</h2>
-            <small class="text-sm text-gray-700">22h ago</small>
+            <small class="text-sm text-gray-700">{{ timeAgo(post.createdAt)}}</small>
           </div>
           <p class="text-gray-700">Joined 12 SEP 2012.</p>
           <p class="mt-3 text-gray-700 text-sm">
             {{ post.content }}
-
           </p>
           <div class="mt-4 flex items-center justify-around">
             <button class="flex  text-gray-700 text-sm mr-3" @click="likeHandler(post.likes.includes(user._id))">
@@ -115,6 +114,33 @@ export default {
       } else {
         this.$store.dispatch("likePost", this.post._id);
       }
+    }, 
+    timeAgo(createAt){
+      const time = new Date(createAt);
+      const now = new Date();
+      const diff = (now.getTime() - time.getTime()) / 1000;
+      if (diff < 60) {
+        return 'just now';
+      }
+      if (diff < 3600) {
+        return Math.round(diff / 60) + ' minutes ago';
+      }
+      if (diff < 86400) {
+        return Math.round(diff / 3600) + ' hours ago';
+      }
+      if (diff < 604800) {
+        return Math.round(diff / 86400) + ' days ago';
+      }
+      if(diff < 2592000){
+        return Math.round(diff / 604800) + ' weeks ago';
+      }
+      if(diff < 31536000){
+        return Math.round(diff / 2592000) + ' months ago';
+      }
+      if(diff < 315360000){
+        return Math.round(diff / 31536000) + ' years ago';
+      }
+      return time.toDateString();
     }
   }
 }

@@ -31,7 +31,7 @@
             :class="{ 'text-right': message.received !== true }"
           >
             <p class="text-left">{{ message.data }}</p>
-            <p class="text-xs">{{ message.time }}</p>
+            <p class="text-xs">{{ timeAgo(message.time) }}</p>
           </div>
         </div>
         <p v-show="isTyping" class="text-green-500 font-semibold">Typing...</p>
@@ -87,13 +87,13 @@ export default {
         senderId: this.user._id,
         receiverId: this.receiver._id,
         message: this.message,
-        time: new Date().toLocaleTimeString(),
+        time: new Date()
       });
       this.conversation.push({
         received: false,
         data: this.message,
         userid: this.user._id,
-        time: new Date().toLocaleTimeString(),
+        time: new Date()
       });
        this.scrollToBottom()
 
@@ -137,6 +137,34 @@ export default {
         this.$refs.chatWindow.scrollTop = this.$refs.chatWindow.scrollHeight;
       });
     },
+
+    timeAgo(createAt){
+      const time = new Date(createAt);
+      const now = new Date();
+      const diff = (now.getTime() - time.getTime()) / 1000;
+      if (diff < 60) {
+        return 'just now';
+      }
+      if (diff < 3600) {
+        return Math.round(diff / 60) + ' minutes ago';
+      }
+      if (diff < 86400) {
+        return Math.round(diff / 3600) + ' hours ago';
+      }
+      if (diff < 604800) {
+        return Math.round(diff / 86400) + ' days ago';
+      }
+      if(diff < 2592000){
+        return Math.round(diff / 604800) + ' weeks ago';
+      }
+      if(diff < 31536000){
+        return Math.round(diff / 2592000) + ' months ago';
+      }
+      if(diff < 315360000){
+        return Math.round(diff / 31536000) + ' years ago';
+      }
+      return time.toDateString();
+    }
   },
 
   created() {
