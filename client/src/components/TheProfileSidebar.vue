@@ -3,7 +3,7 @@
     <div class="rounded-md shadow-md p-2 flex justify-start my-2">
       <div class="w-1/6 h-1/6 rounded-full overflow-hidden">
         <img
-          src="https://images.unsplash.com/photo-1558898479-33c0057a5d12?crop=entropy&cs=tinysrgb&fit=crop&fm=jpg&h=200&ixid=MnwxfDB8MXxyYW5kb218MHx8cHJvZmlsZXx8fHx8fDE2NTIyNjU3MTU&ixlib=rb-1.2.1&q=80&utm_campaign=api-credit&utm_medium=referral&utm_source=unsplash_source&w=200"
+          src="https://source.unsplash.com/random/200x200/?avatar"
         />
       </div>
       <div class="ml-5">
@@ -19,27 +19,27 @@
         </div>
         <div class="text-center">
           <h1 class="font-semibold text-gray-800">{{user.connections.length}}</h1>
-          <h1 class="font-semibold text-gray-600">Friends</h1>
+          <h1 class="font-semibold text-gray-600">Connections </h1>
         </div>
       </div>
       <div>
         <h2 class="font-semibold">Bio</h2>
-        <p>
-         {{ user.bio }}
+        <p class="text-gray-600">
+         {{  user?.bio || 'No bio ☺' }}
         </p>
       </div>
       <div></div>
     </div>
     <div class="rounded-md shadow-md p-2 my-2">
       <div class="flex flex-row justify-between">
-        <button class="p-1 px-2 border rounded-md text-gray-700 border-black">
+        <button class="px-1 border rounded text-gray-700 border-black">
           Edit Profile
         </button>
-        <button class="p-1 px-2 border rounded-md text-gray-700 border-black">
+        <button class="px-1 border rounded text-gray-700 border-black">
           Contact
         </button>
-        <button class="p-1 px-2 border rounded-md text-gray-700 border-black">
-          Setting
+        <button class="px-1 border rounded text-gray-700 border-black">
+          <router-link to="/settings">Settings</router-link>
         </button>
       </div>
       <div></div>

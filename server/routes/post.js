@@ -1,23 +1,20 @@
 const router = require("express").Router()
-const post = require("../models/post")
+const Post = require("../models/post")
+const User = require("../models/user")
 const jwt = require("jsonwebtoken")
 //ROUTE IS /post/
 // Create a new Post
 router.post("/", (req, res) => {
     // check if the user has valid token
     const token = req.headers.authorization.split(" ")[1]
-    jwt.verify(token, process.env.SECRET_KEY, (err, decoded) => { 
+    jwt.verify(token, process.env.SECRET_KEY, (err, decoded) => {
         if (err) {
             return res.status(401).json({
                 message: "Unauthorized"
             })
         }
         // if the user has valid token, create a new post
-        const newPost = new post({
-            title: req.body.title,
-            content: req.body.content,
-            userId: decoded.id
-        })
+        const newPost = new Post(req.body)
         newPost.save().then(post => {
             res.status(200).json({
                 message: "Post created",
@@ -29,19 +26,19 @@ router.post("/", (req, res) => {
             })
         })
     })
-   
-}) 
+
+})
 // update the post
-router.put("/:id", (req, res) => { 
+router.put("/:id", (req, res) => {
     // check if the user has valid token
     const token = req.headers.authorization.split(" ")[1]
-    jwt.verify(token, process.env.SECRET_KEY, (err, decoded) => { 
+    jwt.verify(token, process.env.SECRET_KEY, (err, decoded) => {
         if (err) {
             return res.status(401).json({
                 message: "Invalid token"
             })
         } else {
-            post.findByIdAndUpdate(req.params.id, {
+            Post.findByIdAndUpdate(req.params.id, {
                 $set: {
                     title: req.body.title,
                     content: req.body.content
@@ -57,20 +54,20 @@ router.put("/:id", (req, res) => {
             })
         }
     })
-   
+
 })
 
 // delete the post
 router.delete("/:id", (req, res) => {
     // check if the user has valid token
     const token = req.headers.authorization.split(" ")[1]
-    jwt.verify(token, process.env.SECRET_KEY, (err, decoded) => { 
+    jwt.verify(token, process.env.SECRET_KEY, (err, decoded) => {
         if (err) {
             return res.status(401).json({
                 message: "Invalid token"
             })
         } else {
-            post.findByIdAndDelete(req.params.id).then(() => {
+            Post.findByIdAndDelete(req.params.id).then(() => {
                 res.json({
                     message: "Post deleted"
                 })
@@ -81,27 +78,30 @@ router.delete("/:id", (req, res) => {
             })
         }
     })
-   
+
 })
 
 // like the post
-router.put("/like/:id", (req, res) => { 
+router.put("/like/:id", (req, res) => {
     // check if the user has valid token
     const token = req.headers.authorization.split(" ")[1]
-    jwt.verify(token, process.env.SECRET_KEY, (err, decoded) => { 
+    jwt.verify(token, process.env.SECRET_KEY, (err, decoded) => {
         if (err) {
             return res.status(401).json({
                 message: "Invalid token"
             })
         } else {
-            post.findByIdAndUpdate(req.params.id, {
+            Post.findByIdAndUpdate(req.params.id, {
                 $push: {
                     likes: decoded.id
                 }
             }, {
                 new: true
             }).then(post => {
-                res.json(post)
+                res.status(200).json({
+                    message: "Post liked",
+                    post
+                })
             }).catch(err => {
                 res.json({
                     message: err
@@ -109,27 +109,30 @@ router.put("/like/:id", (req, res) => {
             })
         }
     })
-   
+
 })
 
 // unlike the post
-router.put("/unlike/:id", (req, res) => { 
+router.put("/unlike/:id", (req, res) => {
     // check if the user has valid token
     const token = req.headers.authorization.split(" ")[1]
-    jwt.verify(token, process.env.SECRET_KEY, (err, decoded) => { 
+    jwt.verify(token, process.env.SECRET_KEY, (err, decoded) => {
         if (err) {
             return res.status(401).json({
                 message: "Invalid token"
             })
         } else {
-            post.findByIdAndUpdate(req.params.id, {
+            Post.findByIdAndUpdate(req.params.id, {
                 $pull: {
                     likes: decoded.id
                 }
             }, {
                 new: true
             }).then(post => {
-                res.json(post)
+                res.status(200).json({
+                    message: "Post unliked",
+                    post
+                })
             }).catch(err => {
                 res.json({
                     message: err
@@ -140,31 +143,63 @@ router.put("/unlike/:id", (req, res) => {
 })
 
 // get a users all posts
-router.get("/", (req, res) => { 
+router.get("/", async (req, res) => {
     // check if the user has valid token
     const token = req.headers.authorization.split(" ")[1]
-    jwt.verify(token, process.env.SECRET_KEY, (err, decoded) => { 
-        if (err) { 
+    jwt.verify(token, process.env.SECRET_KEY, async (err, decoded) => {
+        if (err) {
             return res.status(401).json({
                 message: "Invalid token"
             })
-        } else {
-            post.find({
-                userId: decoded.id
-            }).then(posts => { 
-                res.json(posts)
-            }).catch(err => { 
-                res.json({
-                    message: err
-                })
+        } 
+        try { 
+            const posts = await Post.find({userId: decoded.id})
+            res.status(200).json({
+                message: "Posts fetched",
+                posts
             })
+        } catch (errror ) {
+            res.status(500).json({
+                message: "Error fetching posts"
+            })            
         }
+        
     })
-   
+
 })
 
 // get users timeline posts
 router.get("/timeline", async (req, res) => {
+    // check if the user has valid token
+    const token = req.headers.authorization.split(" ")[1]
+    jwt.verify(token, process.env.SECRET_KEY, async (err, decoded) => {
+        if (err) {
+            return res.status(401).json({
+                message: "Invalid token"
+            })
+        }
+
+        try {
+            // get users all the post and their connections all the post 
+            const user = await User.findById(decoded.id)
+            const posts = await Post.find({
+                userId: {
+                    $in: user.connections
+                }
+            })
+            res.status(200).json({
+                message: "Posts fetched",
+                timeline: posts
+            })
+
+        } catch (error) {
+            res.json({
+                message: error
+            })
+        }
+
+
+    })
 })
 
 module.exports = router

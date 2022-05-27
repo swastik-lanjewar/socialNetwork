@@ -35,6 +35,14 @@ const routes = [
     }
   },
   {
+    path: '/settings',
+    name: 'SettingsView',
+    component: () => import('../views/SettingsView.vue'),
+    meta: {
+      requiresAuth: true
+    }
+  },
+  {
     path: '/people',
     name: 'PeopleView',
     component: () => import('../views/PeopleView.vue'),

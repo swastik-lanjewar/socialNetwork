@@ -1,22 +1,22 @@
 POST http://localhost:3000/create-account
 Content-Type: application/json
+Authorization:  
 
 {
-    "user":{
-        "username":"aniket01",
-        "email":"singhdharmvir81@gmail.com",
-        "password":"pc"
-    }
+    "conversationId":"",
+    "sender":"",
+    "text":""
 }
 
 #####
 
-GET http://localhost:3000/user/62808c9414b0ac323d364317
+GET http://localhost:3000/post/timeline/
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYyODUwOWVkNDQ4MDUwYWY3YjU1YzcyNCIsIm5hbWUiOiJUYW5pc2hhIHNpbmdoIiwidXNlcm5hbWUiOiJGYXNoaW9uRGVzaWduZXIiLCJlbWFpbCI6InRhbmlzaGFAZ21haWwuY29tIiwiaWF0IjoxNjUzNDY2NTI4LCJleHAiOjE2NTM0NzAxMjh9.rP4i9y4pGgsqd-zVyarLBbOJS2ZFasadNf9sqJeYeAQ
 
 
 #####
 
-PUT http://localhost:3000/user/aniket01
-#####
+PUT http://localhost:3000/post/like/628f0410042b1d367850ed06/
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYyODUwOWVkNDQ4MDUwYWY3YjU1YzcyNCIsIm5hbWUiOiJUYW5pc2hhIHNpbmdoIiwidXNlcm5hbWUiOiJGYXNoaW9uRGVzaWduZXIiLCJlbWFpbCI6InRhbmlzaGFAZ21haWwuY29tIiwiaWF0IjoxNjUzNTQ3ODgxLCJleHAiOjE2NTM1NTE0ODF9.H8lRvEveIpMtyHevchsad4L6uwko5X-4JDsbHYrRgGc
 
-DELETE http://localhost:3000/user/aniket01
+#####

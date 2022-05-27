@@ -1,30 +1,25 @@
 <template>
-  <main class="flex justify-between p-3">
-    <TheProfileSidebar
-      :username="user.username"
-      :name="user.name"
-      :bio="user.bio"
-    />
+  <main class="flex justify-between md:p-3">
+    <TheProfileSidebar />
 
-    <section
-      class="
+    <section class="
         w-full
         md:w-1/2
         flex flex-col
         items-center
-        px-6
+        px-1
+        md:px-6
         min-h-scrollPost
         max-h-scrollPost
         overflow-y-scroll
-      "
-    >
+      ">
       <TheNewPost />
-
-      <div class="md:grid grid-cols-2 gap-4">
-        <ThePost />
-        <ThePost />
-        <ThePost />
-      </div>
+      <ThePost
+      v-for="(post, index) in timelinePosts"
+       :key="index"
+       :post="post" 
+       />
+  
     </section>
 
     <aside class="w-1/4 mr-7 hidden md:block">
@@ -44,11 +39,8 @@ import ThePeopelYouMayKnow from "../components/ThePeopelYouMayKnow.vue";
 
 export default {
   name: "DashboardView",
-  data() {
-    return {};
-  },
   computed: {
-    ...mapGetters(["user"]),
+    ...mapGetters(["user", "posts", "timelinePosts"]),
   },
   components: {
     TheProfileSidebar,
@@ -56,6 +48,24 @@ export default {
     ThePost,
     TheDiscussions,
     ThePeopelYouMayKnow,
+  },
+  async created() {
+    try {
+      this.$store.dispatch("getTimeline")
+      this.$store.dispatch("getPosts")
+      this.$store.dispatch("getAllUsers")
+
+      const allUsers = this.$store.state.users
+      const connections = allUsers?.filter((user) => user.connections.includes(this.user._id));
+      this.$store.commit("SET_CONNECTION", connections);
+
+    } catch (error) {
+      console.error(error)
+      if(error.response?.status === 401){
+        localStorage.removeItem("token");
+        this.$router.push("/login");
+      }
+    }
   },
 };
 </script>

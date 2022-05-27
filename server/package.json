@@ -4,8 +4,8 @@
   "description": "Server for the social network app",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "nodemon index.js"
+    "start": "index.js",
+    "devStart": "nodemon index.js"
   },
   "author": "",
   "license": "ISC",

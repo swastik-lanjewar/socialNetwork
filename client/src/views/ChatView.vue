@@ -1,20 +1,16 @@
 <template>
-  <main class="flex justify-between p-3 min-h-90 max-h-90">
-   <TheProfileSidebar
-      :username="user.username"
-      :name="user.name"
-      :bio="user.bio"
-    />
+  <main class="flex justify-between md:p-3 min-h-90 max-h-90">
+    <TheProfileSidebar />
 
     <TheChatWindow v-if="currentConversation" />
+
     <div class="text-4xl font-bold text-gray-300 capitalize" v-else>
       Please select a conversation
     </div>
 
     <aside class="w-1/4 mr-7 hidden md:block">
-      <TheConversation :conversations="conversations"/>
+      <TheConversation :conversations="conversations" />
     </aside>
-
   </main>
 </template>
 
@@ -25,15 +21,11 @@ import { mapGetters } from "vuex";
 import TheConversation from "@/components/TheConversation.vue";
 export default {
   name: "ChatView",
-  computed:{
-    ...mapGetters(['user', 'conversations', 'currentConversation']),
+  computed: {
+    ...mapGetters(["user", "conversations", "currentConversation"]),
   },
-  created(){
-    this.$store.dispatch('getConversations').then(res => {
-      this.$store.commit("SET_CONVERSATIONS", res.data.conversations);
-    }).catch(err => {
-      console.log(err)
-    })
+  created() {
+    this.$store.dispatch("getConversations")  
   },
   components: { TheChatWindow, TheProfileSidebar, TheConversation },
 };

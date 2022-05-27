@@ -2,10 +2,7 @@
   <div class="rounded-md shadow-md p-2 overflow-y-auto">
     <h3 class="font-semibold m-2">Conversations</h3>
     <ul>
-      <li
-        v-for="(item, index) in conversations"
-        :key="index"
-        class="
+      <li v-for="(item, index) in conversations" :key="index" class="
           p-2
           flex
           justify-start
@@ -14,16 +11,20 @@
           cursor-pointer
           rounded-md
           border-b border-gray-100
-        "
-        @click="selectConversation(item, item._id)"
-      >
-        <img
-          class="w-1/6 rounded-full mr-4"
-          src="https://source.unsplash.com/random/200x200/?profile"
-          alt=""
-        />
-        <div class="w-full">
-          <button>{{ receiver(item.participants) }}</button>
+        " :class="{ 'bg-sky-400 text-white': item._id === currentConversation?._id }"
+        @click="selectConversation(item, item._id)">
+        <div class="relative w-14 ">
+          <img class="rounded-full  w-10 h-10 object-cover" 
+          src="https://source.unsplash.com/random/200x200/?profile" alt="" />
+          <div
+            class="absolute -right-3 bottom-5 h-4 w-4 sm:top-2 rounded-full border-2 border-white bg-green-400 sm:invisible md:visible"
+            :title="`${receiver(item.participants)?.username} is online`" 
+            v-show="onlineConnections.includes(receiver(item.participants)?._id)"
+            >
+            </div>
+        </div>
+        <div class="w-full ml-4">
+          <button>{{ receiver(item.participants)?.username }}</button>
           <div class="w-full flex justify-between items-center">
             <p class="text-sm text-gray-700">Hi!</p>
             <span class="text-xs text-gray-500">10:31 AM</span>
@@ -41,26 +42,35 @@ export default {
   props: {
     conversations: Object,
   },
-  computed:{
-      ...mapGetters(['user', 'connections']),
+  computed: {
+    ...mapGetters(['user', 'connections', 'currentConversation', 'onlineUsers']),
+    onlineConnections(){
+      const online = []
+       this.onlineUsers.forEach(user => {
+        if(this.user.connections.includes(user.userId)) online.push(user.userId)
+      })
+      return online
+    }
   },
-  methods:{
-      receiver(participants){
-        const receiverId = participants.filter(participant => participant !== this.user._id);
-        return this.connections.find(connection => connection._id === receiverId[0]).username;
-      },
-      selectConversation(conversation, id){
-        console.log(conversation,"is selected by the user");
-        this.$store.commit("SET_CURRENT_CONVERSATION", conversation);
+  methods: {
 
-        // fetch the messages of the selected conversation
-        this.$store.dispatch("getMessages", {id}).then(res=>{
-          console.log(res);
-        }).catch(err =>{
-          console.log(err)
-        })
+    receiver(participants) {
+      const receiverId = participants.filter(participant => participant !== this.user._id);
+      return this.connections.find(connection => connection._id === receiverId[0])
+    },
 
-      },
+    selectConversation(conversation, id) {
+      this.$store.commit("SET_CURRENT_CONVERSATION", conversation);
+
+      // Check if the messages are already loaded in the store of this current conversation
+      this.$store.state.messages.filter(message => message.conversationId == id).length == 0 ?
+        this.loadMessages(id) :
+        console.log("messages already loaded");
+    },
+
+    loadMessages(id) {
+      this.$store.dispatch("getMessages", { id })
+    }
   }
 };
 </script>

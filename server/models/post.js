@@ -5,6 +5,10 @@ const postSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
+    type: {
+        type: String,
+        required: true,
+    },
     content: {
         type: String,
         required: true,
@@ -18,6 +22,9 @@ const postSchema = new mongoose.Schema({
         type: [mongoose.Schema.Types.ObjectId],
         ref: "User",
         default: [],
+    },
+    location: {
+        type: String,
     },
 }, {timestamps:true})
 
