@@ -1,5 +1,5 @@
 import { createStore } from 'vuex'
-import axios from '@/http-common'
+import axios from '@/utils/http-common'
 import createPersistedState from "vuex-persistedstate";
 
 export default createStore({
@@ -277,6 +277,36 @@ export default createStore({
       }
     },
 
+    // action to delete a user 
+    async deleteUser({ commit }) {
+      const token = localStorage.getItem('token')
+      try {
+        await axios.delete('/user/', {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        })
+        localStorage.removeItem('token')
+        commit('SET_USER', null)
+      } catch (error) {
+        console.error(error.message)
+      }
+    },
+
+    // action to update the user
+    async updateUser({ commit }, payload) { 
+      const token = localStorage.getItem('token')
+      try {
+        const response = await axios.put("/user/", payload, {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        })
+        commit("SET_USER", response.data.user)
+      } catch (error) {
+        console.error(error.message)
+      }
+    }
     
 
   },

@@ -656,6 +656,7 @@ module.exports = {
       max: 'max-content',
       fit: 'fit-content',
       90: '90vh',
+      95:'95vh',
       scrollPost:'89vh'
     },
     minWidth: {
