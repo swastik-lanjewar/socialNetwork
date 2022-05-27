@@ -14,7 +14,7 @@
     <div class="rounded-md shadow-md p-4 my-4">
       <div class="flex justify-evenly">
         <div class="text-center">
-          <h1 class="font-semibold text-gray-800">1</h1>
+          <h1 class="font-semibold text-gray-800">{{ posts.length }}</h1>
           <h1 class="font-semibold text-gray-600">Posts</h1>
         </div>
         <div class="text-center">
@@ -53,7 +53,7 @@ export default {
   name: "TheProfileSidebar",
  
   computed:{
-    ...mapGetters(['user'])
+    ...mapGetters(['user', 'posts'])
   },
 };
 </script>

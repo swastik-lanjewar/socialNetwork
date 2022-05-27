@@ -10,10 +10,11 @@ const postRoutes = require('./routes/post')
 const conversationRoutes = require('./routes/conversation')
 const messageRoutes = require('./routes/message')
 
-app.use(cors({
-    origin: true,
-    credentials: true
-}))
+// app.use(cors({
+//     origin: true,
+//     credentials: true
+// }))
+app.use(cors())
 app.use(express.json())
 app.use(express.urlencoded({
     extended: true
