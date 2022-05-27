@@ -1,16 +1,23 @@
 <template>
   <section class="w-full md:w-1/2 md:px-6">
     <!-- // chat window -->
-    <div class="w-full rounded-md shadow-md h-full flex flex-col justify-evenly">
-      <div class="p-4 flex justify-between border-b items-center border-gray-400">
+    <div
+      class="w-full rounded-md shadow-md h-full flex flex-col justify-evenly"
+    >
+      <div
+        class="p-4 flex justify-between border-b items-center border-gray-400"
+      >
         <div class="flex">
+
           <img src="https://source.unsplash.com/random/50x50/?people" class="w-1/12 rounded-full mr-4" alt="" />
           <h2 class="font-semibold text-xl">{{ receiver?.username }}</h2>
+
         </div>
         <button>
           <i class="fab fa-solid fa-ellipsis-vertical"></i>
         </button>
       </div>
+
 
       <section class="p-2 flex-row overflow-auto flex-grow" ref="chatWindow">
         <div :class="{ 'flex w-full justify-end': message.received !== true }" v-for="(message, index) in conversation"
