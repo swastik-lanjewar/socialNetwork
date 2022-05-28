@@ -51,9 +51,9 @@ export default {
   },
   async created() {
     try {
-      this.$store.dispatch("getTimeline")
-      this.$store.dispatch("getPosts")
-      this.$store.dispatch("getAllUsers")
+      await this.$store.dispatch("getAllUsers")
+      await this.$store.dispatch("getTimeline")
+      await this.$store.dispatch("getPosts")
 
       const allUsers = this.$store.state.users
       const connections = allUsers?.filter((user) => user.connections.includes(this.user._id));

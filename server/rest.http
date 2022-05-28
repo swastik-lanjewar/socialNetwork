@@ -1,11 +1,13 @@
-POST http://localhost:3000/create-account
+PUT http://localhost:3000/user/
 Content-Type: application/json
-Authorization:  
+Authorization:  Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYyODUwOWVkNDQ4MDUwYWY3YjU1YzcyNCIsIm5hbWUiOiJUYW5pc2hhIHNpbmdoIiwidXNlcm5hbWUiOiJGYXNoaW9uRGVzaWduZXIiLCJlbWFpbCI6InRhbmlzaGFAZ21haWwuY29tIiwiaWF0IjoxNjUzNzI3NDM3LCJleHAiOjE2NTM3MzEwMzd9.PbazLbEksVLla38bzyEPs4Kx7u2CxKKp4POyx37KOBk
 
 {
-    "conversationId":"",
-    "sender":"",
-    "text":""
+    "passsword":"aniketsingh",
+    "username":"newusername",
+    "name":"newname",
+    "bio":"This is my new bio",
+    "email":"neweamil@gmail.com"
 }
 
 #####

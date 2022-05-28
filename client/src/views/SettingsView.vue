@@ -40,7 +40,15 @@
           </div>
         </form>
 
-        <form @click.prevent="updateAccount" class="flex flex-col mb-2">
+        <div class="py-2 pb-4">
+          <label class="text-gray-700 my-2">
+            <span class="font-semibold">Profile Picture</span>
+            <input type="file" class="w-full border border-gray-300 rounded-md px-3 py-2" accept="image/png, image/jpeg"
+              @change="uploadProfilePciture" />
+          </label>
+        </div>
+
+        <form @submit.prevent="updateAccount" class="flex flex-col mb-2">
           <h4 class="text-2xl font-light mt-3">Accounts</h4>
           <div class="flex flex-col">
             <label class="text-gray-700 my-2">
@@ -94,7 +102,6 @@ import ThePeopelYouMayKnow from "@/components/ThePeopelYouMayKnow.vue";
 import TheAlertSnackbar from "@/components/utils/TheAlertSnackbar.vue";
 import TheDiscussions from "@/components/TheDiscussions.vue";
 import TheSpinner from "@/components/utils/TheSpinner.vue";
-import validateInput from "@/utils/validateInput.js";
 export default {
   name: "SettingsView",
   components: { TheProfileSidebar, ThePeopelYouMayKnow, TheDiscussions, TheAlertSnackbar, TheSpinner },
@@ -106,6 +113,8 @@ export default {
       bio: "",
       generalUpdating: false,
 
+      uploadingProfilePicture: false,
+
       email: "",
       password: "",
       Cpassword: "",
@@ -116,70 +125,77 @@ export default {
   },
   methods: {
     async updateGeneral() {
-      try{
-        // if only the username is changed then we can just update the username
-        if(this.username !== this.user.username){
-          this.generalUpdating = true;
-          if(validateInput(this.username, "username")){
-            // await this.$store.dispatch("updateUser", {username: this.username});
-            this.generalUpdating = false;
-            this.$refs.alertSnackbar.show("Username updated successfully", "success");
-          }
-        }
-        // // if the name is changed then we need to update the name and the username
-        // else if(this.name !== this.user.name){
-        //   this.generalUpdating = true;
-        //   if(validateInput(this.name, "name")){
-        //     // await this.$store.dispatch("updateUser", {name: this.name});
-        //     this.generalUpdating = false;
-        //     this.$refs.alertSnackbar.show("Name updated successfully", "success");
-        //   }
-        // }
-        // // if the bio is changed then we need to update the bio
-        // else if(this.bio !== this.user.bio){
-        //   this.generalUpdating = true;
-        //   if(validateInput(this.bio, "bio")){
-        //     // await this.$store.dispatch("updateUser", {bio: this.bio});
-        //     this.generalUpdating = false;
-        //     this.$refs.alertSnackbar.show("Bio updated successfully", "success");
-        //   }
-        // }
-      }catch(error){
+      try {
+        this.generalUpdating = true
+        await this.$store.dispatch("updateUser", {
+          username: this.username || this.user.username,
+          name: this.name || this.user.name,
+          bio: this.bio || this.user.bio
+        })
+
+        this.$refs.alertSnackbar.show(
+          "Successfully updated your profile",
+          "success"
+        );
+
+        this.generalUpdating = false
+        // clear the form
+        this.username = ""
+        this.name = ""
+        this.bio = ""
+
+      } catch (error) {
         console.log(error)
+        console.error(error)
         this.generalUpdating = false;
+        this.$refs.alertSnackbar.show(
+          "Failed to update your profile",
+          "error"
+        );
+      }
+    },
+    async uploadProfilePciture(event) {
+      try {
+        this.uploadingProfilePicture = true;
+        const file = event.target.files[0];
+        const formData = new FormData();
+        formData.append("image", file);
+        // await this.$store.dispatch("uploadProfilePicture", formData);
+        this.uploadingProfilePicture = false;
+      } catch (error) {
+        this.uploadingProfilePicture = false;
         this.$refs.alertSnackbar.show(
           error.message,
           "error"
         );
       }
-
     },
     async updateAccount() {
       try {
-        // if the email is changed then we need to update the email
-        if(this.email !== this.user.email){
-          this.accountUpdating = true;
-          if(validateInput(this.email, "email")){
-            await this.$store.dispatch("updateUser", {email: this.email});
-            this.accountUpdating = false;
-            this.$refs.alertSnackbar.show("Email updated successfully");
-          }
-        }
-        // if the password is changed then we need to update the password
-        else if(this.password !== ""){
-          this.accountUpdating = true;
-          if(validateInput(this.password, "password")){
-            await this.$store.dispatch("updateUser", {password: this.password});
-            this.accountUpdating = false;
-            this.$refs.alertSnackbar.show("Password updated successfully");
-          }
-        }
+
+        this.accountUpdating = true;
+        await this.$store.dispatch("updateUser", {
+          email: this.email || this.user.email,
+          password: this.password || this.user.password,
+        })
+
+        this.$refs.alertSnackbar.show(
+          "Successfully updated your account",
+          "success"
+        );
+
+        this.accountUpdating = false;
+        // clear the form
+        this.email = ""
+        this.password = ""
+        this.Cpassword = ""
+
       } catch (error) {
-        console.log(error)
-        this.$refs.alertSnackbar.show({
-          message: error.message,
-          type: "error"
-        });
+        this.accountUpdating = false;
+        this.$refs.alertSnackbar.show(
+          "error",
+          "Failed to update your account",
+        );
       }
     },
     async deleteMe() {
@@ -188,18 +204,21 @@ export default {
         await this.$store.dispatch("deleteUser");
         this.deletingAccount = false;
         this.$refs.alertSnackbar.show("Account deleted successfully");
+        this.$router.push("/");
       } catch (error) {
         console.log(error)
-        this.$refs.alertSnackbar.show({
-          message: error.message,
-          type: "error"
-        });
+        this.deletingAccount = false;
+        this.$refs.alertSnackbar.show(
+          "error", 
+          "Failed to delete your account"
+        );
       }
     },
+
   },
   computed: {
     ...mapGetters(['user'])
-  }
+  },
 };
 </script>
 

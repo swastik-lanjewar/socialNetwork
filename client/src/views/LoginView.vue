@@ -42,24 +42,21 @@ export default {
     };
   },
   methods: {
-    async login() {
-      try {
-        this.loading = true;
-        await this.$store.dispatch("login", {
-          email: this.email,
-          password: this.password,
-        })
+    login() {
+
+      this.loading = true;
+      this.$store.dispatch("login", {
+        email: this.email,
+        password: this.password,
+      }).then(() => {
         this.clearInputs()
         this.loading = false;
         this.$router.push("/");
-      } catch (error) {
+      }).catch((error) => {
         this.loading = false;
         this.clearInputs()
-        this.$refs.alertSnackbar.show(
-          "error",
-          error.response.data.message
-        );
-      }
+        this.$refs.alertSnackbar.show("error", error.response.data.message);
+      });
     },
     clearInputs() {
       this.email = '';

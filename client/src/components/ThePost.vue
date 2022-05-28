@@ -56,7 +56,7 @@
             <h2 class="text-lg font-semibold text-gray-900 -mt-1">{{ users?.filter(u => u._id == post.userId)[0].username }}</h2>
             <small class="text-sm text-gray-700">{{ timeAgo(post.createdAt)}}</small>
           </div>
-          <p class="text-gray-700">Joined 12 SEP 2012.</p>
+          <p class="text-gray-700">{{ user.name }}</p>
           <p class="mt-3 text-gray-700 text-sm">
             {{ post.content }}
           </p>

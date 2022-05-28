@@ -85,15 +85,18 @@ export default createStore({
     },
 
     // action to login the user
-    async login({ commit }, payload) {
-      try {
-        const response = await axios.post('auth/login/', payload)
-        commit('SET_USER', response.data.user)
-        localStorage.setItem('token', response.data.token)
-        return response
-      } catch (error) {
-        return error
-      }
+    login({ commit }, payload) {
+      return new Promise((resolve, reject) => { 
+        axios.post('/auth/login/', payload)
+          .then(response => {
+            localStorage.setItem('token', response.data.token)
+            commit('SET_USER', response.data.user)
+            resolve(response)
+          })
+          .catch(error => {
+            reject(error)
+          })
+      })
     },
 
     // action to get all the users
@@ -222,7 +225,6 @@ export default createStore({
           }
         })
         commit("SET_TIMELINE_POSTS", response.data.timeline)
-
       } catch (error) {
         console.error(error.messages)
       }
@@ -294,17 +296,19 @@ export default createStore({
     },
 
     // action to update the user
-    async updateUser({ commit }, payload) { 
+    async updateUser({  commit }, payload) { 
       const token = localStorage.getItem('token')
       try {
-        const response = await axios.put("/user/", payload, {
+        console.log(payload)
+        const response = await axios.put(`/user/`, payload, {
           headers: {
             Authorization: `Bearer ${token}`
           }
         })
         commit("SET_USER", response.data.user)
+        
       } catch (error) {
-        console.error(error.message)
+        console.error(error)
       }
     }
     

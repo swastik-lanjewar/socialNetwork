@@ -38,8 +38,8 @@
         <button class="px-1 border rounded text-gray-700 border-black">
           Contact
         </button>
-        <button class="px-1 border rounded text-gray-700 border-black">
-          <router-link to="/settings">Settings</router-link>
+        <button class="px-1 border rounded text-gray-700 border-black" @click="this.$router.push('/settings')">
+          Settings
         </button>
       </div>
       <div></div>
