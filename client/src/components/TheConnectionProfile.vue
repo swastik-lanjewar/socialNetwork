@@ -15,14 +15,14 @@
     <div class="flex flex-col items-center">
       <img
         class="mb-3 w-24 h-24 rounded-full shadow-lg"
-        src="https://source.unsplash.com/random/300x300/?profile"
+        :src="user?.profilePicture || 'https://source.unsplash.com/random/300x300/?profile'"
         alt="Bonnie image"
       />
       <h5 class="mb-1 text-xl font-medium text-gray-900 dark:text-white">
-        {{ user.username }}
+        {{ user?.username }}
       </h5>
       <span class="text-sm text-gray-500 dark:text-gray-400">{{
-        user.name
+        user?.name
       }}</span>
       <div class="flex mt-4 space-x-3 lg:mt-6 items-center">
         <span class="font-semibold"

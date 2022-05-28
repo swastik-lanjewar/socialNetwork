@@ -11,11 +11,14 @@ const conversationRoutes = require('./routes/conversation')
 const messageRoutes = require('./routes/message')
 const profilePictureRoute = require('./routes/profilePicture')
 
-// app.use(cors({
-//     origin: true,
-//     credentials: true
-// }))
-app.use(cors())
+// uncommnet this if you want to upload to server
+app.use(cors({
+    origin: true,
+    credentials: true
+}))
+
+// uncomment if you want to run in localhost
+// app.use(cors()) 
 app.use(express.json())
 app.use(express.urlencoded({
     extended: true

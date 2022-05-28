@@ -59,6 +59,7 @@
         </form>
 
         <div class="flex items-center py-2 pb-4">
+          <img class=" w-1/4 rounded-md m-2 border" :src="user?.profilePicture || 'https://source.unsplash.com/random/200x200/?avatar'" alt="profile picture">
           <label class="text-gray-700 my-2">
             <span class="font-semibold">Profile Picture</span>
             <input
@@ -77,11 +78,11 @@
               mt-7
               rounded-md
               my-2
-              disabled:opacity-5
+              disabled:opacity-50
               text-white
               font-semibold
             "
-            :disabled="profilePicture"
+            :disabled="!profilePicture"
             @click="uploadProfilePicture"
           >
             <span v-if="!uploadingProfilePicture"> Save </span>
@@ -226,7 +227,7 @@ export default {
         console.log(error);
         console.error(error);
         this.generalUpdating = false;
-        this.$refs.alertSnackbar.show("Failed to update your profile", "error");
+        this.$refs.alertSnackbar.show("error", "Failed to update your profile");
       }
     },
     async profilePictureSelected(event) {
@@ -235,6 +236,11 @@ export default {
     async uploadProfilePicture() {
       try {
         this.uploadingProfilePicture = true;
+
+        if (this.user.profilePicture) {
+          await this.$store.dispatch("deleteProfilePicture", this.user.profilePicture);
+        }
+
         let formData = new FormData();
         formData.append("profilePicture", this.profilePicture);
         await this.$store.dispatch("uploadProfilePicture", formData);
@@ -242,8 +248,11 @@ export default {
           "Successfully updated your profile picture",
           "success"
         );
+        this.profilePicture = null;
         this.uploadingProfilePicture = false;
+
       } catch (error) {
+        this.profilePicture = null;
         this.uploadingProfilePicture = false;
         this.$refs.alertSnackbar.show(error.message, "error");
       }

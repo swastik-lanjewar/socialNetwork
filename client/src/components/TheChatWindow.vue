@@ -9,7 +9,7 @@
       >
         <div class="flex">
 
-          <img src="https://source.unsplash.com/random/50x50/?people" class="w-1/12 rounded-full mr-4" alt="" />
+          <img :src="receiver?.profilePicture || 'https://source.unsplash.com/random/50x50/?people'" class="w-1/12 rounded-full mr-4" alt="" />
           <h2 class="font-semibold text-xl">{{ receiver?.username }}</h2>
 
         </div>

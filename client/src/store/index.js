@@ -322,7 +322,6 @@ export default createStore({
     async uploadProfilePicture({ commit }, payload) { 
       const token = localStorage.getItem('token')
       try {
-        console.log(payload)
         const response = await axios.post(`/profile-picture/upload`, payload, {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -334,8 +333,22 @@ export default createStore({
         console.error(error)
       }
     },
-    
 
+    //action to delete a profile picture
+    async deleteProfilePicture({ commit }, payload) { 
+      const token = localStorage.getItem('token')
+      try {
+        const response = await axios.delete(`${payload}`, {}, {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        })
+        commit("SET_USER", response.data.user)
+      } catch (error) {
+        console.error(error)
+      }
+    },
+    
   },
   modules: {
   },

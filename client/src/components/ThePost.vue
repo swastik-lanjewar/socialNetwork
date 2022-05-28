@@ -50,13 +50,13 @@
     <!-- Textual Posts are rendered here -->
     <div class="flex">
         <img class="w-12 h-12 rounded-full object-cover mr-4 shadow"
-          src="https://source.unsplash.com/random/200x200/?avatar" alt="avatar" />
+          :src="users?.filter(u => u._id == post.userId)[0].profilePicture || 'https://source.unsplash.com/random/200x200/?avatar'" alt="avatar" />
         <div class=" w-full">
           <div class="flex items-center justify-between">
             <h2 class="text-lg font-semibold text-gray-900 -mt-1">{{ users?.filter(u => u._id == post.userId)[0].username }}</h2>
             <small class="text-sm text-gray-700">{{ timeAgo(post.createdAt)}}</small>
           </div>
-          <p class="text-gray-700">{{ user.name }}</p>
+          <p class="text-gray-700">{{ users?.filter(u => u._id == post.userId)[0].name }}</p>
           <p class="mt-3 text-gray-700 text-sm">
             {{ post.content }}
           </p>
@@ -68,7 +68,7 @@
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                   d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
               </svg>
-              <span>{{ post.likes.length }}</span>
+              <span>{{ post.likes?.length }}</span>
             </button>
             <button class="flex  text-gray-700 text-sm mr-8">
               <svg fill="none" viewBox="0 0 24 24" class="w-4 h-4 mr-1" stroke="currentColor">
