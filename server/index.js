@@ -9,6 +9,7 @@ const userRoutes = require('./routes/user')
 const postRoutes = require('./routes/post')
 const conversationRoutes = require('./routes/conversation')
 const messageRoutes = require('./routes/message')
+const profilePictureRoute = require('./routes/profilePicture')
 
 // app.use(cors({
 //     origin: true,
@@ -90,3 +91,4 @@ app.use('/user', userRoutes)
 app.use('/post', postRoutes)
 app.use('/conversation', conversationRoutes)
 app.use('/message', messageRoutes)
+app.use('/profile-picture', profilePictureRoute)

@@ -16,7 +16,11 @@ GET https://letsbug-social-network.herokuapp.com/
 
 
 #####
+GET http://localhost:3000/profile-picture/1653744821071_aniketsingh.png
+Authorization:  Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYyODY2OThkMjM3ODA1ODk5ZDM4Zjg0NiIsIm5hbWUiOiJBbmlrZXQgU2luZ2giLCJ1c2VybmFtZSI6IkhhY2tlcjEwMSIsImVtYWlsIjoic2luZ2hkaGFybXZpcjgxQGdtYWlsLmNvbSIsImlhdCI6MTY1Mzc0MzU1MCwiZXhwIjoxNjUzNzQ3MTUwfQ.B-Dwwk2XIlWaM9QYpuReg21cr0yv84TfhkYf0xRGnco
 
+
+#####
 PUT http://localhost:3000/post/like/628f0410042b1d367850ed06/
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYyODUwOWVkNDQ4MDUwYWY3YjU1YzcyNCIsIm5hbWUiOiJUYW5pc2hhIHNpbmdoIiwidXNlcm5hbWUiOiJGYXNoaW9uRGVzaWduZXIiLCJlbWFpbCI6InRhbmlzaGFAZ21haWwuY29tIiwiaWF0IjoxNjUzNTQ3ODgxLCJleHAiOjE2NTM1NTE0ODF9.H8lRvEveIpMtyHevchsad4L6uwko5X-4JDsbHYrRgGc
 

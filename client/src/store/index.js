@@ -13,6 +13,9 @@ export default createStore({
     onlineUsers: [],
     timelinePosts: [],
     posts: [],
+    settings: {
+      saveMessages:false
+    }
   },
   getters: {
     user: state => state.user,
@@ -68,6 +71,9 @@ export default createStore({
     ADD_NEW_MESSAGES(state, { conversationId, message }) {
       const index = state.messages.findIndex(m => m.conversationId === conversationId)
       state.messages.splice(index, 1, { conversationId, messages: [...state.messages[index].messages, message] })
+    },
+    TOGGLE_SAVE_MESSAGES(state, value) { 
+      state.settings.saveMessages = value
     }
 
   },
@@ -310,7 +316,24 @@ export default createStore({
       } catch (error) {
         console.error(error)
       }
-    }
+    },
+
+    //action to upload a profile picture 
+    async uploadProfilePicture({ commit }, payload) { 
+      const token = localStorage.getItem('token')
+      try {
+        console.log(payload)
+        const response = await axios.post(`/profile-picture/upload`, payload, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            'Content-Type': 'multipart/form-data'
+          }
+        })
+        commit("SET_USER", response.data.user)
+      } catch (error) {
+        console.error(error)
+      }
+    },
     
 
   },

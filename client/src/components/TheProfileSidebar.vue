@@ -3,7 +3,7 @@
     <div class="rounded-md shadow-md p-2 flex justify-start my-2">
       <div class="w-1/6 h-1/6 rounded-full overflow-hidden">
         <img
-          src="https://source.unsplash.com/random/200x200/?avatar"
+          :src="user?.profilePicture || 'https://source.unsplash.com/random/200x200/?avatar'"
         />
       </div>
       <div class="ml-5">
