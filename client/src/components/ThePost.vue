@@ -139,7 +139,8 @@ export default {
         return Math.round(diff / 31536000) + ' years ago';
       }
       return time.toDateString();
-    }
+    },
+    
   }
 }
 </script>
