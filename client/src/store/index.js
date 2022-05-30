@@ -121,19 +121,32 @@ export default createStore({
     },
 
     // action to connect to a user
-    connectUser(state, payload) {
+    async connectUser(state, payload) {
+      // const token = localStorage.getItem('token')
+      // return new Promise((resolve, reject) => {
+      //   axios.post(`/user/${payload.userId}/connect`, payload, {
+      //     headers: {
+      //       Authorization: `Bearer ${token}`
+      //     }
+      //   }).then(response => {
+      //     resolve(response)
+      //   }).catch(error => {
+      //     reject(error)
+      //   })
+      // })
       const token = localStorage.getItem('token')
-      return new Promise((resolve, reject) => {
-        axios.post(`/user/${payload.userId}/connect`, payload, {
+      try {
+        const response = await axios.post(`/user/${payload.userId}/connect`, payload, {
           headers: {
             Authorization: `Bearer ${token}`
           }
-        }).then(response => {
-          resolve(response)
-        }).catch(error => {
-          reject(error)
         })
-      })
+        console.log(response)
+        return response        
+      } catch (error) {
+        console.log(error)
+        return error
+      }
     },
 
     // action to get all the conversation of the user 

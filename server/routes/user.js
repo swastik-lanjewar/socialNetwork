@@ -226,7 +226,8 @@ router.post("/:id/connect", (req, res) => {
                 }
             }).then(userTwo => { 
                 res.status(200).json({
-                    message: "Connected"
+                    message: "Connected",
+                    user: userOne,
                 })
             }).catch(err => {
                 res.status(500).json({
@@ -241,5 +242,53 @@ router.post("/:id/connect", (req, res) => {
         })
     })
 })
+
+// disconnect from a user
+router.post("/:id/disconnect", (req, res) => { 
+    // the request header has the token then we can verify it
+    if (!req.headers.authorization) {
+        return res.status(401).json({
+            message: "Unauthorized"
+        })
+    }
+    // get the user if the user has valid token
+    const token = req.headers.authorization.split(" ")[1]
+    jwt.verify(token, process.env.SECRET_KEY, (err, decoded) => {
+        if (err) {
+            return res.status(401).json({
+                message: "Unauthorized"
+            })
+        }
+
+        // find the user and remove the id from the connections array of the user
+        User.findByIdAndUpdate(req.params.id, {
+            $pull: {
+                connections: decoded.id
+            }
+        }).then(userOne => {
+            // find the user and remove the id from the connections array of the user
+            User.findByIdAndUpdate(decoded.id, {
+                $pull: {
+                    connections: req.params.id
+                }
+            }).then(userTwo => {
+                res.status(200).json({
+                    message: "Disconnected",
+                    user: userOne,
+                })
+            }).catch(err => {
+                res.status(500).json({
+                    message: "Error disconnecting"
+                })
+            })
+        }).catch(err => {
+            res.status(500).json({
+                message: "Error disconnecting user"
+            })
+        })
+    })
+})
+
+
 
 module.exports = router

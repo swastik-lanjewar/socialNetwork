@@ -150,7 +150,10 @@ export default {
   },
 
   created() {
-    this.socket = io("https://letsbug-social-network.herokuapp.com/", {
+    // this.socket = io("https://letsbug-social-network.herokuapp.com/", {
+    //   transports: ["websocket"],
+    // });
+    this.socket = io("http://localhost:3000/", {
       transports: ["websocket"],
     });
 
