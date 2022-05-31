@@ -58,7 +58,10 @@ export default createStore({
       state.timelinePosts = posts
     },
     SET_POSTS(state, posts) {
-      state.posts = posts
+      // add the posts in by createdAt date 
+      state.posts = posts.sort((a, b) => {
+        return new Date(b.createdAt) - new Date(a.createdAt)
+      })
     },
     MERGE_TIMELINE_POSTS(state, posts) {
       state.timelinePosts = [...state.timelinePosts, ...posts]

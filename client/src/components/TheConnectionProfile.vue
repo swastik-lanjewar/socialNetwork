@@ -7,9 +7,8 @@
       shadow-md
       dark:bg-gray-800 dark:border-gray-700
       w-full
-      md:w-fit
       p-4
-      my-4
+      my-1
     "
   >
     <div class="flex flex-col items-center">
@@ -25,16 +24,14 @@
         user?.name
       }}</span>
       <div class="flex mt-4 space-x-3 lg:mt-6 items-center">
-        <span class="font-semibold"
-          >{{ user.connections?.length }} Connections</span
-        >
+        <button class="py-1 px-4 font-semibold text-gray-800 shadow-md border border-gray-800 rounded-md " @click="this.$router.push('/profile')">View</button>
         <button
-          href="#"
           class="
             inline-flex
             items-center
             py-2
             px-4
+            shadow-md
             text-sm
             font-medium
             text-center text-white
