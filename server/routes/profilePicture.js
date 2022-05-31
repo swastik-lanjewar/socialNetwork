@@ -4,11 +4,11 @@ const upload = require("../middleware/upload")
 const User = require("../models/user")
 const Grid = require("gridfs-stream")
 const mongoose = require("mongoose")
+
+
 let gfs, gridfsBucket;
 const conn = mongoose.connection
 conn.once("open", () => {
-    // gfs = Grid(conn.db, mongoose.mongo)
-    // gfs.collection("profile_Picture")
     gridfsBucket = new mongoose.mongo.GridFSBucket(conn.db, {
         bucketName: "profile_Picture"
     })
@@ -16,6 +16,7 @@ conn.once("open", () => {
     gfs = Grid(conn.db, mongoose.mongo)
     gfs.collection("profile_Picture")
 })
+
 
 router.post("/upload", upload.single("profilePicture"), (req, res) => {
     // the request header has the token then we can verify it

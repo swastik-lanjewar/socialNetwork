@@ -220,7 +220,7 @@ router.post("/:id/connect", (req, res) => {
             }
         }).then(userOne => { 
             // find the user and add the id to the connections array of the user
-            user.findByIdAndUpdate(decoded.id, {
+            User.findByIdAndUpdate(decoded.id, {
                 $push: {
                     connections: req.params.id
                 }

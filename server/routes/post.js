@@ -3,6 +3,7 @@ const Post = require("../models/post")
 const User = require("../models/user")
 const jwt = require("jsonwebtoken")
 //ROUTE IS /post/
+
 // Create a new Post
 router.post("/", (req, res) => {
     // check if the user has valid token
@@ -28,6 +29,7 @@ router.post("/", (req, res) => {
     })
 
 })
+
 // update the post
 router.put("/:id", (req, res) => {
     // check if the user has valid token
@@ -78,7 +80,6 @@ router.delete("/:id", (req, res) => {
             })
         }
     })
-
 })
 
 // like the post
