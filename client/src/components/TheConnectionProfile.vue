@@ -24,7 +24,8 @@
         user?.name
       }}</span>
       <div class="flex mt-4 space-x-3 lg:mt-6 items-center">
-        <button class="py-1 px-4 font-semibold text-gray-800 shadow-md border border-gray-800 rounded-md " @click="this.$router.push('/profile')">View</button>
+        <button class="py-1 px-4 font-semibold text-gray-800 shadow-md border border-gray-800 rounded-md " 
+        @click="this.$router.push(`/profile/${user.username}`)">View</button>
         <button
           class="
             inline-flex
@@ -94,6 +95,14 @@ export default {
           this.pending = false;
           console.log(err);
         });
+    },
+    goToProfilePage() {
+      this.$router.push({
+        name: "ProfileView",
+        params: {
+          userId: this.user._id,
+        },
+      });
     },
   },
   components: { TheSpinner },

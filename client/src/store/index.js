@@ -15,7 +15,8 @@ export default createStore({
     posts: [],
     settings: {
       saveMessages:false
-    }
+    },
+    currentProfile:null,
   },
   getters: {
     user: state => state.user,
@@ -31,6 +32,9 @@ export default createStore({
       })
     },
     posts: state => state.posts,
+    currentProfile: state => {
+      return state.users.filter(user => user.id === state.currentProfile)[0]
+    },
   },
   mutations: {
     SET_USER(state, user) {
@@ -77,6 +81,9 @@ export default createStore({
     },
     TOGGLE_SAVE_MESSAGES(state, value) { 
       state.settings.saveMessages = value
+    },
+    SET_CURRENT_PROFILE(state, userId) { 
+      state.currentProfile = userId
     }
 
   },
