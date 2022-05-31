@@ -56,11 +56,8 @@
         <div class="flex items-center justify-between">
           <h2 class="text-lg font-semibold text-gray-900 -mt-1">{{ users?.filter(u => u._id == post.userId)[0].username
           }}</h2>
-          <div>
+          <div class="relative">
             <small class="text-sm text-gray-700 pr-2">{{ timeAgo(post.createdAt) }}</small>
-            <button class="pl-2">
-              <i class="fab fa-solid fa-ellipsis-vertical"></i>
-            </button>
           </div>
         </div>
         <p class="text-gray-700">{{ users?.filter(u => u._id == post.userId)[0].name }}</p>
@@ -107,6 +104,11 @@ export default {
       type: Object,
       // required: true,
     },
+  },
+  data(){
+    return {
+      dropdown: false,
+    }
   },
   computed: {
     ...mapGetters(["user", "users"]),

@@ -13,7 +13,7 @@
     </div>
     <div class="rounded-md shadow-md p-4 my-4">
       <div class="flex justify-evenly">
-        <div class="text-center">
+        <div class="text-center hover:cursor-pointer" @click="this.$router.push('/my-posts')">
           <h1 class="font-semibold text-gray-800">{{ posts.length }}</h1>
           <h1 class="font-semibold text-gray-600">Posts</h1>
         </div>
