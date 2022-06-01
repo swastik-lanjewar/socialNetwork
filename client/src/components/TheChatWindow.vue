@@ -1,17 +1,25 @@
 <template>
   <section class="w-full md:w-1/2 md:px-6">
     <!-- // chat window -->
-    <div
-      class="w-full rounded-md shadow-md h-full flex flex-col justify-evenly"
-    >
-      <div
-        class="p-4 flex justify-between border-b items-center border-gray-400"
-      >
-        <div class="flex w-full">
+    <div class="w-full rounded-md shadow-md h-full flex flex-col justify-evenly">
+      <div class="px-4 py-2 flex justify-between border-b items-center border-gray-400">
+        <div class="flex justify-between items-center w-full">
+          <div class="flex grow">
+            <img :src="receiver?.profilePicture || 'https://source.unsplash.com/random/50x50/?people'"
+              class="w-9 rounded-full mr-4" alt="" />
+            <h2 class="w-full font-semibold text-xl">{{ receiver?.username }}</h2>
+          </div>
 
-          <img :src="receiver?.profilePicture || 'https://source.unsplash.com/random/50x50/?people'" class="w-1/12 rounded-full mr-4" alt="" />
-          <h2 class="w-full font-semibold text-xl">{{ receiver?.username }}</h2>
-
+          <div class="3/4 mr-6 text-blue-700 ">
+            <button class="px-2">
+              <i class="fa fa-phone"></i>
+            </button>
+            
+            <button class="px-2">
+              <i class="fa fa-video"></i>
+            </button>
+            
+          </div>
         </div>
         <button>
           <i class="fab fa-solid fa-ellipsis-vertical"></i>
@@ -32,20 +40,23 @@
 
         <p v-show="isTyping" class="text-green-500 font-semibold">Typing...</p>
       </section>
-      
+
       <div class="px-4 py-2 border-t border-gray-400">
         <!-- selected img previewer -->
         <div class="w-full bg-gray-100">
-          <img class="w-40 rounded-md shadow-md mb-2" :src="previewImage"  v-if="previewImage"/>
+          <div v-if="previewImage" class="w-fit relative">
+            <img class="w-40 rounded-md shadow-md mb-2" :src="previewImage"  />
+            <button class="absolute -top-2 left-full transform -translate-x-4 bg-red-500 px-2 rounded-full text-white" @click="image = null, previewImage = null"><i class="-mt-4 fa fa-times"></i></button>
+          </div>
           <!-- <img class="w-40 rounded-md shadow-md mb-2"  src="https://source.unsplash.com/random/200x200/?girl" /> -->
         </div>
         <label class="flex items-center">
-          <label class="hover:cursor-pointer bg-blue-500 text-center p-1 mr-2 rounded-lg text-white" >
+          <label class="hover:cursor-pointer bg-blue-500 text-center p-1 mr-2 rounded-lg text-white">
             <i class="ml-2 fas fa-image mr-2"></i>
             <input type="file" class="hidden" accept="image/png, image/jpeg" multiple @change="imgSelected">
           </label>
-          <input type="text" placeholder="Write Something..." class="w-full focus:outline-none"
-            v-model="message" @keypress="typing" />
+          <input type="text" placeholder="Write Something..." class="w-full focus:outline-none" v-model="message"
+            @keypress="typing" />
           <button class="bg-blue-400 px-4 py-1 rounded-full text-white" @click="sendMessage">
             <i class="fa-solid fa-paper-plane"></i>
           </button>
@@ -62,7 +73,7 @@ import { mapGetters } from "vuex";
 import TheImg from "@/components/utils/TheImg.vue";
 export default {
   name: "TheChatWindow",
-  components:{
+  components: {
     TheImg,
   },
   data() {
@@ -85,8 +96,8 @@ export default {
       });
     },
     sendMessage() {
-      
-      if(this.image){
+
+      if (this.image) {
 
         this.conversation.push({
           received: false,
@@ -98,7 +109,7 @@ export default {
           time: new Date()
         });
 
-        this.socket.emit("message",{
+        this.socket.emit("message", {
           senderId: this.user._id,
           receiverId: this.receiver._id,
           message: {
@@ -108,7 +119,7 @@ export default {
           time: new Date()
         });
 
-      }else{
+      } else {
 
         if (this.message.length <= 0) return;
 
@@ -118,14 +129,14 @@ export default {
           message: this.message,
           time: new Date()
         });
-  
+
         this.conversation.push({
           received: false,
           data: this.message,
           userid: this.user._id,
           time: new Date()
         });
-        
+
       }
       // this.saveMessage(this.user._id, this.currentConversation._id, this.message)
       this.previewImage = null;
@@ -249,14 +260,14 @@ export default {
       );
     },
   },
-  watch:{
-    currentConversation(newVal){
-      if(newVal){
+  watch: {
+    currentConversation(newVal) {
+      if (newVal) {
         this.loadConversation();
       }
     }
   },
-  mounted(){
+  mounted() {
     this.loadConversation()
     this.scrollToBottom()
   }
