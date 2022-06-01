@@ -7,10 +7,10 @@
       <div
         class="p-4 flex justify-between border-b items-center border-gray-400"
       >
-        <div class="flex">
+        <div class="flex w-full">
 
           <img :src="receiver?.profilePicture || 'https://source.unsplash.com/random/50x50/?people'" class="w-1/12 rounded-full mr-4" alt="" />
-          <h2 class="font-semibold text-xl">{{ receiver?.username }}</h2>
+          <h2 class="w-full font-semibold text-xl">{{ receiver?.username }}</h2>
 
         </div>
         <button>
@@ -23,20 +23,34 @@
         <div :class="{ 'flex w-full justify-end': message.received !== true }" v-for="(message, index) in conversation"
           :key="index">
           <div class="rounded-lg bg-blue-100 w-fit p-1 px-4 my-2" :class="{ 'text-right': message.received !== true }">
-            <p class="text-left">{{ message.data }}</p>
+            <TheImg :blob="message.data.image" v-if="message.data.image" />
+            <p class="text-left" v-if="message.data.image">{{ message.data.caption }}</p>
+            <p class="text-left" v-else>{{ message.data }}</p>
             <p class="text-xs">{{ timeAgo(message.time) }}</p>
           </div>
         </div>
+
         <p v-show="isTyping" class="text-green-500 font-semibold">Typing...</p>
       </section>
+      
       <div class="px-4 py-2 border-t border-gray-400">
-        <label for="writeSomething" class="flex items-center">
-          <input id="writeSomething" type="text" placeholder="Write Something..." class="w-full focus:outline-none"
+        <!-- selected img previewer -->
+        <div class="w-full bg-gray-100">
+          <img class="w-40 rounded-md shadow-md mb-2" :src="previewImage"  v-if="previewImage"/>
+          <!-- <img class="w-40 rounded-md shadow-md mb-2"  src="https://source.unsplash.com/random/200x200/?girl" /> -->
+        </div>
+        <label class="flex items-center">
+          <label class="hover:cursor-pointer bg-blue-500 text-center p-1 mr-2 rounded-lg text-white" >
+            <i class="ml-2 fas fa-image mr-2"></i>
+            <input type="file" class="hidden" accept="image/png, image/jpeg" multiple @change="imgSelected">
+          </label>
+          <input type="text" placeholder="Write Something..." class="w-full focus:outline-none"
             v-model="message" @keypress="typing" />
           <button class="bg-blue-400 px-4 py-1 rounded-full text-white" @click="sendMessage">
             <i class="fa-solid fa-paper-plane"></i>
           </button>
         </label>
+
       </div>
     </div>
   </section>
@@ -45,8 +59,12 @@
 <script>
 import io from "socket.io-client";
 import { mapGetters } from "vuex";
+import TheImg from "@/components/utils/TheImg.vue";
 export default {
   name: "TheChatWindow",
+  components:{
+    TheImg,
+  },
   data() {
     return {
       socket: {},
@@ -54,6 +72,8 @@ export default {
       message: "",
       conversation: [],
       isTyping: false,
+      image: null,
+      previewImage: null,
     };
   },
   methods: {
@@ -65,25 +85,53 @@ export default {
       });
     },
     sendMessage() {
-      if (this.message.length <= 0) return;
+      
+      if(this.image){
 
-      this.socket.emit("message", {
-        senderId: this.user._id,
-        receiverId: this.receiver._id,
-        message: this.message,
-        time: new Date()
-      });
+        this.conversation.push({
+          received: false,
+          data: {
+            caption: this.message,
+            image: this.image,
+          },
+          userid: this.user._id,
+          time: new Date()
+        });
 
-      this.conversation.push({
-        received: false,
-        data: this.message,
-        userid: this.user._id,
-        time: new Date()
-      });
-      this.scrollToBottom()
-      this.saveMessage(this.user._id, this.currentConversation._id, this.message)
+        this.socket.emit("message",{
+          senderId: this.user._id,
+          receiverId: this.receiver._id,
+          message: {
+            caption: this.message,
+            image: this.image,
+          },
+          time: new Date()
+        });
 
+      }else{
+
+        if (this.message.length <= 0) return;
+
+        this.socket.emit("message", {
+          senderId: this.user._id,
+          receiverId: this.receiver._id,
+          message: this.message,
+          time: new Date()
+        });
+  
+        this.conversation.push({
+          received: false,
+          data: this.message,
+          userid: this.user._id,
+          time: new Date()
+        });
+        
+      }
+      // this.saveMessage(this.user._id, this.currentConversation._id, this.message)
+      this.previewImage = null;
+      this.image = null;
       this.message = "";
+      this.scrollToBottom()
     },
 
     async saveMessage(senderId, conversationId, message) {
@@ -101,7 +149,7 @@ export default {
     loadConversation() {
       // sperad the messages in the conversation
       this.conversation = this.messages?.filter(
-        (message) => message.conversationId == this.currentConversation._id
+        (message) => message.conversationId === this.currentConversation._id
       )[0]
         .messages.map((msg) => {
           return {
@@ -111,6 +159,17 @@ export default {
             time: msg.createdAt,
           };
         }).sort((a, b) => a.time - b.time)
+
+      this.scrollToBottom();
+    },
+    // image selected
+    imgSelected(e) {
+      this.image = e.target.files[0];
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        this.previewImage = e.target.result;
+      };
+      reader.readAsDataURL(this.image);
     },
 
     // scroll to the bottom of the chat window
@@ -190,11 +249,17 @@ export default {
       );
     },
   },
-  watch: {
-    currentConversation() {
-      this.loadConversation();
-    },
+  watch:{
+    currentConversation(newVal){
+      if(newVal){
+        this.loadConversation();
+      }
+    }
   },
+  mounted(){
+    this.loadConversation()
+    this.scrollToBottom()
+  }
 };
 </script>
 
