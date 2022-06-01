@@ -1,5 +1,5 @@
 <template>
-  <img class="w-40 rounded-md shadow-md mb-2" :src="source" alt="" />
+  <img class="w-40 rounded-md shadow-md mb-2 hover:cursor-pointer" :src="source" alt="" />
 </template>
 
 <script>

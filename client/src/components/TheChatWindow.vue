@@ -41,7 +41,7 @@
         <p v-show="isTyping" class="text-green-500 font-semibold">Typing...</p>
       </section>
 
-      <div class="px-4 py-2 border-t border-gray-400">
+      <div class="p-2 border-t border-gray-400">
         <!-- selected img previewer -->
         <div class="w-full bg-gray-100">
           <div v-if="previewImage" class="w-fit relative">
@@ -218,7 +218,9 @@ export default {
       return time.toDateString();
     }
   },
-
+  updated(){
+    this.scrollToBottom();
+  },
   created() {
     // this.socket = io("https://letsbug-social-network.herokuapp.com/", {
     //   transports: ["websocket"],
