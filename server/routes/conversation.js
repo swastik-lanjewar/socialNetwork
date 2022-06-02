@@ -1,36 +1,49 @@
 const router = require("express").Router()
 const jwt = require("jsonwebtoken")
-const conversation = require("../models/conversation")
+const Conversation = require("../models/conversation")
 // create a new conversation
 router.post("/", (req, res) => {
     // check if the user has a valid token 
     const token = req.headers.authorization.split(" ")[1]
-    jwt.verify(token, process.env.SECRET_KEY, (err, decoded) => {
+    jwt.verify(token, process.env.SECRET_KEY, async (err, decoded) => {
         if (err) {
             return res.status(401).json({
                 message: "Unthorized Access"
             })
         }
-       const members = { participants: [...req.body.participants, decoded.id] }
-        // check if the conversation of these memebers already exists
-        conversation.findOne(members).then(duplicateConversation => {
+        
+        try {
+         
+            // check there is a conversation with the same participants
+            const duplicateConversation = await Conversation.findOne({
+                participants: {
+                    $all: [decoded.id, ...req.body.participants]
+                }
+            })
             if (duplicateConversation) {
                 return res.status(400).json({
                     message: "Conversation already exists"
                 })
             }
+
+            // if there is no conversation with the  same participants
             // create a new conversation
-            const newConversation = new conversation({
-                participants: [...req.body.participants, decoded.id]
+            const newConversation = await new Conversation({
+                participants: [decoded.id, ...req.body.participants]                
             })
-            newConversation.save().then(conversation => {
-                res.status(201).json({
-                    message: "Conversation created successfully",
-                    conversation
-                })
+
+            await newConversation.save()
+
+            return res.status(201).json({
+                message: "Conversation created successfully",
+                conversation: newConversation
             })
-        })
-        
+
+        } catch (error) {
+            res.status(500).json({
+                message: "Internal Server Error"
+            })
+        }
     })
 })
 
@@ -38,26 +51,30 @@ router.post("/", (req, res) => {
 router.get("/", (req, res) => {
     // check if the user has a valid token 
     const token = req.headers.authorization.split(" ")[1]
-    jwt.verify(token, process.env.SECRET_KEY, (err, decoded) => {
+    jwt.verify(token, process.env.SECRET_KEY, async (err, decoded) => {
         if (err) {
             return res.status(401).json({
                 message: "Unthorized Access"
             })
         }
-        // get the conversation of the user by id 
-        conversation.find({
-            participants: decoded.id
-        }).then(conv => {
+        
+        try {
+            // get all conversations of the user
+            const conversations = await Conversation.find({
+                participants: {
+                    $all: [decoded.id]
+                }
+            })
             return res.status(200).json({
-                message: "Conversation retrieved",
-                conversations: conv
+                message: "Conversations retrieved successfully",
+                conversations
             })
-        }).catch(err => {
-            res.status(501).json({
-                message: "Cannot find conversation"
+            
+        } catch (error) {
+            return res.status(500).json({
+                message: "Internal Server Error"
             })
-        })
-
+        }
     })
 })
 
@@ -72,7 +89,7 @@ router.delete("/:id", (req, res) => {
             })
         }
         // delete the conversation of the user by id 
-        conversation.findByIdAndDelete(req.params.id).then(conversation => {
+        Conversation.findByIdAndDelete(req.params.id).then(conversation => {
             return res.status(200).json({
                 message: "Conversation deleted",
                 conversation
