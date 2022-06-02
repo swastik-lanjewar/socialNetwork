@@ -40,7 +40,7 @@ import ThePeopelYouMayKnow from "../components/ThePeopelYouMayKnow.vue";
 export default {
   name: "DashboardView",
   computed: {
-    ...mapGetters(["user", "posts", "timelinePosts"]),
+    ...mapGetters(["user","users", "posts", "timelinePosts"]),
   },
   components: {
     TheProfileSidebar,
@@ -55,8 +55,7 @@ export default {
       await this.$store.dispatch("getTimeline")
       await this.$store.dispatch("getPosts")
 
-      const allUsers = this.$store.state.users
-      const connections = allUsers?.filter((user) => user.connections.includes(this.user._id));
+      const connections = this.users?.filter((user) => this.user.connections.includes(user._id));
       this.$store.commit("SET_CONNECTION", connections);
 
     } catch (error) {

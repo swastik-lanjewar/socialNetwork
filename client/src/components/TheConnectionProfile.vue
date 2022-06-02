@@ -14,18 +14,33 @@
     <div class="flex flex-col items-center">
       <img
         class="mb-3 w-24 h-24 rounded-full shadow-lg"
-        :src="user?.profilePicture || 'https://source.unsplash.com/random/300x300/?profile'"
+        :src="
+          people?.profilePicture ||
+          'https://source.unsplash.com/random/300x300/?profile'
+        "
         alt="Bonnie image"
       />
       <h5 class="mb-1 text-xl font-medium text-gray-900 dark:text-white">
-        {{ user?.username }}
+        {{ people?.username }}
       </h5>
       <span class="text-sm text-gray-500 dark:text-gray-400">{{
-        user?.name
+        people?.name
       }}</span>
       <div class="flex mt-4 space-x-3 lg:mt-6 items-center">
-        <button class="py-1 px-4 font-semibold text-gray-800 shadow-md border border-gray-800 rounded-md " 
-        @click="this.$router.push(`/profile/${user.username}`)">View</button>
+        <button
+          class="
+            py-1
+            px-4
+            font-semibold
+            text-gray-800
+            shadow-md
+            border border-gray-800
+            rounded-md
+          "
+          @click="this.$router.push(`/profile/${people.username}`)"
+        >
+          View
+        </button>
         <button
           class="
             inline-flex
@@ -40,17 +55,14 @@
             rounded-lg
             hover:bg-blue-800
           "
-          :disabled="isConnected || me"
-          :class="{
-            'disabled:opacity-50 disabled:cursor-not-allowed': isConnected,
-          }"
-          @click="connect"
+          @click="connectHandler(user.connections.includes(people._id), people._id)"
+          :disabled="me"
+          :class="{'disabled:opacity-50 hover:cursor-not-allowed': me}"
         >
-          <TheSpinner v-if="pending" text=" " />
-          <span v-if="me != true">
-            {{ isConnected ? "Connected" : "Connect" }}
+          <TheSpinner v-if="pending" :text="user.connections.includes(people._id) ? 'Disconnecting...' : 'Connecting...'" />
+          <span v-else>
+            {{ user.connections.includes(people._id) ? "Disconnect" : "Connect" }}
           </span>
-          {{ me ? " (You)" : "" }}
         </button>
       </div>
     </div>
@@ -59,10 +71,11 @@
 
 <script>
 import TheSpinner from "./utils/TheSpinner.vue";
+import { mapGetters } from "vuex";
 export default {
   name: "TheConnectionProfile",
   props: {
-    user: {
+    people: {
       type: Object,
       required: true,
     },
@@ -72,9 +85,7 @@ export default {
     },
   },
   computed: {
-    isConnected() {
-      return this.user.connections.includes(this.$store.state.user._id);
-    },
+    ...mapGetters(["user"]),
   },
   data() {
     return {
@@ -83,27 +94,21 @@ export default {
   },
 
   methods: {
-    connect() {
-      this.pending = true;
-      this.$store
-        .dispatch("connectUser", { userId: this.user._id })
-        .then((res) => {
+    async connectHandler(isConnected, id) {
+      try {
+        if(isConnected === true){
+          this.pending = true;
+          await this.$store.dispatch("disconnectUser", { userId: id });
           this.pending = false;
-          console.log(res);
-        })
-        .catch((err) => {
+        }else{
+          this.pending = true;
+          await this.$store.dispatch("connectUser", { userId: id });
           this.pending = false;
-          console.log(err);
-        });
-    },
-    goToProfilePage() {
-      this.$router.push({
-        name: "ProfileView",
-        params: {
-          userId: this.user._id,
-        },
-      });
-    },
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    }
   },
   components: { TheSpinner },
 };

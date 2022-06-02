@@ -43,7 +43,7 @@ export default {
     conversations: Object,
   },
   computed: {
-    ...mapGetters(['user', 'connections', 'currentConversation', 'onlineUsers']),
+    ...mapGetters(['user','users', 'connections', 'currentConversation', 'onlineUsers']),
     onlineConnections(){
       const online = []
        this.onlineUsers.forEach(user => {
@@ -56,7 +56,7 @@ export default {
 
     receiver(participants) {
       const receiverId = participants.filter(participant => participant !== this.user._id);
-      return this.connections.find(connection => connection._id === receiverId[0])
+      return this.users.find(connection => connection._id === receiverId[0])
     },
 
     selectConversation(conversation, id) {

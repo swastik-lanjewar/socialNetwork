@@ -251,13 +251,13 @@ export default {
     });
   },
   computed: {
-    ...mapGetters(["user", "currentConversation", "connections", "messages"]),
+    ...mapGetters(["user","users", "currentConversation", "connections", "messages"]),
     receiver() {
       const participants = this.currentConversation.participants;
       const receiverId = participants.filter(
         (participant) => participant != this.user._id
       );
-      return this.connections.find(
+      return this.users.find(
         (connection) => connection._id == receiverId[0]
       );
     },

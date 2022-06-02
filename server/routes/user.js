@@ -46,7 +46,6 @@ router.get("/:id", (req, res) => {
     })
 })
 
-
 // UPDATE A USER BY ID
 router.put("/", (req, res) => {
     // the request header has the token then we can verify it
@@ -82,7 +81,7 @@ router.put("/", (req, res) => {
                 updatedAt,
                 ...userData
             } = user._doc
-           
+
             res.status(200).json({
                 message: "User updated",
                 user: userData
@@ -94,7 +93,6 @@ router.put("/", (req, res) => {
         })
     })
 })
-
 
 // DELETE A USER BY ID
 router.delete("/", (req, res) => {
@@ -140,7 +138,7 @@ router.delete("/", (req, res) => {
 })
 
 // GET ALL USERS
-router.get("/", (req, res) => { 
+router.get("/", (req, res) => {
     // the request header has the token then we can verify it
     if (!req.headers.authorization) {
         return res.status(401).json({
@@ -162,7 +160,7 @@ router.get("/", (req, res) => {
                 })
             }
             // don not send the password and timestamp
-            const usersData = users.map(user => { 
+            const usersData = users.map(user => {
                 const {
                     password,
                     updatedAt,
@@ -192,59 +190,54 @@ router.post("/:id/connect", (req, res) => {
     }
     // get the user if the user has valid token 
     const token = req.headers.authorization.split(" ")[1]
-    jwt.verify(token, process.env.SECRET_KEY, (err, decoded) => {
+    jwt.verify(token, process.env.SECRET_KEY, async (err, decoded) => {
         if (err) {
             return res.status(401).json({
                 message: "Unauthorized"
             })
         }
 
-        // the user is already connected to the other user then return an error
-        User.findById(req.params.id).then(user => {
-            if (user.connectedUsers.includes(decoded.id)) {
+        try {
+            // check if the user is already connected to the other user
+            const user = await User.findById(decoded.id)
+            const isConnected = user.connections.find(connection => connection.userId === req.params.id)
+            if (isConnected) {
                 return res.status(400).json({
                     message: "User already connected"
                 })
             }
-        }).catch(err => { 
-            return res.status(500).json({
-                message: "Error getting user"
-            })
-        })
 
+            // save current user to the other user's connections array
+            const otherUser = await User.findById(req.params.id)
+            otherUser.connections.push(decoded.id)
+            await otherUser.save()
 
-        // find the user and add the id to the connections array of the user
-        User.findByIdAndUpdate(req.params.id, {
-            $push: {
-                connections: decoded.id
-            }
-        }).then(userOne => { 
-            // find the user and add the id to the connections array of the user
-            User.findByIdAndUpdate(decoded.id, {
-                $push: {
-                    connections: req.params.id
-                }
-            }).then(userTwo => { 
-                res.status(200).json({
-                    message: "Connected",
-                    user: userOne,
-                })
-            }).catch(err => {
-                res.status(500).json({
-                    message: "Error connecting"
-                })
+            // save the other user to the current user's connections array
+            user.connections.push(req.params.id)
+            const updatedUser = await user.save()
+
+            // send the updated user to the frontend
+            const {
+                password,
+                updatedAt,
+                ...other
+            } = updatedUser._doc
+
+            res.status(200).json({
+                message: "User connected",
+                user : other
             })
-                
-        }).catch(err => { 
+
+        } catch (error) {
             res.status(500).json({
                 message: "Error connecting user"
             })
-        })
+        }
     })
 })
 
 // disconnect from a user
-router.post("/:id/disconnect", (req, res) => { 
+router.post("/:id/disconnect", (req, res) => {
     // the request header has the token then we can verify it
     if (!req.headers.authorization) {
         return res.status(401).json({
@@ -253,42 +246,41 @@ router.post("/:id/disconnect", (req, res) => {
     }
     // get the user if the user has valid token
     const token = req.headers.authorization.split(" ")[1]
-    jwt.verify(token, process.env.SECRET_KEY, (err, decoded) => {
+    jwt.verify(token, process.env.SECRET_KEY, async (err, decoded) => {
         if (err) {
             return res.status(401).json({
                 message: "Unauthorized"
             })
         }
 
-        // find the user and remove the id from the connections array of the user
-        User.findByIdAndUpdate(req.params.id, {
-            $pull: {
-                connections: decoded.id
-            }
-        }).then(userOne => {
-            // find the user and remove the id from the connections array of the user
-            User.findByIdAndUpdate(decoded.id, {
-                $pull: {
-                    connections: req.params.id
-                }
-            }).then(userTwo => {
-                res.status(200).json({
-                    message: "Disconnected",
-                    user: userOne,
-                })
-            }).catch(err => {
-                res.status(500).json({
-                    message: "Error disconnecting"
-                })
+        try {
+            
+            const updatedUser = await User.findByIdAndUpdate(decoded.id, {
+                $pull: {connections: req.params.id}
+            }, { new: true })
+            
+            await User.findByIdAndUpdate(req.params.id, {
+                $pull: {connections: decoded.id}
             })
-        }).catch(err => {
+            
+            const {
+                password,
+                updatedAt,
+                ...other
+            } = updatedUser._doc
+
+            res.status(200).json({
+                message: "User disconnected",
+                user: other
+            })
+            
+        } catch (error) {
             res.status(500).json({
                 message: "Error disconnecting user"
             })
-        })
+        }
+
     })
 })
-
-
 
 module.exports = router

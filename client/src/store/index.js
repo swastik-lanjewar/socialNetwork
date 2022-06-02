@@ -1,4 +1,6 @@
-import { createStore } from 'vuex'
+import {
+  createStore
+} from 'vuex'
 import axios from '@/utils/http-common'
 import createPersistedState from "vuex-persistedstate";
 
@@ -14,9 +16,9 @@ export default createStore({
     timelinePosts: [],
     posts: [],
     settings: {
-      saveMessages:false
+      saveMessages: false
     },
-    currentProfile:null,
+    currentProfile: null,
   },
   getters: {
     user: state => state.user,
@@ -40,8 +42,8 @@ export default createStore({
     SET_USER(state, user) {
       state.user = user
     },
-    SET_CONNECTION(state, connection) {
-      state.connections = connection
+    SET_CONNECTION(state, connections) {
+      state.connections = connections
     },
     SET_USERS(state, users) {
       state.users = users
@@ -52,8 +54,14 @@ export default createStore({
     SET_CURRENT_CONVERSATION(state, conversation) {
       state.currentConversation = conversation
     },
-    SET_MESSAGES(state, { conversationId, messages }) {
-      state.messages.push({ conversationId, messages })
+    SET_MESSAGES(state, {
+      conversationId,
+      messages
+    }) {
+      state.messages.push({
+        conversationId,
+        messages
+      })
     },
     SET_ONLINE_USERS(state, users) {
       state.onlineUsers = users
@@ -75,21 +83,29 @@ export default createStore({
       state.timelinePosts.splice(index, 1, post)
     },
 
-    ADD_NEW_MESSAGES(state, { conversationId, message }) {
+    ADD_NEW_MESSAGES(state, {
+      conversationId,
+      message
+    }) {
       const index = state.messages.findIndex(m => m.conversationId === conversationId)
-      state.messages.splice(index, 1, { conversationId, messages: [...state.messages[index].messages, message] })
+      state.messages.splice(index, 1, {
+        conversationId,
+        messages: [...state.messages[index].messages, message]
+      })
     },
-    TOGGLE_SAVE_MESSAGES(state, value) { 
+    TOGGLE_SAVE_MESSAGES(state, value) {
       state.settings.saveMessages = value
     },
-    SET_CURRENT_PROFILE(state, userId) { 
+    SET_CURRENT_PROFILE(state, userId) {
       state.currentProfile = userId
     }
 
   },
   actions: {
     //action to create a new account of the user 
-    async createAccount({ commit }, payload) {
+    async createAccount({
+      commit
+    }, payload) {
       try {
         const response = await axios.post('/auth/create-account/', payload)
         localStorage.setItem('token', response.data.token)
@@ -101,8 +117,10 @@ export default createStore({
     },
 
     // action to login the user
-    login({ commit }, payload) {
-      return new Promise((resolve, reject) => { 
+    login({
+      commit
+    }, payload) {
+      return new Promise((resolve, reject) => {
         axios.post('/auth/login/', payload)
           .then(response => {
             localStorage.setItem('token', response.data.token)
@@ -116,7 +134,9 @@ export default createStore({
     },
 
     // action to get all the users
-    async getAllUsers({ commit }) {
+    async getAllUsers({
+      commit
+    }) {
       const token = localStorage.getItem("token")
       try {
         const response = await axios.get('/user/', {
@@ -131,19 +151,10 @@ export default createStore({
     },
 
     // action to connect to a user
-    async connectUser(state, payload) {
-      // const token = localStorage.getItem('token')
-      // return new Promise((resolve, reject) => {
-      //   axios.post(`/user/${payload.userId}/connect`, payload, {
-      //     headers: {
-      //       Authorization: `Bearer ${token}`
-      //     }
-      //   }).then(response => {
-      //     resolve(response)
-      //   }).catch(error => {
-      //     reject(error)
-      //   })
-      // })
+    async connectUser({
+      commit,
+      state
+    }, payload) {
       const token = localStorage.getItem('token')
       try {
         const response = await axios.post(`/user/${payload.userId}/connect`, payload, {
@@ -151,8 +162,36 @@ export default createStore({
             Authorization: `Bearer ${token}`
           }
         })
-        console.log(response)
-        return response        
+        commit('SET_USER', response.data.user)
+
+        const connections = state.users.filter(user => response.data.user.connections.includes(user._id))
+        commit('SET_CONNECTION', connections)
+
+        return response
+      } catch (error) {
+        console.log(error)
+        return error
+      }
+    },
+
+    // action to connect to a user
+    async disconnectUser({
+      commit,
+      state
+    }, payload) {
+      const token = localStorage.getItem('token')
+      try {
+        const response = await axios.post(`/user/${payload.userId}/disconnect`, payload, {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        })
+        commit('SET_USER', response.data.user)
+
+        const connections = state.users.filter(user => response.data.user.connections.includes(user._id))
+        commit('SET_CONNECTION', connections)
+
+        return response
       } catch (error) {
         console.log(error)
         return error
@@ -160,7 +199,9 @@ export default createStore({
     },
 
     // action to get all the conversation of the user 
-    async getConversations({ commit }) {
+    async getConversations({
+      commit
+    }) {
       const token = localStorage.getItem('token')
       try {
         const response = await axios.get('/conversation/', {
@@ -178,7 +219,9 @@ export default createStore({
     createConversation(state, payload) {
       const token = localStorage.getItem('token')
       return new Promise((resolve, reject) => {
-        axios.post('/conversation/', { participants: [payload.receiverId] }, {
+        axios.post('/conversation/', {
+          participants: [payload.receiverId]
+        }, {
           headers: {
             Authorization: `Bearer ${token}`
           }
@@ -191,7 +234,9 @@ export default createStore({
     },
 
     //action to get all the messages of a conversation
-    async getMessages({ commit }, payload) {
+    async getMessages({
+      commit
+    }, payload) {
       const token = localStorage.getItem('token')
       try {
         const response = await axios.get(`/message/${payload.id}`, {
@@ -199,13 +244,19 @@ export default createStore({
             Authorization: `Bearer ${token}`
           }
         })
-        commit("SET_MESSAGES", { conversationId: payload.id, messages: response.data.messages })
+        commit("SET_MESSAGES", {
+          conversationId: payload.id,
+          messages: response.data.messages
+        })
       } catch (error) {
         console.error(error)
       }
     },
 
-    async saveMessages({ commit }, payload) {
+    // action to save the message to the database
+    async saveMessages({
+      commit
+    }, payload) {
       const token = localStorage.getItem('token')
       try {
         console.log(payload)
@@ -229,7 +280,10 @@ export default createStore({
     },
 
     // action to create a new post
-    async createPost({ state, commit }, payload) {
+    async createPost({
+      state,
+      commit
+    }, payload) {
       const token = localStorage.getItem('token')
       try {
         const response = await axios.post(`/post/`, payload, {
@@ -245,7 +299,9 @@ export default createStore({
     },
 
     // action to get a users timeline 
-    async getTimeline({ commit }) {
+    async getTimeline({
+      commit
+    }) {
       const token = localStorage.getItem('token')
       try {
         const response = await axios.get('/post/timeline/', {
@@ -260,7 +316,9 @@ export default createStore({
     },
 
     // action to get a users all post 
-    async getPosts({ commit }) {
+    async getPosts({
+      commit
+    }) {
 
       const token = localStorage.getItem('token')
       try {
@@ -279,7 +337,9 @@ export default createStore({
     },
 
     // action to like the post
-    async likePost({ commit }, payload) {
+    async likePost({
+      commit
+    }, payload) {
       const token = localStorage.getItem('token')
       try {
         const response = await axios.put(`/post/like/${payload}/`, {}, {
@@ -294,7 +354,9 @@ export default createStore({
     },
 
     // action to like the post
-    async unlikePost({ commit }, payload) {
+    async unlikePost({
+      commit
+    }, payload) {
       const token = localStorage.getItem('token')
       try {
         const response = await axios.put(`/post/unlike/${payload}/`, {}, {
@@ -309,7 +371,9 @@ export default createStore({
     },
 
     // action to delete a user 
-    async deleteUser({ commit }) {
+    async deleteUser({
+      commit
+    }) {
       const token = localStorage.getItem('token')
       try {
         await axios.delete('/user/', {
@@ -325,7 +389,9 @@ export default createStore({
     },
 
     // action to update the user
-    async updateUser({  commit }, payload) { 
+    async updateUser({
+      commit
+    }, payload) {
       const token = localStorage.getItem('token')
       try {
         console.log(payload)
@@ -335,14 +401,16 @@ export default createStore({
           }
         })
         commit("SET_USER", response.data.user)
-        
+
       } catch (error) {
         console.error(error)
       }
     },
 
     //action to upload a profile picture 
-    async uploadProfilePicture({ commit }, payload) { 
+    async uploadProfilePicture({
+      commit
+    }, payload) {
       const token = localStorage.getItem('token')
       try {
         const response = await axios.post(`/profile-picture/upload`, payload, {
@@ -358,7 +426,9 @@ export default createStore({
     },
 
     //action to delete a profile picture
-    async deleteProfilePicture({ commit }, payload) { 
+    async deleteProfilePicture({
+      commit
+    }, payload) {
       const token = localStorage.getItem('token')
       try {
         const response = await axios.delete(`${payload}`, {}, {
@@ -371,9 +441,8 @@ export default createStore({
         console.error(error)
       }
     },
-    
+
   },
-  modules: {
-  },
+  modules: {},
   plugins: [createPersistedState()]
 })
