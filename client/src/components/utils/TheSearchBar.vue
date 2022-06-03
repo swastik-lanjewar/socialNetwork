@@ -37,7 +37,7 @@
       @keydown="searchUser"
     />
 
-    <ul class="bg-white shadow-xl">
+    <ul class="bg-white shadow-xl " >
       <li
         v-for="(item, index) in results"
         :key="index"
@@ -61,7 +61,7 @@
           />
         </div>
         <div class="w-full ml-4">
-          <button>{{ item.username }}</button>
+          <button  @click="this.$router.push(`/profile/${item.username}`) , results = [], searchText = ''">{{ item.username }}</button>
         </div>
       </li>
     </ul>

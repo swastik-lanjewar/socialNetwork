@@ -15,11 +15,10 @@
       ">
       <TheNewPost />
       <ThePost
-      v-for="(post, index) in timelinePosts"
+      v-for="(post, index) in posts"
        :key="index"
        :post="post" 
        />
-  
     </section>
 
     <aside class="w-1/4 mr-7 hidden md:block">
@@ -40,7 +39,7 @@ import ThePeopelYouMayKnow from "../components/ThePeopelYouMayKnow.vue";
 export default {
   name: "DashboardView",
   computed: {
-    ...mapGetters(["user","users", "posts", "timelinePosts"]),
+    ...mapGetters(["user", "posts"]),
   },
   components: {
     TheProfileSidebar,
@@ -48,23 +47,6 @@ export default {
     ThePost,
     TheDiscussions,
     ThePeopelYouMayKnow,
-  },
-  async created() {
-    try {
-      await this.$store.dispatch("getAllUsers")
-      await this.$store.dispatch("getTimeline")
-      await this.$store.dispatch("getPosts")
-
-      const connections = this.users?.filter((user) => this.user.connections.includes(user._id));
-      this.$store.commit("SET_CONNECTION", connections);
-
-    } catch (error) {
-      console.error(error)
-      if(error.response?.status === 401){
-        localStorage.removeItem("token");
-        this.$router.push("/login");
-      }
-    }
   },
 };
 </script>

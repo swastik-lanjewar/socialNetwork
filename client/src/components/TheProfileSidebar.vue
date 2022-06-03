@@ -3,7 +3,7 @@
     <div class="rounded-md shadow-md p-2 flex justify-start my-2">
       <div class="w-1/6 h-1/6 rounded-full overflow-hidden">
         <img
-          src="https://source.unsplash.com/random/200x200/?avatar"
+          :src="user?.profilePicture || 'https://source.unsplash.com/random/200x200/?avatar'"
         />
       </div>
       <div class="ml-5">
@@ -13,8 +13,8 @@
     </div>
     <div class="rounded-md shadow-md p-4 my-4">
       <div class="flex justify-evenly">
-        <div class="text-center">
-          <h1 class="font-semibold text-gray-800">1</h1>
+        <div class="text-center hover:cursor-pointer" @click="this.$router.push('/my-posts')">
+          <h1 class="font-semibold text-gray-800">{{ posts.length }}</h1>
           <h1 class="font-semibold text-gray-600">Posts</h1>
         </div>
         <div class="text-center">
@@ -38,8 +38,8 @@
         <button class="px-1 border rounded text-gray-700 border-black">
           Contact
         </button>
-        <button class="px-1 border rounded text-gray-700 border-black">
-          <router-link to="/settings">Settings</router-link>
+        <button class="px-1 border rounded text-gray-700 border-black" @click="this.$router.push('/settings')">
+          Settings
         </button>
       </div>
       <div></div>
@@ -53,7 +53,7 @@ export default {
   name: "TheProfileSidebar",
  
   computed:{
-    ...mapGetters(['user'])
+    ...mapGetters(['user', 'posts'])
   },
 };
 </script>

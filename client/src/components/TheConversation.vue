@@ -15,7 +15,7 @@
         @click="selectConversation(item, item._id)">
         <div class="relative w-14 ">
           <img class="rounded-full  w-10 h-10 object-cover" 
-          src="https://source.unsplash.com/random/200x200/?profile" alt="" />
+          :src="receiver(item.participants)?.profilePicture ||'https://source.unsplash.com/random/200x200/?profile'" alt="" />
           <div
             class="absolute -right-3 bottom-5 h-4 w-4 sm:top-2 rounded-full border-2 border-white bg-green-400 sm:invisible md:visible"
             :title="`${receiver(item.participants)?.username} is online`" 
@@ -43,7 +43,7 @@ export default {
     conversations: Object,
   },
   computed: {
-    ...mapGetters(['user', 'connections', 'currentConversation', 'onlineUsers']),
+    ...mapGetters(['user','users', 'connections', 'currentConversation', 'onlineUsers']),
     onlineConnections(){
       const online = []
        this.onlineUsers.forEach(user => {
@@ -56,7 +56,7 @@ export default {
 
     receiver(participants) {
       const receiverId = participants.filter(participant => participant !== this.user._id);
-      return this.connections.find(connection => connection._id === receiverId[0])
+      return this.users.find(connection => connection._id === receiverId[0])
     },
 
     selectConversation(conversation, id) {

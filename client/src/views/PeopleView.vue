@@ -16,7 +16,7 @@
       "
     >
       <div v-for="people in users" :key="people._id">
-        <TheConnectionProfile :user="people" :me="people._id == user._id" />
+        <TheConnectionProfile :people="people" :me="people._id == user._id" />
       </div>
     </section>
 
@@ -32,7 +32,7 @@
           >
             <img
               class="w-1/12 rounded-full"
-              src="https://source.unsplash.com/random/200x200/?profile"
+              :src="connection?.profilePicture || 'https://source.unsplash.com/random/200x200/?profile'"
               alt=""
             />
             <h2 class="font-semibold mx-4 w-full">{{ connection.username }}</h2>

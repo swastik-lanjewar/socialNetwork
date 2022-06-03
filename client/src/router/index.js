@@ -50,6 +50,23 @@ const routes = [
       requiresAuth: true
     }
   },
+  {
+    path: '/my-posts',
+    name: 'MyPostsView',
+    component: () => import('../views/MyPostsView.vue'),
+    meta: {
+      requiresAuth: true
+    }
+  },
+  {
+    path: '/profile/:id',
+    name: 'ProfileView',
+    component: () => import('../views/ProfileView.vue'),
+    props:true,
+    meta: {
+      requiresAuth: true
+    }
+  },
   //404 redirect
   {
     path:'/:catchall(.*)',
