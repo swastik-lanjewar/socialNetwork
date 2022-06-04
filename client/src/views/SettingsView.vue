@@ -237,7 +237,7 @@ export default {
       try {
         this.uploadingProfilePicture = true;
 
-        if (this.user.profilePicture) {
+        if (this.user.profilePicture !== "") {
           await this.$store.dispatch("deleteProfilePicture", this.user.profilePicture);
         }
 

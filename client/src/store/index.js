@@ -210,27 +210,27 @@ export default createStore({
           }
         })
         commit("SET_CONVERSATIONS", response.data.conversations)
+        return response
       } catch (error) {
-        console.error(error)
+        return error
       }
     },
 
     // action to create a new conversation
-    createConversation(state, payload) {
+    async createConversation(state, payload) {
       const token = localStorage.getItem('token')
-      return new Promise((resolve, reject) => {
-        axios.post('/conversation/', {
+      try {
+        const response = await axios.post('/conversation/', {
           participants: [payload.receiverId]
         }, {
           headers: {
             Authorization: `Bearer ${token}`
           }
-        }).then(response => {
-          resolve(response)
-        }).catch(error => {
-          reject(error)
         })
-      })
+        return response
+      } catch (error) {
+        return error
+      }
     },
 
     //action to get all the messages of a conversation

@@ -24,8 +24,12 @@ export default {
   computed: {
     ...mapGetters(["user", "conversations", "currentConversation"]),
   },
-  created() {
-    this.$store.dispatch("getConversations")  
+  async created() {
+    try {
+      await this.$store.dispatch("getConversations")  
+    } catch (error) {
+      console.log(error)
+    }
   },
   components: { TheChatWindow, TheProfileSidebar, TheConversation },
 };
