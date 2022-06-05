@@ -11,9 +11,9 @@ const conversationRoutes = require('./routes/conversation')
 const messageRoutes = require('./routes/message')
 const profilePictureRoute = require('./routes/profilePicture')
 
-// uncommnet this if you want to upload to server
+// config cors for cross origin resource sharing and preflight requests 
 app.use(cors({
-    origin: true,
+    origin: 'https://social-network.letsbug.com/',
     credentials: true
 }))
 

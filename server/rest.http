@@ -12,7 +12,13 @@ Authorization:  Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYyODUwOWVk
 
 #####
 
-GET https://letsbug-social-network.herokuapp.com/
+POST https://letsbug-social-network.herokuapp.com/auth/login 
+Content-Type: application/json
+
+{
+    "email":"singhdharmvir81@gmail.com",
+    "password":"aniket"
+}
 
 
 #####
@@ -21,7 +27,7 @@ Authorization:  Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYyODUwOWVk
 
 
 #####
-PUT http://localhost:3000/post/like/628f0410042b1d367850ed06/
+PUT http://localhost:3000/login
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYyODUwOWVkNDQ4MDUwYWY3YjU1YzcyNCIsIm5hbWUiOiJUYW5pc2hhIHNpbmdoIiwidXNlcm5hbWUiOiJGYXNoaW9uRGVzaWduZXIiLCJlbWFpbCI6InRhbmlzaGFAZ21haWwuY29tIiwiaWF0IjoxNjUzNTQ3ODgxLCJleHAiOjE2NTM1NTE0ODF9.H8lRvEveIpMtyHevchsad4L6uwko5X-4JDsbHYrRgGc
 
 #####
