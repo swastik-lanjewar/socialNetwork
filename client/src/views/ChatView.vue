@@ -24,6 +24,7 @@ export default {
   computed: {
     ...mapGetters(["user", "conversations", "currentConversation"]),
   },
+  // props:["socket"],
   async created() {
     try {
       await this.$store.dispatch("getConversations")  

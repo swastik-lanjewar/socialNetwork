@@ -13,8 +13,9 @@ const profilePictureRoute = require('./routes/profilePicture')
 
 // config cors for cross origin resource sharing and preflight requests 
 app.use(cors({
-    origin: 'https://social-network.letsbug.com/',
-    credentials: true
+    origin: true,
+    credentials: true,
+    methods: ['GET', 'POST', 'PUT', 'DELETE'],
 }))
 
 // uncomment if you want to run in localhost
@@ -72,6 +73,12 @@ io.on("connection", (socket) => {
         if (user) { 
             io.to(user.socketId).emit('typing', {senderId, receiverId, typing})
         }
+    })
+
+    socket.on('removeUser', () => {
+        removeUser(socket.id)
+        console.log(users)
+        io.emit("getUsers", users)
     })
 
     socket.on('disconnect', () => {

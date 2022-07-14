@@ -68,7 +68,6 @@
 </template>
 
 <script>
-import io from "socket.io-client";
 import { mapGetters } from "vuex";
 import TheImg from "@/components/utils/TheImg.vue";
 export default {
@@ -78,7 +77,6 @@ export default {
   },
   data() {
     return {
-      socket: {},
       greeting: null,
       message: "",
       conversation: [],
@@ -221,14 +219,8 @@ export default {
   updated(){
     this.scrollToBottom();
   },
+  // props: ["socket"],
   created() {
-    this.socket = io("https://letsbug-social-network.herokuapp.com/", {
-      transports: ["websocket"],
-    });
-    // this.socket = io("http://localhost:3000/", {
-    //   transports: ["websocket"],
-    // });
-
     this.socket.emit("addUser", { userId: this.user._id });
     this.socket.on("getUsers", (data) => {
       this.$store.commit("SET_ONLINE_USERS", data);
@@ -272,7 +264,7 @@ export default {
   mounted() {
     this.loadConversation()
     this.scrollToBottom()
-  }
+  },
 };
 </script>
 
