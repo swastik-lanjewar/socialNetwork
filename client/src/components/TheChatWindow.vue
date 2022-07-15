@@ -68,6 +68,7 @@
 </template>
 
 <script>
+import io from "socket.io-client";
 import { mapGetters } from "vuex";
 import TheImg from "@/components/utils/TheImg.vue";
 export default {
@@ -83,6 +84,7 @@ export default {
       isTyping: false,
       image: null,
       previewImage: null,
+      socket:{},
     };
   },
   methods: {
@@ -219,8 +221,25 @@ export default {
   updated(){
     this.scrollToBottom();
   },
-  // props: ["socket"],
   created() {
+
+    // this.socket = io("https://letsbug-social-network.herokuapp.com/", {
+    //   transports: ["websocket"],
+    // });
+
+    this.socket = io("http://localhost:3000/", {
+    transports: ["websocket"],
+    });
+
+    this.socket.on("connect", () => {
+      console.log("connected");
+    });
+
+    this.socket.on("disconnect", () => {
+      console.log("disconnected");
+    });
+
+
     this.socket.emit("addUser", { userId: this.user._id });
     this.socket.on("getUsers", (data) => {
       this.$store.commit("SET_ONLINE_USERS", data);
@@ -241,6 +260,7 @@ export default {
         this.isTyping = false;
       }, 500);
     });
+
   },
   computed: {
     ...mapGetters(["user","users", "currentConversation", "connections", "messages"]),
@@ -267,6 +287,3 @@ export default {
   },
 };
 </script>
-
-<style>
-</style>
