@@ -39,10 +39,16 @@ const io = require('socket.io')(http)
 
 let users = []
 const addUser = (userId, socketId) => {
-    !users.some(user => user.userId === userId) && users.push({
-        userId,
-        socketId
-    })
+    // check if user already exists in users array with same userId
+    const user = getUser(userId)
+    if(user) {
+        user.socketId = socketId
+    } else {
+        users.push({
+            userId,
+            socketId
+        })
+    }
 }
 const removeUser = (socketId) => {
     users = users.filter(user => user.socketId !== socketId)
@@ -50,7 +56,6 @@ const removeUser = (socketId) => {
 const getUser = (userId) => {
     return users.find(user => user.userId === userId)
 }
-
 
 io.on("connection", (socket) => {
 
@@ -77,7 +82,6 @@ io.on("connection", (socket) => {
 
     socket.on('removeUser', () => {
         removeUser(socket.id)
-        console.log(users)
         io.emit("getUsers", users)
     })
 

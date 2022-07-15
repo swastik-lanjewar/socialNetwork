@@ -260,7 +260,6 @@ export default {
         this.isTyping = false;
       }, 500);
     });
-
   },
   computed: {
     ...mapGetters(["user","users", "currentConversation", "connections", "messages"]),
