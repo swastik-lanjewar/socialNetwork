@@ -4,8 +4,15 @@
       <div class="flex justify-between p-4">
         <div class="flex items-center">
           <img
+            v-if="users?.filter((u) => u._id == post.userId)[0].profilePicture != null"
             class="w-1/12 rounded-full"
-            src="https://source.unsplash.com/random/200x200/?people"
+            :src="users?.filter((u) => u._id == post.userId)[0].profilePicture"
+            alt=""
+          />
+          <img
+            v-else
+            class="w-1/12 rounded-full"
+            src="../assets/noAvatar.png"
             alt=""
           />
           <h2 class="pl-2 font-semibold">
@@ -80,13 +87,18 @@
     <!-- Textual Posts are rendered here -->
     <div class="flex">
       <img
+        v-if="users?.filter((u) => u._id == post.userId)[0].profilePicture != ''"
         class="w-12 h-12 rounded-full object-cover mr-4 shadow"
-        :src="
-          users?.filter((u) => u._id == post.userId)[0].profilePicture ||
-          'https://source.unsplash.com/random/200x200/?avatar'
-        "
+        :src="users?.filter((u) => u._id == post.userId)[0].profilePicture"
         alt="avatar"
       />
+      <img
+        v-else
+        class="w-12 h-12 rounded-full object-cover mr-4 shadow"
+        src="../assets/noAvatar.png"
+        alt="avatar"
+      />
+      
       <div class="w-full">
         <div class="flex items-center justify-between">
           <h2 class="text-lg font-semibold text-gray-900 -mt-1">
@@ -171,7 +183,6 @@ export default {
   props: {
     post: {
       type: Object,
-      // required: true,
     },
   },
   data() {

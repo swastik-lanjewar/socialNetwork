@@ -30,7 +30,7 @@ router.get("/:id", (req, res) => {
             // if the user is found, do not send the password and timestamp
             const {
                 password,
-                updsatedAt,
+                updatedAt,
                 ...other
             } = user._doc
             res.status(200).json({
@@ -111,7 +111,7 @@ router.delete("/", (req, res) => {
             })
         }
 
-        try {            
+        try {
             // delete all posts of the user
             await Post.deleteMany({ userId: decoded.id })
             // delete the user
@@ -218,7 +218,7 @@ router.post("/:id/connect", (req, res) => {
 
             res.status(200).json({
                 message: "User connected",
-                user : other
+                user: other
             })
 
         } catch (error) {
@@ -247,15 +247,15 @@ router.post("/:id/disconnect", (req, res) => {
         }
 
         try {
-            
+
             const updatedUser = await User.findByIdAndUpdate(decoded.id, {
-                $pull: {connections: req.params.id}
+                $pull: { connections: req.params.id }
             }, { new: true })
-            
+
             await User.findByIdAndUpdate(req.params.id, {
-                $pull: {connections: decoded.id}
+                $pull: { connections: decoded.id }
             })
-            
+
             const {
                 password,
                 updatedAt,
@@ -266,7 +266,7 @@ router.post("/:id/disconnect", (req, res) => {
                 message: "User disconnected",
                 user: other
             })
-            
+
         } catch (error) {
             res.status(500).json({
                 message: "Error disconnecting user"

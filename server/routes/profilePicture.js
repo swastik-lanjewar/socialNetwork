@@ -9,6 +9,7 @@ const mongoose = require("mongoose")
 let gfs, gridfsBucket;
 const conn = mongoose.connection
 conn.once("open", () => {
+
     gridfsBucket = new mongoose.mongo.GridFSBucket(conn.db, {
         bucketName: "profile_Picture"
     })
@@ -25,32 +26,34 @@ router.post("/upload", upload.single("profilePicture"), (req, res) => {
             message: "Unauthorized"
         })
     }
-    // get the user if the user has valid token 
+
+    // const profilePicture = req.file.filename
+    const profilePictureUrl = `https://letsbug-social-network.herokuapp.com/profile-picture/${req.file.filename}`
+    // const profilePictureUrl = `https://localhost:/profile-picture/${req.file.filename}`
+    // get the user if the user has valid token
     const token = req.headers.authorization.split(" ")[1]
-    jwt.verify(token, process.env.SECRET_KEY, async (err, decoded) => {
+    jwt.verify(token, process.env.SECRET_KEY, (err, decoded) => {
         if (err) {
             return res.status(401).json({
                 message: "Unauthorized"
             })
         }
 
-        if (req.file === undefined) {
-            return res.status(400).json({
-                message: "No file uploaded"
-            })
-        }
-
-        const profilePictureUrl = `http://localhost:3000/profile-picture/${req.file.filename}`
-        // const profilePictureUrl = `https://letsbug-social-network.herokuapp.com/profile-picture/${req.file.filename}`
-        // find the user and update the profile picture url 
+        // find the user and update the profile picture url
         User.findByIdAndUpdate(decoded.id, {
             profilePicture: profilePictureUrl
         }, {
             new: true
         }).then(user => {
+
+            const {
+                password,
+                updatedAt,
+                ...userData
+            } = user._doc
             return res.status(200).json({
                 message: "Profile picture updated successfully",
-                user
+                user: userData
             })
         }).catch(err => {
             return res.status(500).json({
@@ -59,19 +62,21 @@ router.post("/upload", upload.single("profilePicture"), (req, res) => {
         })
 
     })
+
 })
 
 // route for streaming the profile picture 
 router.get("/:filename", async (req, res) => {
     try {
         const file = await gfs.files.findOne({ filename: req.params.filename })
-        if (!file) { 
+        if (!file) {
             return res.status(404).json({
                 message: "No file found"
             })
         }
+        console.log(file)
         const readstream = gridfsBucket.openDownloadStream(file._id)
-        readstream.pipe(res)    
+        readstream.pipe(res)
     } catch (error) {
         console.log(error)
         return res.status(500).json({
@@ -104,12 +109,12 @@ router.delete("/:filename", (req, res) => {
         try {
             // find the file and delete it
             const file = await gfs.files.findOne({ filename: req.params.filename })
-            if (!file) { 
+            if (!file) {
                 return res.status(404).json({
                     message: "No file found"
                 })
             }
-            
+
             // delete the profile picture from db
             await gridfsBucket.delete(file._id)
 
@@ -119,24 +124,32 @@ router.delete("/:filename", (req, res) => {
             }, {
                 new: true
             }).then(user => {
+
+                const {
+                    password,
+                    updatedAt,
+                    ...userData
+                } =  user._doc
+
+
                 return res.status(200).json({
                     message: "Profile picture deleted successfully",
-                    user
+                    user:userData
                 })
-            }).catch(err => { 
+            }).catch(err => {
                 return res.status(500).json({
                     message: "Internal server error"
                 })
             })
 
-            
+
         } catch (error) {
             console.log(error)
             return res.status(500).json({
                 message: "Internal server error"
             })
         }
-        
+
     })
 })
 

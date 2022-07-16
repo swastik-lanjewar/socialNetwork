@@ -36,7 +36,7 @@ export default createStore({
     posts: state => state.posts,
     currentProfile: state => {
       return state.users.filter(user => user.id === state.currentProfile)[0]
-    },
+    }
   },
   mutations: {
     SET_USER(state, user) {
@@ -430,8 +430,9 @@ export default createStore({
       commit
     }, payload) {
       const token = localStorage.getItem('token')
+      const pictureName = payload.split("/")[4]
       try {
-        const response = await axios.delete(`${payload}`, {}, {
+        const response = await axios.delete(`/profile-picture/${pictureName}`, {
           headers: {
             Authorization: `Bearer ${token}`
           }

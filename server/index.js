@@ -59,10 +59,10 @@ const getUser = (userId) => {
 
 io.on("connection", (socket) => {
 
-    console.log('a user connected')
     socket.on("addUser", ({userId}) => {
         addUser(userId, socket.id)
         io.emit("getUsers", users)
+        console.log(`${userId} connected`)
     })
 
 
@@ -93,7 +93,7 @@ io.on("connection", (socket) => {
     })
 
     socket.on('disconnect', () => {
-        console.log('user disconnected')
+        console.log(`${socket.id} disconnected`)
         removeUser(socket.id)
         io.emit("getUsers", users)
     })
