@@ -19,7 +19,7 @@ router.post('/create-account', (req, res) => {
             name: user.name,
             username: user.username,
             email: user.email
-        }, process.env.SECRET_KEY, { expiresIn: '1h' })
+        }, process.env.SECRET_KEY, { expiresIn: '5h' })
         user.password = undefined;
         res.status(200).json({
             message: "User created successfully",

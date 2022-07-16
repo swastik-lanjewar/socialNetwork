@@ -40,8 +40,8 @@ router.post("/upload", upload.single("profilePicture"), (req, res) => {
             })
         }
 
-        // const profilePictureUrl = `http://localhost:3000/profile-picture/${req.file.filename}`
-        const profilePictureUrl = `https://letsbug-social-network.herokuapp.com/profile-picture/${req.file.filename}`
+        const profilePictureUrl = `http://localhost:3000/profile-picture/${req.file.filename}`
+        // const profilePictureUrl = `https://letsbug-social-network.herokuapp.com/profile-picture/${req.file.filename}`
         // find the user and update the profile picture url 
         User.findByIdAndUpdate(decoded.id, {
             profilePicture: profilePictureUrl

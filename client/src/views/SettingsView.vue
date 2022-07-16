@@ -59,12 +59,15 @@
         </form>
 
         <div class="flex items-center py-2 pb-4">
-          <img class=" w-1/4 rounded-md m-2 border" :src="user?.profilePicture || 'https://source.unsplash.com/random/200x200/?avatar'" alt="profile picture">
-          <label class="text-gray-700 my-2">
-            <span class="font-semibold">Profile Picture</span>
+          <label class="text-gray-700 min-w-1/4 border">
+            <img 
+              class="min-w-1/4 aspect-square rounded-md border" 
+              :src="user?.profilePicture || '../assets/noAvatar.png'"
+              alt="profile picture">
+            <!-- <span class="font-semibold min-w-1/4 aspect-square">Profile Picture</span> -->
             <input
               type="file"
-              class="w-full border border-gray-300 rounded-md px-3 py-2"
+              class="hidden"
               accept="image/png, image/jpeg"
               @change="profilePictureSelected"
             />
