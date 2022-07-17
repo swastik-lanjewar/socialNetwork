@@ -1,7 +1,6 @@
 const router = require("express").Router()
 const Post = require("../models/post")
 const User = require("../models/user")
-const jwt = require("jsonwebtoken")
 const jwtAuth = require("../middleware/jwtAuth")
 //ROUTE IS /post/
 

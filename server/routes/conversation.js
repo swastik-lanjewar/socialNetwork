@@ -1,5 +1,4 @@
 const router = require("express").Router()
-const jwt = require("jsonwebtoken")
 const Conversation = require("../models/conversation")
 const jwtAuth = require("../middleware/jwtAuth")
 
