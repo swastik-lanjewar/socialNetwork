@@ -5,7 +5,6 @@ const Grid = require("gridfs-stream")
 const mongoose = require("mongoose")
 const jwtAuth = require("../middleware/jwtAuth")
 
-
 let gfs, gridfsBucket;
 const conn = mongoose.connection
 conn.once("open", () => {
@@ -17,7 +16,6 @@ conn.once("open", () => {
     gfs = Grid(conn.db, mongoose.mongo)
     gfs.collection("profile_Picture")
 })
-
 
 router.post("/upload", jwtAuth, upload.single("profilePicture"), async (req, res) => {
     if (req.user) {
@@ -42,7 +40,6 @@ router.post("/upload", jwtAuth, upload.single("profilePicture"), async (req, res
             })
         }
     }
-
 })
 
 // route for streaming the profile picture 
@@ -58,7 +55,6 @@ router.get("/:filename", jwtAuth, async (req, res) => {
         const readstream = gridfsBucket.openDownloadStream(file._id)
         readstream.pipe(res)
     } catch (error) {
-        console.log(error)
         return res.status(500).json({
             message: "Internal server error"
         })
@@ -111,7 +107,5 @@ router.delete("/:filename", jwtAuth, async (req, res) => {
         }
     }
 })
-
-
 
 module.exports = router
