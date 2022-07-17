@@ -103,9 +103,10 @@ http.listen(PORT, () => {
     console.log(`Server running at port ${PORT}`)
 })
 
+
 // use the routes
 app.get("/", (req, res) => {
-    res.send("Hello World")
+res.send("Hello World")
 })
 app.use('/auth', authRoutes)
 app.use('/user', userRoutes)
