@@ -11,7 +11,7 @@ const streamPostImageController = require("../controllers/streamPostImage")
 router.post("/", jwtAuth, uploadPostImages.single("postImage"), createPostController)
 
 // Stream a Post Image
-router.get("/image/:filename", jwtAuth, streamPostImageController)
+router.get("/image/:filename", streamPostImageController)
 
 // update the post
 router.put("/:id", jwtAuth, async (req, res) => {

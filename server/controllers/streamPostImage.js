@@ -15,21 +15,19 @@ conn.once("open", () => {
 })
 
 const streamPostImageController = async (req, res) => {
-    if (req.user) {
-        try {
-            const file = await gfs.files.findOne({ filename: req.params.filename })
-            if (!file) {
-                return res.status(404).json({
-                    message: "No file found"
-                })
-            }
-            const readstream = gridfsBucket.openDownloadStream(file._id)
-            readstream.pipe(res)
-        } catch (error) {
-            return res.status(500).json({
-                message: "Internal server error"
+    try {
+        const file = await gfs.files.findOne({ filename: req.params.filename })
+        if (!file) {
+            return res.status(404).json({
+                message: "No file found"
             })
         }
+        const readstream = gridfsBucket.openDownloadStream(file._id)
+        readstream.pipe(res)
+    } catch (error) {
+        return res.status(500).json({
+            message: "Internal server error"
+        })
     }
 }
 

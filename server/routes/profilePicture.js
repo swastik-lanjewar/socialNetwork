@@ -43,7 +43,7 @@ router.post("/upload", jwtAuth, upload.single("profilePicture"), async (req, res
 })
 
 // route for streaming the profile picture 
-router.get("/:filename", jwtAuth, async (req, res) => {
+router.get("/:filename", async (req, res) => {
     try {
         const file = await gfs.files.findOne({ filename: req.params.filename })
         if (!file) {
