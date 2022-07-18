@@ -280,15 +280,13 @@ export default createStore({
     },
 
     // action to create a new post
-    async createPost({
-      state,
-      commit
-    }, payload) {
+    async createPost({state, commit}, payload) {
       const token = localStorage.getItem('token')
       try {
         const response = await axios.post(`/post/`, payload, {
           headers: {
-            Authorization: `Bearer ${token}`
+            Authorization: `Bearer ${token}`,
+            'Content-Type': 'multipart/form-data',
           }
         })
         commit("SET_POSTS", [...state.posts, response.data.post])

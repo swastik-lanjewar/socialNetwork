@@ -224,7 +224,7 @@
 <script>
 import { mapGetters } from "vuex";
 import TheProfileSidebar from "../components/TheProfileSidebar.vue";
-import ThePeopelYouMayKnow from "@/components/ThePeopelYouMayKnow.vue";
+import ThePeopelYouMayKnow from "@/components/ThePeopleYouMayKnow.vue";
 import TheAlertSnackbar from "@/components/utils/TheAlertSnackbar.vue";
 import TheDiscussions from "@/components/TheDiscussions.vue";
 import TheSpinner from "@/components/utils/TheSpinner.vue";

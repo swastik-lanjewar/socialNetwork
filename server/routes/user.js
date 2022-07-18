@@ -42,30 +42,18 @@ router.put("/", jwtAuth, async (req, res) => {
             if (req.body.password) {
                 req.body.password = bcrypt.hashSync(req.body.password, 16);
             }
-            User.findByIdAndUpdate(req.user.id, req.body, {
+            const updatedUserProfile = await User.findByIdAndUpdate(req.user.id, req.body, {
                 new: true,
             })
-                .then((user) => {
-                    if (!user) {
-                        return res.status(404).json({
-                            message: "User not found",
-                        });
-                    }
-                    // if the user is found, do not send the password and timestamp
-                    const { password, updatedAt, ...userData } = user._doc;
-
-                    res.status(200).json({
-                        message: "User updated",
-                        user: userData,
-                    });
-                })
-                .catch((err) => {
-                    res.status(500).json({
-                        message: "Error updating user",
-                    });
-                });
+            // if the user is found, do not send the password and timestamp
+            const { password, updatedAt, ...userData } = updatedUserProfile._doc;
+            
+            return res.status(200).json({
+                message: "User updated",
+                user: userData,
+            });   
         } catch (error) {
-            res.status(500).json({
+            return res.status(500).json({
                 message: "Error updating user",
             });
         }
@@ -81,11 +69,11 @@ router.delete("/", jwtAuth, async (req, res) => {
             // delete the user
             await User.findByIdAndDelete(req.user.id);
 
-            res.status(200).json({
+            return res.status(200).json({
                 message: "User deleted",
             });
         } catch (error) {
-            res.status(500).json({
+            return res.status(500).json({
                 message: "Internal Server Error",
             });
         }
@@ -112,12 +100,12 @@ router.get("/", jwtAuth, async (req, res) => {
                     return user.id !== req.user.id;
                 });
 
-            res.status(200).json({
+            return res.status(200).json({
                 message: "Users found",
                 users: usersData,
             });
         } catch (error) {
-            res.status(500).json({
+            return res.status(500).json({
                 message: "Error getting users",
             });
         }
@@ -129,7 +117,7 @@ router.post("/:id/connect", jwtAuth, async (req, res) => {
     if (req.user) {
         try {
             // check if the user is already connected to the other user
-            const user = await User.findById(decoded.id);
+            const user = await User.findById(req.user.id);
             const isConnected = user.connections.find(
                 (connection) => connection.userId === req.params.id
             );
@@ -141,7 +129,7 @@ router.post("/:id/connect", jwtAuth, async (req, res) => {
 
             // save current user to the other user's connections array
             const otherUser = await User.findById(req.params.id);
-            otherUser.connections.push(decoded.id);
+            otherUser.connections.push(req.user.id);
             await otherUser.save();
 
             // save the other user to the current user's connections array
@@ -151,12 +139,12 @@ router.post("/:id/connect", jwtAuth, async (req, res) => {
             // send the updated user to the frontend
             const { password, updatedAt, ...other } = updatedUser._doc;
 
-            res.status(200).json({
+            return res.status(200).json({
                 message: "User connected",
                 user: other,
             });
         } catch (error) {
-            res.status(500).json({
+            return res.status(500).json({
                 message: "Error connecting user",
             });
         }
@@ -168,7 +156,7 @@ router.post("/:id/disconnect", jwtAuth, async (req, res) => {
     if (req.user) {
         try {
             const updatedUser = await User.findByIdAndUpdate(
-                decoded.id,
+                req.user.id,
                 {
                     $pull: { connections: req.params.id },
                 },
@@ -176,17 +164,17 @@ router.post("/:id/disconnect", jwtAuth, async (req, res) => {
             );
 
             await User.findByIdAndUpdate(req.params.id, {
-                $pull: { connections: decoded.id },
+                $pull: { connections: req.user.id },
             });
 
             const { password, updatedAt, ...other } = updatedUser._doc;
 
-            res.status(200).json({
+            return res.status(200).json({
                 message: "User disconnected",
                 user: other,
             });
         } catch (error) {
-            res.status(500).json({
+            return res.status(500).json({
                 message: "Error disconnecting user",
             });
         }

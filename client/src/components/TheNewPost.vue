@@ -1,12 +1,31 @@
 <template>
   <div class="bg-white shadow-md rounded-md w-full mb-2">
-    <div>
-      <img
-        v-if="previewImage != null"
-        :src="previewImage"
-        alt="selected image"
-      />
+    <div  v-if="previewImage != null">
+      <div class="relative">
+        <img
+          v-if="previewImage != null"
+          :src="previewImage"
+          alt="selected image"
+        />
+        <button
+          class="
+            absolute
+            -top-0
+            left-full
+            transform
+            -translate-x-6
+            bg-red-500
+            px-2
+            rounded-full
+            text-white
+          "
+          @click="(previewImage = null), (image = null)"
+        >
+          <i class="-mt-4 fa fa-times"></i>
+        </button>
+      </div>
     </div>
+
     <div class="border-b border-gray-400 p-4">
       <label for="writeSomething" class="flex">
         <input
@@ -26,7 +45,7 @@
       </label>
     </div>
     <div class="px-4 py-2 flex justify-between">
-      <label class="text-center">
+      <label class="text-center cursor-pointer">
         <input
           type="file"
           class="hidden"
@@ -61,7 +80,6 @@ export default {
   data() {
     return {
       postContent: "",
-      type: "text",
       posting: false,
       previewImage: null,
       image: null,
@@ -69,38 +87,32 @@ export default {
   },
   methods: {
     async createPost() {
+      if (this.image == null && this.postContent == "") {
+        return;
+      }
       try {
         this.posting = true;
-        if (this.type == "text") {
-          if (this.postContent.length > 0) {
-            await this.$store.dispatch("createPost", {
-              title: this.postContent,
-              content: this.postContent,
-              type: "text",
-              userId: this.user._id,
-            });
-          }
-        } else {
-          let formData = new FormData();
-          formData.append("title", this.postContent);
-          formData.append("content", this.postContent);
-          formData.append("type", this.type);
-          formData.append("userId", this.user._id);
-          formData.append("image", this.image);
-          await this.$store.dispatch("createPost", formData);
+
+        const formData = new FormData();
+        formData.append("content", this.postContent);
+        formData.append("userId", this.user._id);
+        if (this.image) {
+          formData.append("postImage", this.image);
         }
+        await this.$store.dispatch("createPost", formData);
+
         this.posting = false;
         this.postContent = "";
+        this.previewImage = null;
+        this.image = null;
       } catch (error) {
         this.posting = false;
+        this.postContent = "";
         this.image = null;
         this.previewImage = null;
-        this.type = "text";
-        console.log(error);
       }
     },
     imgSelected(e) {
-      this.type = "image";
       this.image = e.target.files[0];
       this.previewImage = URL.createObjectURL(this.image);
     },
@@ -111,6 +123,3 @@ export default {
   components: { TheSpinner },
 };
 </script>
-
-<style>
-</style>

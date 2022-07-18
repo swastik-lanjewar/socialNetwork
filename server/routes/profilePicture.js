@@ -51,7 +51,6 @@ router.get("/:filename", jwtAuth, async (req, res) => {
                 message: "No file found"
             })
         }
-        console.log(file)
         const readstream = gridfsBucket.openDownloadStream(file._id)
         readstream.pipe(res)
     } catch (error) {
@@ -100,7 +99,6 @@ router.delete("/:filename", jwtAuth, async (req, res) => {
             })
 
         } catch (error) {
-            console.log(error)
             return res.status(500).json({
                 message: "Internal server error"
             })

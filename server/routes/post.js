@@ -2,25 +2,16 @@ const router = require("express").Router()
 const Post = require("../models/post")
 const User = require("../models/user")
 const jwtAuth = require("../middleware/jwtAuth")
+const uploadPostImages = require("../middleware/uploadPostImages")
+const createPostController = require("../controllers/createPost")
+const streamPostImageController = require("../controllers/streamPostImage")
 //ROUTE IS /post/
 
 // Create a new Post
-router.post("/", jwtAuth, async (req, res) => {
-    if (req.user) {
-        try {
-            const newPost = new Post(req.body)
-            await newPost.save()
-            return res.status(201).json({
-                message: "Post created successfully",
-                post: newPost
-            })
-        } catch (error) {
-            return res.status(500).json({
-                message: "Error creating post"
-            })
-        }
-    }
-})
+router.post("/", jwtAuth, uploadPostImages.single("postImage"), createPostController)
+
+// Stream a Post Image
+router.get("/image/:filename", jwtAuth, streamPostImageController)
 
 // update the post
 router.put("/:id", jwtAuth, async (req, res) => {
