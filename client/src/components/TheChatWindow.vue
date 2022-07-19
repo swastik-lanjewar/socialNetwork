@@ -78,13 +78,13 @@ export default {
   },
   data() {
     return {
-      socket: {},
       greeting: null,
       message: "",
       conversation: [],
       isTyping: false,
       image: null,
       previewImage: null,
+      socket:{},
     };
   },
   methods: {
@@ -222,12 +222,23 @@ export default {
     this.scrollToBottom();
   },
   created() {
-    this.socket = io("https://letsbug-social-network.herokuapp.com/", {
-      transports: ["websocket"],
-    });
-    // this.socket = io("http://localhost:3000/", {
+
+    // this.socket = io("https://letsbug-social-network.herokuapp.com/", {
     //   transports: ["websocket"],
     // });
+
+    this.socket = io("http://localhost:3000/", {
+    transports: ["websocket"],
+    });
+
+    this.socket.on("connect", () => {
+      console.log("connected");
+    });
+
+    this.socket.on("disconnect", () => {
+      console.log("disconnected");
+    });
+
 
     this.socket.emit("addUser", { userId: this.user._id });
     this.socket.on("getUsers", (data) => {
@@ -272,9 +283,6 @@ export default {
   mounted() {
     this.loadConversation()
     this.scrollToBottom()
-  }
+  },
 };
 </script>
-
-<style>
-</style>

@@ -3,22 +3,27 @@
     <div class="rounded-md shadow-md p-2 flex justify-start my-2">
       <div class="w-1/6 h-1/6 rounded-full overflow-hidden">
         <img
-          :src="user?.profilePicture || 'https://source.unsplash.com/random/200x200/?avatar'"
+          v-if="user?.profilePicture != ''"
+          :src="user?.profilePicture"
+        />
+        <img
+        v-else
+          src="../assets/noAvatar.png"
         />
       </div>
       <div class="ml-5">
         <h2 class="font-bold">{{ user.username }}</h2>
-        <p>{{ user.name }}</p>
+        <p>{{ user?.name }}</p>
       </div>
     </div>
     <div class="rounded-md shadow-md p-4 my-4">
       <div class="flex justify-evenly">
         <div class="text-center hover:cursor-pointer" @click="this.$router.push('/my-posts')">
-          <h1 class="font-semibold text-gray-800">{{ posts.length }}</h1>
+          <h1 class="font-semibold text-gray-800">{{ posts?.length }}</h1>
           <h1 class="font-semibold text-gray-600">Posts</h1>
         </div>
         <div class="text-center">
-          <h1 class="font-semibold text-gray-800">{{user.connections.length}}</h1>
+          <h1 class="font-semibold text-gray-800">{{user?.connections?.length}}</h1>
           <h1 class="font-semibold text-gray-600">Connections </h1>
         </div>
       </div>

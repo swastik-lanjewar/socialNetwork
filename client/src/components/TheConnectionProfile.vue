@@ -13,11 +13,15 @@
   >
     <div class="flex flex-col items-center">
       <img
+        v-if="people?.profilePicture != ''"
+          class="mb-3 w-24 h-24 rounded-full shadow-lg"
+          :src="people?.profilePicture"
+        alt="Bonnie image"
+      />
+      <img
+        v-else
         class="mb-3 w-24 h-24 rounded-full shadow-lg"
-        :src="
-          people?.profilePicture ||
-          'https://source.unsplash.com/random/300x300/?profile'
-        "
+        src="../assets/noAvatar.png"
         alt="Bonnie image"
       />
       <h5 class="mb-1 text-xl font-medium text-gray-900 dark:text-white">

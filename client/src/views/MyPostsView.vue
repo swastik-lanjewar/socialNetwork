@@ -34,7 +34,7 @@ import TheNewPost from "@/components/TheNewPost.vue";
 import { mapGetters } from "vuex";
 import ThePost from "../components/ThePost.vue";
 import TheDiscussions from "@/components/TheDiscussions.vue";
-import ThePeopelYouMayKnow from "../components/ThePeopelYouMayKnow.vue";
+import ThePeopelYouMayKnow from "../components/ThePeopleYouMayKnow.vue";
 
 export default {
   name: "DashboardView",

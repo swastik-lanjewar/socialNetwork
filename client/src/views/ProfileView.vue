@@ -17,13 +17,21 @@
       <article class="bg-white shadow-md rounded-md w-full px-4">
         <div class="w-full flex flex-col items-center">
           <img
-            class="rounded-md"
-            :src="profileUser.profilePicture || 'https://source.unsplash.com/random/300x300/?profile'"
+            v-if="profileUser.profilePicture != ''"
+            class="rounded-md max-h-40"
+            :src="profileUser.profilePicture"
             alt=""
           />
+          
+          <img
+            v-else
+            class="rounded-md max-h-40"
+            src="../assets/noAvatar.png"
+            alt=""
+          />
+
           <h2 class="text-2xl text-gray-800 font-semibold my-2">
             {{ profileUser.username }} @ {{ profileUser.name }} 
-            
           </h2>
           <div class="w-full flex justify-evenly mt-4">
             <div class="text-center hover:cursor-pointer">
@@ -115,7 +123,7 @@
 import TheProfileSidebar from "@/components/TheProfileSidebar.vue";
 import { mapGetters } from "vuex";
 import TheDiscussions from "@/components/TheDiscussions.vue";
-import ThePeopelYouMayKnow from "../components/ThePeopelYouMayKnow.vue";
+import ThePeopelYouMayKnow from "../components/ThePeopleYouMayKnow.vue";
 import ThePost from "@/components/ThePost.vue";
 
 export default {

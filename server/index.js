@@ -11,10 +11,11 @@ const conversationRoutes = require('./routes/conversation')
 const messageRoutes = require('./routes/message')
 const profilePictureRoute = require('./routes/profilePicture')
 
-// uncommnet this if you want to upload to server
+// config cors for cross origin resource sharing and preflight requests 
 app.use(cors({
     origin: true,
-    credentials: true
+    credentials: true,
+    methods: ['GET', 'POST', 'PUT', 'DELETE'],
 }))
 
 // uncomment if you want to run in localhost
@@ -38,10 +39,16 @@ const io = require('socket.io')(http)
 
 let users = []
 const addUser = (userId, socketId) => {
-    !users.some(user => user.userId === userId) && users.push({
-        userId,
-        socketId
-    })
+    // check if user already exists in users array with same userId
+    const user = getUser(userId)
+    if(user) {
+        user.socketId = socketId
+    } else {
+        users.push({
+            userId,
+            socketId
+        })
+    }
 }
 const removeUser = (socketId) => {
     users = users.filter(user => user.socketId !== socketId)
@@ -50,13 +57,12 @@ const getUser = (userId) => {
     return users.find(user => user.userId === userId)
 }
 
-
 io.on("connection", (socket) => {
 
-    console.log('a user connected')
     socket.on("addUser", ({userId}) => {
         addUser(userId, socket.id)
         io.emit("getUsers", users)
+        console.log(`${userId} connected`)
     })
 
 
@@ -74,8 +80,20 @@ io.on("connection", (socket) => {
         }
     })
 
+    socket.on('notification', ({ senderId, receiverId, notification }) => { 
+        const user = getUser(receiverId)
+        if (user) { 
+            io.to(user.socketId).emit('notification', { senderId, receiverId, notification })
+        }
+    })
+
+    socket.on('removeUser', () => {
+        removeUser(socket.id)
+        io.emit("getUsers", users)
+    })
+
     socket.on('disconnect', () => {
-        console.log('user disconnected')
+        console.log(`${socket.id} disconnected`)
         removeUser(socket.id)
         io.emit("getUsers", users)
     })
@@ -85,9 +103,10 @@ http.listen(PORT, () => {
     console.log(`Server running at port ${PORT}`)
 })
 
+
 // use the routes
 app.get("/", (req, res) => {
-    res.send("Hello World")
+res.send("Hello World")
 })
 app.use('/auth', authRoutes)
 app.use('/user', userRoutes)

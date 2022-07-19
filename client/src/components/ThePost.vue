@@ -1,11 +1,18 @@
 <template>
   <div class="shadow-md rounded-md lg:min-w-fit my-2 px-4 py-6 w-full">
-    <div v-if="post.type != 'text'">
+    <div v-if="post.image != ''">
       <div class="flex justify-between p-4">
         <div class="flex items-center">
           <img
+            v-if="users?.filter((u) => u._id == post.userId)[0].profilePicture != null"
             class="w-1/12 rounded-full"
-            src="https://source.unsplash.com/random/200x200/?people"
+            :src="users?.filter((u) => u._id == post.userId)[0].profilePicture"
+            alt=""
+          />
+          <img
+            v-else
+            class="w-1/12 rounded-full"
+            src="../assets/noAvatar.png"
             alt=""
           />
           <h2 class="pl-2 font-semibold">
@@ -19,29 +26,30 @@
       <div class="">
         <img
           class="w-full"
-          src="https://source.unsplash.com/random/200x200/?avatar"
-          alt=""
+          :src="post.image"
+          alt="post image"
         />
       </div>
       <div class="flex justify-between py-2 px-4">
-        <div>
-          <button class="mr-4">
-            <div class="flex items-center text-gray-700 text-sm mr-3">
-              <svg
-                fill="none"
-                viewBox="0 0 24 24"
-                class="w-4 h-4 mr-1 fill-red-500"
-                stroke="fill-red-500"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
-                />
-              </svg>
-              <span>12</span>
-            </div>
+        <div class="flex">
+          <button class="flex text-gray-700 text-sm mr-3 text-center"
+            @click="likeHandler(post.likes.includes(user._id))"
+          >
+            <svg
+              fill="none"
+              viewBox="0 0 24 24"
+              class="w-4 h-4 mr-1"
+              :stroke="post.likes.includes(user._id) ? 'red' : 'currentColor'"
+              :class="post.likes.includes(user._id) ? 'fill-red-500' : ''"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
+              />
+            </svg>
+            <span>{{ post.likes?.length }}</span>
           </button>
           <button class="">
             <div class="flex items-center text-gray-700 text-sm mr-8">
@@ -78,15 +86,20 @@
     </div>
 
     <!-- Textual Posts are rendered here -->
-    <div class="flex">
+    <div v-else class="flex">
       <img
+        v-if="users?.filter((u) => u._id == post.userId)[0].profilePicture != ''"
         class="w-12 h-12 rounded-full object-cover mr-4 shadow"
-        :src="
-          users?.filter((u) => u._id == post.userId)[0].profilePicture ||
-          'https://source.unsplash.com/random/200x200/?avatar'
-        "
+        :src="users?.filter((u) => u._id == post.userId)[0].profilePicture"
         alt="avatar"
       />
+      <img
+        v-else
+        class="w-12 h-12 rounded-full object-cover mr-4 shadow"
+        src="../assets/noAvatar.png"
+        alt="avatar"
+      />
+      
       <div class="w-full">
         <div class="flex items-center justify-between">
           <h2 class="text-lg font-semibold text-gray-900 -mt-1">
@@ -105,8 +118,7 @@
           {{ post.content }}
         </p>
         <div class="mt-4 flex items-center justify-around">
-          <button
-            class="flex text-gray-700 text-sm mr-3"
+          <button class="flex text-gray-700 text-sm mr-3 text-center"
             @click="likeHandler(post.likes.includes(user._id))"
           >
             <svg
@@ -125,7 +137,7 @@
             </svg>
             <span>{{ post.likes?.length }}</span>
           </button>
-          <button class="flex text-gray-700 text-sm mr-8">
+          <button class="flex text-gray-700 text-sm mr-8 text-center">
             <svg
               fill="none"
               viewBox="0 0 24 24"
@@ -141,7 +153,7 @@
             </svg>
             <span>8</span>
           </button>
-          <button class="flex text-gray-700 text-sm mr-4">
+          <button class="flex text-gray-700 text-sm mr-4 text-center">
             <svg
               fill="none"
               viewBox="0 0 24 24"
@@ -171,7 +183,6 @@ export default {
   props: {
     post: {
       type: Object,
-      // required: true,
     },
   },
   data() {

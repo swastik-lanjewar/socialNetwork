@@ -59,12 +59,68 @@
         </form>
 
         <div class="flex items-center py-2 pb-4">
-          <img class=" w-1/4 rounded-md m-2 border" :src="user?.profilePicture || 'https://source.unsplash.com/random/200x200/?avatar'" alt="profile picture">
-          <label class="text-gray-700 my-2">
-            <span class="font-semibold">Profile Picture</span>
+          <div v-if="profilePicture != null" class="w-fit relative">
+            <img
+              class="min-w-1/4 w-40 aspect-square rounded-md border"
+              :src="selectedImgPreview"
+              alt="newSelectedProfilePicture"
+            />
+            <button
+              class="
+                absolute
+                -top-2
+                left-full
+                transform
+                -translate-x-4
+                bg-red-500
+                px-2
+                rounded-full
+                text-white
+              "
+              @click="(selectedImgPreview = null), (profilePicture = null)"
+            >
+              <i class="-mt-4 fa fa-times"></i>
+            </button>
+          </div>
+          <label
+            v-else
+            class="text-gray-700 w-40 min-w-1/4 border"
+            for="imageInput"
+          >
+            <div class="w-fit relative">
+              <img
+                v-if="user?.profilePicture != ''"
+                class="min-w-1/4 w-40 aspect-square rounded-md border"
+                :src="user.profilePicture"
+                alt="profile picture"
+              />
+              <img
+                v-else
+                class="w-40 aspect-square rounded-md border"
+                src="../assets/noAvatar.png"
+                alt="profile picture"
+              />
+              <button
+                class="
+                  absolute
+                  -top-2
+                  left-full
+                  transform
+                  -translate-x-4
+                  bg-red-500
+                  px-2
+                  rounded-full
+                  text-white
+                "
+                @click="removeProfilePicture"
+              >
+                <i class="-mt-4 fa fa-times"></i>
+              </button>
+            </div>
             <input
+              id="imageInput"
               type="file"
-              class="w-full border border-gray-300 rounded-md px-3 py-2"
+              class="hidden"
               accept="image/png, image/jpeg"
               @change="profilePictureSelected"
             />
@@ -168,7 +224,7 @@
 <script>
 import { mapGetters } from "vuex";
 import TheProfileSidebar from "../components/TheProfileSidebar.vue";
-import ThePeopelYouMayKnow from "@/components/ThePeopelYouMayKnow.vue";
+import ThePeopelYouMayKnow from "@/components/ThePeopleYouMayKnow.vue";
 import TheAlertSnackbar from "@/components/utils/TheAlertSnackbar.vue";
 import TheDiscussions from "@/components/TheDiscussions.vue";
 import TheSpinner from "@/components/utils/TheSpinner.vue";
@@ -192,6 +248,7 @@ export default {
 
       uploadingProfilePicture: false,
       profilePicture: null,
+      selectedImgPreview: null,
 
       email: "",
       password: "",
@@ -230,31 +287,49 @@ export default {
         this.$refs.alertSnackbar.show("error", "Failed to update your profile");
       }
     },
-    async profilePictureSelected(event) {
+
+    profilePictureSelected(event) {
       this.profilePicture = event.target.files[0];
+      this.selectedImgPreview = URL.createObjectURL(this.profilePicture);
     },
+
     async uploadProfilePicture() {
       try {
-        this.uploadingProfilePicture = true;
+        if (this.user.profilePicture === "") {
+          this.uploadingProfilePicture = true;
 
-        if (this.user.profilePicture !== "") {
-          await this.$store.dispatch("deleteProfilePicture", this.user.profilePicture);
+          await this.removeProfilePicture();
+
+          let formData = new FormData();
+          formData.append("profilePicture", this.profilePicture);
+          await this.$store.dispatch("uploadProfilePicture", formData);
+          this.$refs.alertSnackbar.show(
+            "Successfully updated your profile picture",
+            "success"
+          );
+
+          this.profilePicture = null;
+          this.selectedImgPreview = null;
+          this.uploadingProfilePicture = false;
         }
-
-        let formData = new FormData();
-        formData.append("profilePicture", this.profilePicture);
-        await this.$store.dispatch("uploadProfilePicture", formData);
-        this.$refs.alertSnackbar.show(
-          "Successfully updated your profile picture",
-          "success"
-        );
-        this.profilePicture = null;
-        this.uploadingProfilePicture = false;
-
       } catch (error) {
         this.profilePicture = null;
+        this.selectedImgPreview = null;
         this.uploadingProfilePicture = false;
         this.$refs.alertSnackbar.show(error.message, "error");
+      }
+    },
+
+    async removeProfilePicture() {
+      if (this.user.profilePicture !== "") {
+        try {
+          await this.$store.dispatch(
+            "deleteProfilePicture",
+            this.user.profilePicture
+          );
+        } catch (error) {
+          console.log(error);
+        }
       }
     },
 

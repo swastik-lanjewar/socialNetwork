@@ -1,7 +1,7 @@
 <template>
   <nav class="hidden  md:flex justify-between p-3 shadow mb-3 max-h-10 ">
     <div class="ml-7">
-      <h3 class="font-bold text-blue-800 tracking-wide">SOCIAL NETWORK</h3>
+      <h3 class="font-bold text-blue-800 tracking-wide">SOCIAL NETWORK {{ socket }}</h3>
     </div>
     <div class="w-1/5 hidden md:block">
       <ul class="flex justify-around text-blue-800">
@@ -51,13 +51,15 @@ export default {
                 },
             ],
         };
-    },
+  },
+    props: ["socket"],
     methods: {
         logout() {
             // delelte the token from local storage
             localStorage.removeItem("token");
             // redirect to login page
             this.$router.push("/login");
+            this.socket.disconnect();
         },
         searchUser() {
             console.log(this.searchText);

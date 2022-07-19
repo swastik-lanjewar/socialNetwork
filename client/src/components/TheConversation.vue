@@ -14,8 +14,16 @@
         " :class="{ 'bg-sky-400 text-white': item._id === currentConversation?._id }"
         @click="selectConversation(item, item._id)">
         <div class="relative w-14 ">
-          <img class="rounded-full  w-10 h-10 object-cover" 
-          :src="receiver(item.participants)?.profilePicture ||'https://source.unsplash.com/random/200x200/?profile'" alt="" />
+          <img 
+          v-if="receiver(item.participants)?.profilePicture !== ''"
+          class="rounded-full  w-10 h-10 object-cover" 
+          :src="receiver(item.participants)?.profilePicture" 
+          alt="" />
+          <img 
+          v-else
+          class="rounded-full  w-10 h-10 object-cover" 
+          src="../assets/noAvatar.png" 
+          alt="" />
           <div
             class="absolute -right-3 bottom-5 h-4 w-4 sm:top-2 rounded-full border-2 border-white bg-green-400 sm:invisible md:visible"
             :title="`${receiver(item.participants)?.username} is online`" 
