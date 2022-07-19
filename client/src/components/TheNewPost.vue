@@ -39,7 +39,7 @@
           class="bg-blue-400 px-4 py-1 rounded-full text-white"
           @click="createPost"
         >
-          <i class="fa-solid fa-paper-plane" v-if="posting != true"></i>
+          <i class="fa-solid fa-paper-plane" v-if="posting !== true"></i>
           <TheSpinner v-if="posting" text="" />
         </button>
       </label>
@@ -90,9 +90,8 @@ export default {
       if (this.image == null && this.postContent == "") {
         return;
       }
+      this.posting = true;
       try {
-        this.posting = true;
-
         const formData = new FormData();
         formData.append("content", this.postContent);
         formData.append("userId", this.user._id);

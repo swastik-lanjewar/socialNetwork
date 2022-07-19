@@ -3,8 +3,7 @@ const Post = require("../models/post")
 const User = require("../models/user")
 const jwtAuth = require("../middleware/jwtAuth")
 const uploadPostImages = require("../middleware/uploadPostImages")
-const createPostController = require("../controllers/createPost")
-const streamPostImageController = require("../controllers/streamPostImage")
+const { createPostController, streamPostImageController, deletePostController } = require("../controllers/postController")
 //ROUTE IS /post/
 
 // Create a new Post
@@ -38,20 +37,7 @@ router.put("/:id", jwtAuth, async (req, res) => {
 })
 
 // delete the post
-router.delete("/:id", jwtAuth, async (req, res) => {
-    if (req.user) {
-        try {
-            await Post.findByIdAndDelete(req.params.id)
-            return res.status(200).json({
-                message: "Post deleted successfully"
-            })
-        } catch (error) {
-            return res.status(500).json({
-                message: "Error deleting post"
-            })
-        }
-    }
-})
+router.delete("/:id", jwtAuth, deletePostController)
 
 // like the post
 router.put("/like/:id", jwtAuth, async (req, res) => {

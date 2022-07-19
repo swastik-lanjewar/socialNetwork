@@ -2,7 +2,8 @@
   <main class="flex justify-between md:p-3">
     <TheProfileSidebar />
 
-    <section class="
+    <section
+      class="
         w-full
         md:w-1/2
         flex flex-col
@@ -12,17 +13,25 @@
         min-h-scrollPost
         max-h-scrollPost
         overflow-y-scroll
-      ">
+      "
+    >
       <TheNewPost />
-      <ThePost
-      v-for="(post, index) in posts"
-       :key="index"
-       :post="post" 
-       />
+      <div v-if="posts.length > 0">
+        <ThePost
+          v-for="(post, index) in posts"
+          :key="index"
+          :post="post"
+          :myPost="true"
+        />
+      </div>
+      <div v-else class="text-center">
+        <h1 class="text-2xl text-gray-400 font-bold">No posts yet</h1>
+      </div>
+
     </section>
 
     <aside class="w-1/4 mr-7 hidden md:block">
-      <ThePeopelYouMayKnow />
+      <ThePeopleYouMayKnow />
       <TheDiscussions />
     </aside>
   </main>
@@ -34,7 +43,7 @@ import TheNewPost from "@/components/TheNewPost.vue";
 import { mapGetters } from "vuex";
 import ThePost from "../components/ThePost.vue";
 import TheDiscussions from "@/components/TheDiscussions.vue";
-import ThePeopelYouMayKnow from "../components/ThePeopleYouMayKnow.vue";
+import ThePeopleYouMayKnow from "../components/ThePeopleYouMayKnow.vue";
 
 export default {
   name: "DashboardView",
@@ -46,7 +55,7 @@ export default {
     TheNewPost,
     ThePost,
     TheDiscussions,
-    ThePeopelYouMayKnow,
+    ThePeopleYouMayKnow,
   },
 };
 </script>

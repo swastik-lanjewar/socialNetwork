@@ -81,6 +81,8 @@ export default createStore({
     UPDATE_LIKED_POST(state, post) {
       const index = state.timelinePosts.findIndex(p => p._id === post._id)
       state.timelinePosts.splice(index, 1, post)
+      const index2 = state.posts.findIndex(p => p._id === post._id)
+      state.posts.splice(index2, 1, post)
     },
 
     ADD_NEW_MESSAGES(state, {
@@ -98,6 +100,15 @@ export default createStore({
     },
     SET_CURRENT_PROFILE(state, userId) {
       state.currentProfile = userId
+    },
+
+    DELETE_POST(state, postId) { 
+      const index = state.posts.findIndex(p => p._id === postId)
+      state.posts.splice(index, 1)
+    },
+    DELETE_TIMELINE_POST(state, postId) { 
+      const index = state.timelinePosts.findIndex(p => p._id === postId)
+      state.timelinePosts.splice(index, 1)  
     }
 
   },
@@ -291,6 +302,22 @@ export default createStore({
         })
         commit("SET_POSTS", [...state.posts, response.data.post])
         commit("SET_TIMELINE_POSTS", [...state.timelinePosts, response.data.post])
+      } catch (error) {
+        console.error(error.messages)
+      }
+    },
+
+    // action to delete a post
+    async deletePost({commit }, payload) { 
+      const token = localStorage.getItem('token')
+      try {
+        await axios.delete(`/post/${payload}`, {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        })
+        commit("DELETE_POST", payload)
+        commit("DELETE_TIMELINE_POST", payload)
       } catch (error) {
         console.error(error.messages)
       }

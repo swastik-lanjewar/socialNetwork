@@ -62,11 +62,6 @@ router.get("/:filename", async (req, res) => {
 
 // route for Deleting the profile picture
 router.delete("/:filename", jwtAuth, async (req, res) => {
-    if (!req.params.filename) {
-        return res.status(400).json({
-            message: "No file name provided"
-        })
-    }
     if (req.user) {
         try {
             // find the file and delete it

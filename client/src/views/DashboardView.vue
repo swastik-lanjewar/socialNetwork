@@ -16,15 +16,20 @@
       "
     >
       <TheNewPost />
-      <ThePost
-        v-for="(post, index) in timelinePosts"
-        :key="index"
-        :post="post"
-      />
+      <div v-if="timelinePosts.length > 0" class="flex flex-col">
+        <ThePost
+          v-for="(post, index) in timelinePosts"
+          :key="index"
+          :post="post"
+        />
+      </div>
+      <div v-else class="text-center">
+        <h1 class="text-2xl text-gray-400 font-bold">No posts in Timeline</h1>
+      </div>
     </section>
 
     <aside class="w-1/4 mr-7 hidden md:block">
-      <ThePeopelYouMayKnow />
+      <ThePeopleYouMayKnow />
       <TheDiscussions />
     </aside>
   </main>
@@ -36,7 +41,7 @@ import TheNewPost from "@/components/TheNewPost.vue";
 import { mapGetters } from "vuex";
 import ThePost from "../components/ThePost.vue";
 import TheDiscussions from "@/components/TheDiscussions.vue";
-import ThePeopelYouMayKnow from "../components/ThePeopleYouMayKnow.vue";
+import ThePeopleYouMayKnow from "../components/ThePeopleYouMayKnow.vue";
 
 export default {
   name: "DashboardView",
@@ -48,7 +53,7 @@ export default {
     TheNewPost,
     ThePost,
     TheDiscussions,
-    ThePeopelYouMayKnow,
+    ThePeopleYouMayKnow,
   },
   async created() {
     try {
