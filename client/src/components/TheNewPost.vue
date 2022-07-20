@@ -87,10 +87,10 @@ export default {
   },
   methods: {
     async createPost() {
+      this.posting = true;
       if (this.image == null && this.postContent == "") {
         return;
       }
-      this.posting = true;
       try {
         const formData = new FormData();
         formData.append("content", this.postContent);

@@ -5,8 +5,16 @@
       <div class="px-4 py-2 flex justify-between border-b items-center border-gray-400">
         <div class="flex justify-between items-center w-full">
           <div class="flex grow">
-            <img :src="receiver?.profilePicture || 'https://source.unsplash.com/random/50x50/?people'"
-              class="w-9 rounded-full mr-4" alt="" />
+            <img 
+              v-if="user.profilePicture != ''"
+              class="w-9 aspect-square rounded-full mr-4" 
+              :src="receiver?.profilePicture"
+              alt="" />
+            <img 
+              v-else
+              class="w-9 aspect-square rounded-full mr-4" 
+              src="../assets/noAvatar.png"
+              alt="" />
             <h2 class="w-full font-semibold text-xl">{{ receiver?.username }}</h2>
           </div>
 

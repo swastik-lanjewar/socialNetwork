@@ -20,13 +20,20 @@
 
     <aside class="w-1/4 mr-7 hidden md:block">
       <section class="rounded-md shadow-md p-3 w-full my-2">
+    
         <h2 class="font-bold mb-4 text-gray-700">Connections</h2>
         <ul>
           <li v-if="connections.length <= 0">You don't have any connection</li>
           <li class="flex w-full justify-start my-2 items-center px-2" v-for="connection in connections"
             :key="connection">
-            <img class="w-1/12 rounded-full"
-              :src="connection?.profilePicture || 'https://source.unsplash.com/random/200x200/?profile'" alt="" />
+            <img 
+              v-if="connection?.profilePicture != ''"
+              class="w-1/12 aspect-square rounded-full"
+              :src="connection?.profilePicture" alt="" />
+            <img 
+              v-else
+              class="w-1/12 aspect-square rounded-full"
+              src="../assets/noAvatar.png" alt="" />
             <h2 class="font-semibold mx-4 w-full">{{ connection.username }}</h2>
             <button class="border border-gray-700 bg-white rounded p-1 text-gray-700"
               @click="createConversation(connection._id)">

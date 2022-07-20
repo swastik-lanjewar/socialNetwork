@@ -36,7 +36,7 @@ export default createStore({
     posts: state => state.posts,
     currentProfile: state => {
       return state.users.filter(user => user.id === state.currentProfile)[0]
-    }
+    },
   },
   mutations: {
     SET_USER(state, user) {
@@ -109,8 +109,7 @@ export default createStore({
     DELETE_TIMELINE_POST(state, postId) { 
       const index = state.timelinePosts.findIndex(p => p._id === postId)
       state.timelinePosts.splice(index, 1)  
-    }
-
+    }, 
   },
   actions: {
     //action to create a new account of the user 

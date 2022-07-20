@@ -47,7 +47,7 @@
           <TheSpinner v-else text="Please Wait..." />
         </button>
       </div>
-      <p>Already Created?<a class="text-blue-600"> Login</a></p>
+      <p>Already Created?<router-link class="text-blue-600" to="/login"> Login</router-link></p>
     </form>
     <TheAlertSnackbar ref="alertSnackbar" />
   </section>
