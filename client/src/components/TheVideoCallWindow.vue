@@ -1,5 +1,5 @@
 <template>
-  <div class="absolute bg-blue-800 z-50 p-40">
+  <div class="hide absolute bg-blue-800 z-50 p-40">
     <video class="w-full aspect-video">
       <source src="" />
     </video>
