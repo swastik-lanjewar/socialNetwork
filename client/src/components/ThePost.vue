@@ -1,20 +1,20 @@
 <template>
-  <div class="shadow-md rounded-md lg:min-w-fit my-2 p-4 w-full">
+  <div class="shadow-md rounded-md lg:min-w-fit my-4 w-full">
     <article v-if="post.image != ''" class="">
-      <header class="flex justify-between">
+      <header class="flex justify-between px-2">
         <div class="flex items-center">
           <img
             v-if="
               users?.filter((u) => u._id == post.userId)[0].profilePicture !=
               null
             "
-            class="w-1/12 rounded-full"
+            class="w-10 h-10 rounded-full"
             :src="users?.filter((u) => u._id == post.userId)[0].profilePicture"
             alt=""
           />
           <img
             v-else
-            class="w-1/12 rounded-full"
+            class="w-10 h-10 rounded-full"
             src="../assets/noAvatar.png"
             alt=""
           />
@@ -161,12 +161,12 @@
     </article>
 
     <!-- Textual Posts are rendered here -->
-    <div v-else class="flex">
+    <div v-else class="flex p-2">
       <img
         v-if="
           users?.filter((u) => u._id == post.userId)[0].profilePicture != ''
         "
-        class="w-12 h-12 rounded-full object-cover mr-4 shadow"
+        class="w-10 h-10 rounded-full object-cover mr-4 shadow"
         :src="users?.filter((u) => u._id == post.userId)[0].profilePicture"
         alt="avatar"
       />
@@ -178,6 +178,7 @@
       />
 
       <div class="w-full">
+
         <div class="flex items-center justify-between">
           <h2 class="text-lg font-semibold text-gray-900 -mt-1">
             {{ users?.filter((u) => u._id == post.userId)[0].username }}
@@ -261,13 +262,17 @@
             </div>
           </div>
         </div>
+
         <p class="text-gray-700">
           {{ users?.filter((u) => u._id == post.userId)[0].name }}
         </p>
+
         <p class="mt-3 text-gray-700 text-sm">
           {{ post.content }}
         </p>
+
         <div class="mt-4 flex items-center justify-around">
+
           <button
             class="flex text-gray-700 text-sm mr-3 text-center"
             @click="likeHandler(post.likes.includes(user._id))"
@@ -288,6 +293,7 @@
             </svg>
             <span>{{ post.likes?.length }}</span>
           </button>
+
           <button class="flex text-gray-700 text-sm mr-8 text-center">
             <svg
               fill="none"
@@ -304,6 +310,7 @@
             </svg>
             <span>8</span>
           </button>
+
           <button class="flex text-gray-700 text-sm mr-4 text-center">
             <svg
               fill="none"
@@ -320,7 +327,9 @@
             </svg>
             <span>share</span>
           </button>
+
         </div>
+
       </div>
     </div>
   </div>
@@ -389,6 +398,3 @@ export default {
   },
 };
 </script>
-
-<style>
-</style>
