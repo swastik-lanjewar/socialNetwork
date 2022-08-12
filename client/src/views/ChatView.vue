@@ -1,5 +1,6 @@
 <template>
-  <main class="flex justify-between md:p-3 min-h-90 max-h-90">
+  <main class="flex justify-between md:p-3 min-h-90 max-h-90 relative">
+    <TheVideoCallWindow />
     <TheProfileSidebar />
 
     <TheChatWindow v-if="currentConversation" />
@@ -19,6 +20,7 @@ import TheChatWindow from "@/components/TheChatWindow.vue";
 import TheProfileSidebar from "@/components/TheProfileSidebar.vue";
 import { mapGetters } from "vuex";
 import TheConversation from "@/components/TheConversation.vue";
+import TheVideoCallWindow from "@/components/TheVideoCallWindow.vue";
 export default {
   name: "ChatView",
   computed: {
@@ -32,7 +34,7 @@ export default {
       console.log(error)
     }
   },
-  components: { TheChatWindow, TheProfileSidebar, TheConversation },
+  components: { TheChatWindow, TheProfileSidebar, TheConversation, TheVideoCallWindow },
 };
 </script>
 
