@@ -14,8 +14,8 @@ export default {
   name: "App",
   data() {
     return {
-      socket: null,
-    };
+      socket:{},
+    }
   },
 };
 </script>

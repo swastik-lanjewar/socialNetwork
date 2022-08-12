@@ -1,5 +1,5 @@
 <template>
-  <main class="flex justify-between md:p-3 min-h-90 max-h-90">
+  <main class="flex justify-between md:p-3 min-h-90 max-h-90 relative">
     <TheProfileSidebar />
 
     <TheChatWindow v-if="currentConversation" />

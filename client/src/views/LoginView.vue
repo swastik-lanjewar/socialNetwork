@@ -23,7 +23,7 @@
           <TheSpinner v-else text="Please wait..."></TheSpinner>
         </button>
       </div>
-      <p>Don't have account? <a class="text-blue-600">Create Account</a></p>
+      <p>Don't have account? <router-link class="text-blue-600" to="/create-account">Create Account</router-link></p>
     </form>
     <TheAlertSnackbar ref="alertSnackbar" />
   </section>
