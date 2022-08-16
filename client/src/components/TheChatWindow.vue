@@ -4,15 +4,7 @@
       class="w-full rounded-md shadow-md h-full flex flex-col justify-evenly"
     >
       <div
-        class="
-          px-4
-          py-2
-          flex
-          justify-between
-          border-b
-          items-center
-          border-gray-400
-        "
+        class="px-4 py-2 flex justify-between border-b items-center border-gray-400"
       >
         <div class="flex justify-between items-center w-full">
           <div class="flex grow">
@@ -49,23 +41,22 @@
 
       <section class="p-2 flex-row overflow-auto flex-grow" ref="chatWindow">
         <div
-          :class="{ 'flex w-full justify-end': message.received !== true }"
-          v-for="(message, index) in conversation"
-          :key="index"
+          :class="{ 'flex w-full justify-end': m.received !== true }"
+          v-for="(m, i) in messages(currentConversation._id)"
+          :key="i"
         >
           <div
             class="rounded-lg bg-blue-100 w-fit p-1 px-4 my-2"
-            :class="{ 'text-right': message.received !== true }"
+            :class="{ 'text-right': m.received !== true }"
           >
-            <TheImg :blob="message.data.image" v-if="message.data.image" />
-            <p class="text-left" v-if="message.data.image">
-              {{ message.data.caption }}
+            <TheImg :blob="m.message.image" v-if="m.message.image" />
+            <p class="text-left" v-if="m.message.image">
+              {{ m.message.caption }}
             </p>
-            <p class="text-left" v-else>{{ message.data }}</p>
-            <p class="text-xs">{{ timeAgo(message.time) }}</p>
+            <p class="text-left" v-else>{{ m.message }}</p>
+            <p class="text-xs">{{ timeAgo(m.time) }}</p>
           </div>
         </div>
-
         <p v-show="isTyping" class="text-green-500 font-semibold">Typing...</p>
       </section>
 
@@ -75,35 +66,16 @@
           <div v-if="previewImage" class="w-fit relative">
             <img class="w-40 rounded-md shadow-md mb-2" :src="previewImage" />
             <button
-              class="
-                absolute
-                -top-2
-                left-full
-                transform
-                -translate-x-4
-                bg-red-500
-                px-2
-                rounded-full
-                text-white
-              "
+              class="absolute -top-2 left-full transform -translate-x-4 bg-red-500 px-2 rounded-full text-white"
               @click="(image = null), (previewImage = null)"
             >
               <i class="-mt-4 fa fa-times"></i>
             </button>
           </div>
-          <!-- <img class="w-40 rounded-md shadow-md mb-2"  src="https://source.unsplash.com/random/200x200/?girl" /> -->
         </div>
         <label class="flex items-center">
           <label
-            class="
-              hover:cursor-pointer
-              bg-blue-500
-              text-center
-              p-1
-              mr-2
-              rounded-lg
-              text-white
-            "
+            class="hover:cursor-pointer bg-blue-500 text-center p-1 mr-2 rounded-lg text-white"
           >
             <i class="ml-2 fas fa-image mr-2"></i>
             <input
@@ -141,12 +113,11 @@ export default {
   name: "TheChatWindow",
   components: {
     TheImg,
-},
+  },
   data() {
     return {
       greeting: null,
       message: "",
-      conversation: [],
       isTyping: false,
       image: null,
       previewImage: null,
@@ -157,24 +128,27 @@ export default {
   methods: {
     typing() {
       this.socket.emit("typing", {
-        userid: this.userid,
         senderId: this.user._id,
         receiverId: this.receiver._id,
+        conversationId: this.currentConversation._id
       });
     },
     sendMessage() {
       if (this.image) {
-        this.conversation.push({
+        this.$store.commit("ADD_NEW_MESSAGES", {
+          conversationId: this.currentConversation._id,
+          senderId: this.user._id,
+          receiverId: this.receiver._id,
           received: false,
-          data: {
+          message: {
             caption: this.message,
             image: this.image,
           },
-          userid: this.user._id,
           time: new Date(),
         });
 
         this.socket.emit("message", {
+          conversationId: this.currentConversation._id,
           senderId: this.user._id,
           receiverId: this.receiver._id,
           message: {
@@ -187,16 +161,19 @@ export default {
         if (this.message.length <= 0) return;
 
         this.socket.emit("message", {
-          senderId: this.user._id,
+          conversationId: this.currentConversation._id,
           receiverId: this.receiver._id,
+          senderId: this.user._id,
           message: this.message,
           time: new Date(),
         });
 
-        this.conversation.push({
+        this.$store.commit("ADD_NEW_MESSAGES", {
+          conversationId: this.currentConversation._id,
+          receiverId: this.receiver._id,
+          senderId: this.user._id,
           received: false,
-          data: this.message,
-          userid: this.user._id,
+          message: this.message,
           time: new Date(),
         });
       }
@@ -220,20 +197,20 @@ export default {
     },
 
     loadConversation() {
-      // sperad the messages in the conversation
-      this.conversation = this.messages
-        ?.filter(
-          (message) => message.conversationId === this.currentConversation._id
-        )[0]
-        .messages.map((msg) => {
-          return {
-            received: msg.sender !== this.user._id,
-            data: msg.text,
-            userid: msg.sender,
-            time: msg.createdAt,
-          };
-        })
-        .sort((a, b) => a.time - b.time);
+      // // sperad the messages in the conversation
+      // this.conversation = this.messages
+      //   ?.filter(
+      //     (message) => message.conversationId === this.currentConversation._id
+      //   )[0]
+      //   .messages.map((msg) => {
+      //     return {
+      //       received: msg.sender !== this.user._id,
+      //       data: msg.text,
+      //       userid: msg.sender,
+      //       time: msg.createdAt,
+      //     };
+      //   })
+      //   .sort((a, b) => a.time - b.time);
 
       this.scrollToBottom();
     },
@@ -308,19 +285,20 @@ export default {
     });
 
     this.socket.on("message", (data) => {
-      this.conversation.push({
+      this.$store.commit("ADD_NEW_MESSAGES", {
+        ...data,
         received: true,
-        data: data.message,
-        time: data.time,
-      });
+      })
       this.scrollToBottom();
     });
 
-    this.socket.on("typing", () => {
-      this.isTyping = true;
-      setTimeout(() => {
-        this.isTyping = false;
-      }, 500);
+    this.socket.on("typing", ({conversationId}) => {
+      if (conversationId === this.currentConversation._id) {
+        this.isTyping = true;
+        setTimeout(() => {
+          this.isTyping = false;
+        }, 500);
+      }
     });
   },
   computed: {
