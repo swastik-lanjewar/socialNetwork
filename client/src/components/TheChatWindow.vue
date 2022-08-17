@@ -59,7 +59,12 @@
             <p class="text-xs">{{ timeAgo(m.time) }}</p>
           </div>
         </div>
-        <p v-show="isTyping" class="text-green-500 font-semibold w-fit py-2 px-4 rounded-full">Typing...</p>
+        <p
+          v-show="isTyping"
+          class="text-green-500 font-semibold w-fit py-2 px-4 rounded-full"
+        >
+          Typing...
+        </p>
       </section>
 
       <div class="p-2 border-t border-gray-400">
@@ -93,7 +98,7 @@
             placeholder="Write Something..."
             class="w-full focus:outline-none"
             v-model="message"
-            @keypress="typing"
+            @keydown="typing"
           />
           <button
             class="bg-blue-400 px-4 py-1 rounded-full text-white"
@@ -108,7 +113,6 @@
 </template>
 
 <script>
-import io from "socket.io-client";
 import { mapGetters } from "vuex";
 import TheImg from "@/components/utils/TheImg.vue";
 export default {
@@ -116,11 +120,16 @@ export default {
   components: {
     TheImg,
   },
+  props: {
+    isTyping: {
+      type: Boolean,
+      default: false,
+    }
+  },
   data() {
     return {
       greeting: null,
       message: "",
-      isTyping: false,
       image: null,
       previewImage: null,
       socket: {},
@@ -129,54 +138,43 @@ export default {
   },
   methods: {
     typing() {
-      this.socket.emit("typing", {
+      this.$emit("typing", {
         senderId: this.user._id,
         receiverId: this.receiver._id,
-        conversationId: this.currentConversation._id
+        conversationId: this.currentConversation._id,
       });
     },
     sendMessage() {
+      let msgObject;
       if (this.image) {
+        msgObject = {
+          message: {
+            image: this.image,
+            caption: this.message,
+          },
+          senderId: this.user._id,
+          receiverId: this.receiver._id,
+          conversationId: this.currentConversation._id,
+          time: new Date(),
+        };
+        this.$emit("sendMessage", msgObject);
         this.$store.commit("ADD_NEW_MESSAGES", {
-          conversationId: this.currentConversation._id,
-          senderId: this.user._id,
-          receiverId: this.receiver._id,
+          ...msgObject,
           received: false,
-          message: {
-            caption: this.message,
-            image: this.image,
-          },
-          time: new Date(),
-        });
-
-        this.socket.emit("message", {
-          conversationId: this.currentConversation._id,
-          senderId: this.user._id,
-          receiverId: this.receiver._id,
-          message: {
-            caption: this.message,
-            image: this.image,
-          },
-          time: new Date(),
         });
       } else {
         if (this.message.length <= 0) return;
-
-        this.socket.emit("message", {
+        msgObject = {
           conversationId: this.currentConversation._id,
           receiverId: this.receiver._id,
           senderId: this.user._id,
           message: this.message,
           time: new Date(),
-        });
-
+        };
+        this.$emit("sendMessage", msgObject);
         this.$store.commit("ADD_NEW_MESSAGES", {
-          conversationId: this.currentConversation._id,
-          receiverId: this.receiver._id,
-          senderId: this.user._id,
+          ...msgObject,
           received: false,
-          message: this.message,
-          time: new Date(),
         });
       }
       // this.saveMessage(this.user._id, this.currentConversation._id, this.message)
@@ -263,52 +261,6 @@ export default {
   },
   updated() {
     this.scrollToBottom();
-  },
-  created() {
-    // this.socket = io("https://letsbug-social-network.herokuapp.com/", {
-    //   transports: ["websocket"],
-    // });
-
-    this.socket = io("http://localhost:3000/", {
-      transports: ["websocket"],
-    });
-
-    this.socket.on("connect", () => {
-      console.log("connected");
-    });
-
-    this.socket.on("disconnect", () => {
-      console.log("disconnected");
-    });
-
-    this.socket.emit("addUser", { userId: this.user._id });
-    this.socket.on("getUsers", (data) => {
-      this.$store.commit("SET_ONLINE_USERS", data);
-    });
-
-    this.socket.on("message", (data) => {
-      this.$store.commit("ADD_NEW_MESSAGES", {
-        ...data,
-        received: true,
-      })
-      this.scrollToBottom();
-    });
-
-    this.socket.on("typing", ({conversationId}) => {
-      if (conversationId === this.currentConversation._id) {
-        if (!this.isTyping) {
-          this.isTyping = true;
-          this.typingTimeout = setTimeout(() => {
-            this.isTyping = false;
-          }, 1000);
-        } else {
-          clearTimeout(this.typingTimeout);
-          this.typingTimeout = setTimeout(() => {
-            this.isTyping = false;
-          }, 1000);
-        } 
-      }
-    });
   },
   computed: {
     ...mapGetters([

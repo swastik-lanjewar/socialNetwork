@@ -72,9 +72,7 @@ export default {
         this.$router.push("/login");
       }
     }
+    this.$emit("connect")
   },
 };
 </script>
-
-<style>
-</style>

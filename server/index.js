@@ -60,7 +60,7 @@ io.on("connection", (socket) => {
     socket.on("addUser", ({userId}) => {
         addUser(userId, socket.id)
         io.emit("getUsers", users)
-        console.log(`${userId} connected`)
+        console.log(`${userId} connected`, users)
     })
 
     socket.on('message', ({receiverId, ...otherData}) => {
