@@ -1,5 +1,5 @@
 <template>
-  <section class="w-full md:w-1/2 md:px-6 relative">
+  <section class="w-full md:w-3/4 md:px-6 relative">
     <div
       class="w-full rounded-md shadow-md h-full flex flex-col justify-evenly"
     >
@@ -12,12 +12,14 @@
               v-if="user.profilePicture != ''"
               class="w-9 aspect-square rounded-full mr-4"
               :src="receiver?.profilePicture"
+              loading="lazy"
               alt=""
             />
             <img
               v-else
               class="w-9 aspect-square rounded-full mr-4"
               src="../assets/noAvatar.png"
+              loading="lazy"
               alt=""
             />
             <h2 class="w-full font-semibold text-xl">
@@ -57,7 +59,7 @@
             <p class="text-xs">{{ timeAgo(m.time) }}</p>
           </div>
         </div>
-        <p v-show="isTyping" class="text-green-500 font-semibold">Typing...</p>
+        <p v-show="isTyping" class="text-green-500 font-semibold w-fit py-2 px-4 rounded-full">Typing...</p>
       </section>
 
       <div class="p-2 border-t border-gray-400">
@@ -294,10 +296,17 @@ export default {
 
     this.socket.on("typing", ({conversationId}) => {
       if (conversationId === this.currentConversation._id) {
-        this.isTyping = true;
-        setTimeout(() => {
-          this.isTyping = false;
-        }, 500);
+        if (!this.isTyping) {
+          this.isTyping = true;
+          this.typingTimeout = setTimeout(() => {
+            this.isTyping = false;
+          }, 1000);
+        } else {
+          clearTimeout(this.typingTimeout);
+          this.typingTimeout = setTimeout(() => {
+            this.isTyping = false;
+          }, 1000);
+        } 
       }
     });
   },

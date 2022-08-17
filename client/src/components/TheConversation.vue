@@ -18,11 +18,13 @@
           v-if="receiver(item.participants)?.profilePicture !== ''"
           class="rounded-full  w-10 h-10 object-cover" 
           :src="receiver(item.participants)?.profilePicture" 
+          loading="lazy"
           alt="" />
           <img 
           v-else
           class="rounded-full  w-10 h-10 object-cover" 
           src="../assets/noAvatar.png" 
+          loading="lazy"
           alt="" />
           <div
             class="absolute -right-3 bottom-5 h-4 w-4 sm:top-2 rounded-full border-2 border-white bg-green-400 sm:invisible md:visible"

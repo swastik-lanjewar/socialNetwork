@@ -1,10 +1,9 @@
 <template>
-  <main class="flex justify-between p-3">
-    <TheProfileSidebar />
+  <main class="w-3/4 flex justify-between p-3">
 
     <section class="
         w-full
-        md:w-1/2
+        md:w-3/4
         sm:grid
         grid-cols-2
         sm:gap-3
@@ -18,7 +17,7 @@
       </div>
     </section>
 
-    <aside class="w-1/4 mr-7 hidden md:block">
+    <aside class="w-1/3 mr-7 hidden md:block">
       <section class="rounded-md shadow-md p-3 w-full my-2">
     
         <h2 class="font-bold mb-4 text-gray-700">Connections</h2>
@@ -29,11 +28,17 @@
             <img 
               v-if="connection?.profilePicture != ''"
               class="w-1/12 aspect-square rounded-full"
-              :src="connection?.profilePicture" alt="" />
+              :src="connection?.profilePicture" 
+              alt=""
+              loading="lazy"
+               />
             <img 
               v-else
               class="w-1/12 aspect-square rounded-full"
-              src="../assets/noAvatar.png" alt="" />
+              src="../assets/noAvatar.png" 
+              alt=""
+              loading="lazy"
+              />
             <h2 class="font-semibold mx-4 w-full">{{ connection.username }}</h2>
             <button class="border border-gray-700 bg-white rounded p-1 text-gray-700"
               @click="createConversation(connection._id)">
@@ -50,12 +55,11 @@
 
 <script>
 import TheDiscussions from "@/components/TheDiscussions.vue";
-import TheProfileSidebar from "@/components/TheProfileSidebar.vue";
 import { mapGetters } from "vuex";
 import TheConnectionProfile from "../components/TheConnectionProfile.vue";
 export default {
   name: "PeopleView",
-  components: { TheDiscussions, TheProfileSidebar, TheConnectionProfile },
+  components: { TheDiscussions, TheConnectionProfile },
   computed: {
     ...mapGetters(["user", "users", "connections", "conversations"]),
   },

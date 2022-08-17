@@ -23,6 +23,7 @@
             "
             :src="discussion.link"
             alt=""
+            loading="lazy"
           />
           <img
             class="
@@ -34,6 +35,7 @@
             "
             :src="discussion.link"
             alt=""
+            loading="lazy"
           />
           <img
             class="
@@ -45,6 +47,7 @@
             "
             :src="discussion.link"
             alt=""
+            loading="lazy"
           />
           <a
             class="

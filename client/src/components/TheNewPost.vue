@@ -6,6 +6,7 @@
           v-if="previewImage != null"
           :src="previewImage"
           alt="selected image"
+          loading="lazy"
         />
         <button
           class="

@@ -11,12 +11,14 @@
             class="w-10 h-10 rounded-full"
             :src="users?.filter((u) => u._id == post.userId)[0].profilePicture"
             alt=""
+            loading="lazy"
           />
           <img
             v-else
             class="w-10 h-10 rounded-full"
             src="../assets/noAvatar.png"
             alt=""
+            loading="lazy"
           />
           <div class="pl-4">
             <h2 class="font-semibold">
@@ -100,7 +102,7 @@
         </div>
       </header>
       <main class="">
-        <img class="w-full" :src="post.image" alt="post image" />
+        <img class="w-full" :src="post.image" alt="post image" loading="lazy" />
       </main>
       <div class="flex justify-between py-2 px-4">
         <div class="flex">
@@ -169,12 +171,14 @@
         class="w-10 h-10 rounded-full object-cover mr-4 shadow"
         :src="users?.filter((u) => u._id == post.userId)[0].profilePicture"
         alt="avatar"
+         loading="lazy"
       />
       <img
         v-else
         class="w-12 h-12 rounded-full object-cover mr-4 shadow"
         src="../assets/noAvatar.png"
         alt="avatar"
+        loading="lazy"
       />
 
       <div class="w-full">

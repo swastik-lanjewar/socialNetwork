@@ -1,10 +1,9 @@
 <template>
-  <main class="flex justify-between p-3">
-    <TheProfileSidebar />
+  <main class=" w-3/4 flex justify-between p-3">
     <section
       class="
         w-full
-        md:w-1/2
+        md:w-3/4
         flex flex-col
         items-center
         px-1
@@ -64,6 +63,7 @@
               class="min-w-1/4 w-40 aspect-square rounded-md border"
               :src="selectedImgPreview"
               alt="newSelectedProfilePicture"
+              loading="lazy"
             />
             <button
               class="
@@ -93,12 +93,14 @@
                 class="min-w-1/4 w-40 aspect-square rounded-md border"
                 :src="user.profilePicture"
                 alt="profile picture"
+                loading="lazy"
               />
               <img
                 v-else
                 class="w-40 aspect-square rounded-md border"
                 src="../assets/noAvatar.png"
                 alt="profile picture"
+                loading="lazy"
               />
               <button
                 class="
@@ -213,7 +215,7 @@
         </article>
       </section>
     </section>
-    <aside class="w-1/4 mr-7 hidden md:block">
+    <aside class="w-1/2 mr-7 hidden md:block">
       <ThePeopelYouMayKnow />
       <TheDiscussions />
     </aside>
@@ -223,7 +225,6 @@
 
 <script>
 import { mapGetters } from "vuex";
-import TheProfileSidebar from "../components/TheProfileSidebar.vue";
 import ThePeopelYouMayKnow from "@/components/ThePeopleYouMayKnow.vue";
 import TheAlertSnackbar from "@/components/utils/TheAlertSnackbar.vue";
 import TheDiscussions from "@/components/TheDiscussions.vue";
@@ -232,7 +233,6 @@ import TheSpinner from "@/components/utils/TheSpinner.vue";
 export default {
   name: "SettingsView",
   components: {
-    TheProfileSidebar,
     ThePeopelYouMayKnow,
     TheDiscussions,
     TheAlertSnackbar,

@@ -1,6 +1,5 @@
 <template>
   <main class="flex justify-between md:p-3">
-    <TheProfileSidebar />
 
     <section
       class="
@@ -21,6 +20,7 @@
             class="rounded-md max-h-40"
             :src="profileUser.profilePicture"
             alt=""
+            loading="lazy"
           />
           
           <img
@@ -28,6 +28,7 @@
             class="rounded-md max-h-40"
             src="../assets/noAvatar.png"
             alt=""
+            loading="lazy"
           />
 
           <h2 class="text-2xl text-gray-800 font-semibold my-2">
@@ -62,6 +63,7 @@
                 class="w-20 h-20 rounded-lg"
                 src="https://source.unsplash.com/random/200x200/?girl"
                 alt=""
+                loading="lazy"
               />
                 <div>
                     <h3 class="text-lg font-semibold text-gray-800 mb-2">Hacker101</h3>
@@ -84,6 +86,8 @@
                 class="w-20 h-20 rounded-lg"
                 src="https://source.unsplash.com/random/200x200/?girl"
                 alt=""
+                loading="lazy"
+
               />
                 <div>
 
@@ -120,7 +124,6 @@
 </template>
 
 <script>
-import TheProfileSidebar from "@/components/TheProfileSidebar.vue";
 import { mapGetters } from "vuex";
 import TheDiscussions from "@/components/TheDiscussions.vue";
 import ThePeopelYouMayKnow from "../components/ThePeopleYouMayKnow.vue";
@@ -136,7 +139,6 @@ export default {
   },
   props:['id'],
   components: {
-    TheProfileSidebar,
     TheDiscussions,
     ThePeopelYouMayKnow,
     ThePost,
