@@ -3,7 +3,7 @@
     <TheNavbar></TheNavbar>
 
     <main class="flex justify-between md:p-3">
-      <TheProfileSidebar v-if="user.name" />
+      <TheProfileSidebar v-if="token" />
 
       <router-view v-slot="{ Component }">
         <transition name="fade" mode="out-in">
@@ -38,7 +38,7 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(["user", "currentConversation"]),
+    ...mapGetters(["user", "currentConversation", "token"]),
   },
   methods: {
     connect() {

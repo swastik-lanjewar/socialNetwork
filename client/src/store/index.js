@@ -6,6 +6,7 @@ import getters from './getters'
 
 export default createStore({
   state: {
+    token: null,
     user: {},
     users: [],
     connections: [],

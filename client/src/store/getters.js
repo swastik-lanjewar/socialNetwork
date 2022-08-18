@@ -25,5 +25,7 @@ export default {
     
     currentProfile: state => {
         return state.users.filter(user => user.id === state.currentProfile)[0]
-    }
+    }, 
+
+    token: state => state.token,
 }

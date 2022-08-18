@@ -7,6 +7,7 @@ export default {
         try {
             const response = await axios.post('/auth/create-account/', payload)
             localStorage.setItem('token', response.data.token)
+            commit('SET_TOKEN', response.data.token)
             commit('SET_USER', response.data.user)
             return response
         } catch (error) {
@@ -22,6 +23,7 @@ export default {
             axios.post('/auth/login/', payload)
                 .then(response => {
                     localStorage.setItem('token', response.data.token)
+                    commit('SET_TOKEN', response.data.token)
                     commit('SET_USER', response.data.user)
                     resolve(response)
                 })
