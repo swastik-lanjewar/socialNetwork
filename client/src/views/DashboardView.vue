@@ -1,18 +1,7 @@
 <template>
   <main class="w-3/4 flex justify-between md:p-3">
-
     <section
-      class="
-        w-full
-        md:w-3/4
-        flex flex-col
-        items-center
-        px-1
-        md:px-6
-        min-h-scrollPost
-        max-h-scrollPost
-        overflow-y-scroll
-      "
+      class="w-full md:w-3/4 flex flex-col items-center px-1 md:px-6 min-h-scrollPost max-h-scrollPost overflow-y-scroll"
     >
       <TheNewPost />
       <div v-if="timelinePosts.length > 0" class="flex flex-col">
@@ -31,13 +20,10 @@
       <ThePeopleYouMayKnow />
       <TheDiscussions />
     </aside>
-
   </main>
-  
 </template>
 
 <script>
-
 import TheNewPost from "@/components/TheNewPost.vue";
 import { mapGetters } from "vuex";
 import ThePost from "../components/ThePost.vue";
@@ -72,7 +58,7 @@ export default {
         this.$router.push("/login");
       }
     }
-    this.$emit("connect")
+    this.$emit("connect");
   },
 };
 </script>

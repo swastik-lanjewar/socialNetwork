@@ -3,6 +3,10 @@ export default {
         state.token = token
     },
 
+    REMOVE_TOKEN(state) { 
+        state.token = null
+    },
+
     SET_USER(state, user) {
         state.user = user
     },

@@ -1,7 +1,9 @@
 <template>
-  <nav class="hidden  md:flex justify-between p-3 shadow mb-3 max-h-10 ">
+  <nav class="hidden md:flex justify-between p-3 shadow mb-3 max-h-10">
     <div class="ml-7">
-      <h3 class="font-bold text-blue-800 tracking-wide">SOCIAL NETWORK {{ socket }}</h3>
+      <h3 class="font-bold text-blue-800 tracking-wide">
+        SOCIAL NETWORK  <span class="text-gray-400">v1.0</span>
+      </h3>
     </div>
     <div class="w-1/5 hidden md:block">
       <ul class="flex justify-around text-blue-800">
@@ -18,7 +20,7 @@
       </ul>
     </div>
     <div class="mr-7 flex">
-     <TheSearchBar />
+      <TheSearchBar />
       <button class="ml-5" @click="logout">
         <i class="fas fa-solid fa-sign-out text-blue-600"></i>
       </button>
@@ -27,47 +29,45 @@
 </template>
 
 <script>
-import TheSearchBar from './utils/TheSearchBar.vue';
+import TheSearchBar from "./utils/TheSearchBar.vue";
 export default {
-    name: "TheNavbar",
-    data() {
-        return {
-            searchText: "",
-            navItems: [
-                {
-                    name: "Home",
-                    icon: "fa-house",
-                    link: "/",
-                },
-                {
-                    name: "friends",
-                    icon: "fa-user-group",
-                    link: "/people",
-                },
-                {
-                    name: "message",
-                    icon: "fa-comment",
-                    link: "/message",
-                },
-            ],
-        };
-  },
-    props: ["socket"],
-    methods: {
-        logout() {
-            // delelte the token from local storage
-            localStorage.removeItem("token");
-            // redirect to login page
-            this.$router.push("/login");
-            this.socket.disconnect();
+  name: "TheNavbar",
+  data() {
+    return {
+      searchText: "",
+      navItems: [
+        {
+          name: "Home",
+          icon: "fa-house",
+          link: "/",
         },
-        searchUser() {
-            console.log(this.searchText);
-        }
+        {
+          name: "friends",
+          icon: "fa-user-group",
+          link: "/people",
+        },
+        {
+          name: "message",
+          icon: "fa-comment",
+          link: "/message",
+        },
+      ],
+    };
+  },
+  methods: {
+    logout() {
+      // delete the token from local storage
+      localStorage.removeItem("token");
+      this.$store.commit("REMOVE_TOKEN")
+      // redirect to login page
+      this.$router.push("/login");
     },
-    components: { TheSearchBar }
+    searchUser() {
+      console.log(this.searchText);
+    },
+  },
+  components: { TheSearchBar },
 };
 </script>
 
-<style>
-</style>
+<style></style>
