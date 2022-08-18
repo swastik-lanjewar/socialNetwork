@@ -144,6 +144,7 @@ export default {
         conversationId: this.currentConversation._id,
       });
     },
+    
     sendMessage() {
       let msgObject;
       if (this.image) {
@@ -197,21 +198,6 @@ export default {
     },
 
     loadConversation() {
-      // // sperad the messages in the conversation
-      // this.conversation = this.messages
-      //   ?.filter(
-      //     (message) => message.conversationId === this.currentConversation._id
-      //   )[0]
-      //   .messages.map((msg) => {
-      //     return {
-      //       received: msg.sender !== this.user._id,
-      //       data: msg.text,
-      //       userid: msg.sender,
-      //       time: msg.createdAt,
-      //     };
-      //   })
-      //   .sort((a, b) => a.time - b.time);
-
       this.scrollToBottom();
     },
     // image selected

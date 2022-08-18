@@ -12,7 +12,7 @@
           rounded-md
           border-b border-gray-100
         " :class="{ 'bg-sky-400 text-white': item._id === currentConversation?._id }"
-        @click="selectConversation(item, item._id)">
+        @click="selectConversation(item)">
         <div class="relative w-14 ">
           <img 
           v-if="receiver(item.participants)?.profilePicture !== ''"
@@ -69,18 +69,17 @@ export default {
       return this.users.find(connection => connection._id === receiverId[0])
     },
 
-    selectConversation(conversation, id) {
+    selectConversation(conversation) {
       this.$store.commit("SET_CURRENT_CONVERSATION", conversation);
-
-      // Check if the messages are already loaded in the store of this current conversation
-      this.$store.state.messages.filter(message => message.conversationId == id).length == 0 ?
-        this.loadMessages(id) :
-        console.log("messages already loaded");
+      // // Check if the messages are already loaded in the store of this current conversation
+      // this.$store.state.messages.filter(message => message.conversationId == id).length == 0 ?
+      //   this.loadMessages(id) :
+      //   console.log("messages already loaded");
     },
 
-    loadMessages(id) {
-      this.$store.dispatch("getMessages", { id })
-    }
+    // loadMessages(id) {
+    //   this.$store.dispatch("getMessages", { id })
+    // }
   }
 };
 </script>
