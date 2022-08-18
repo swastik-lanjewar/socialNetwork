@@ -12,17 +12,19 @@
           rounded-md
           border-b border-gray-100
         " :class="{ 'bg-sky-400 text-white': item._id === currentConversation?._id }"
-        @click="selectConversation(item, item._id)">
+        @click="selectConversation(item)">
         <div class="relative w-14 ">
           <img 
           v-if="receiver(item.participants)?.profilePicture !== ''"
           class="rounded-full  w-10 h-10 object-cover" 
           :src="receiver(item.participants)?.profilePicture" 
+          loading="lazy"
           alt="" />
           <img 
           v-else
           class="rounded-full  w-10 h-10 object-cover" 
           src="../assets/noAvatar.png" 
+          loading="lazy"
           alt="" />
           <div
             class="absolute -right-3 bottom-5 h-4 w-4 sm:top-2 rounded-full border-2 border-white bg-green-400 sm:invisible md:visible"
@@ -67,18 +69,17 @@ export default {
       return this.users.find(connection => connection._id === receiverId[0])
     },
 
-    selectConversation(conversation, id) {
+    selectConversation(conversation) {
       this.$store.commit("SET_CURRENT_CONVERSATION", conversation);
-
-      // Check if the messages are already loaded in the store of this current conversation
-      this.$store.state.messages.filter(message => message.conversationId == id).length == 0 ?
-        this.loadMessages(id) :
-        console.log("messages already loaded");
+      // // Check if the messages are already loaded in the store of this current conversation
+      // this.$store.state.messages.filter(message => message.conversationId == id).length == 0 ?
+      //   this.loadMessages(id) :
+      //   console.log("messages already loaded");
     },
 
-    loadMessages(id) {
-      this.$store.dispatch("getMessages", { id })
-    }
+    // loadMessages(id) {
+    //   this.$store.dispatch("getMessages", { id })
+    // }
   }
 };
 </script>

@@ -1,19 +1,7 @@
 <template>
-  <main class="flex justify-between md:p-3">
-    <TheProfileSidebar />
-
+  <main class="w-3/4 flex justify-between md:p-3">
     <section
-      class="
-        w-full
-        md:w-1/2
-        flex flex-col
-        items-center
-        px-1
-        md:px-6
-        min-h-scrollPost
-        max-h-scrollPost
-        overflow-y-scroll
-      "
+      class="w-full md:w-3/4 flex flex-col items-center px-1 md:px-6 min-h-scrollPost max-h-scrollPost overflow-y-scroll"
     >
       <TheNewPost />
       <div v-if="timelinePosts.length > 0" class="flex flex-col">
@@ -28,7 +16,7 @@
       </div>
     </section>
 
-    <aside class="w-1/4 mr-7 hidden md:block">
+    <aside class="w-1/3 mr-7 hidden md:block">
       <ThePeopleYouMayKnow />
       <TheDiscussions />
     </aside>
@@ -36,7 +24,6 @@
 </template>
 
 <script>
-import TheProfileSidebar from "@/components/TheProfileSidebar.vue";
 import TheNewPost from "@/components/TheNewPost.vue";
 import { mapGetters } from "vuex";
 import ThePost from "../components/ThePost.vue";
@@ -49,7 +36,6 @@ export default {
     ...mapGetters(["user", "users", "posts", "timelinePosts"]),
   },
   components: {
-    TheProfileSidebar,
     TheNewPost,
     ThePost,
     TheDiscussions,
@@ -72,9 +58,7 @@ export default {
         this.$router.push("/login");
       }
     }
+    this.$emit("connect");
   },
 };
 </script>
-
-<style>
-</style>

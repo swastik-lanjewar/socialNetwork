@@ -117,9 +117,11 @@ export default {
   methods: {
     logout() {
       this.menubar = false;
+      // delete the token from local storage
       localStorage.removeItem("token");
+      this.$emit("removeUser")
+      this.$store.commit("REMOVE_TOKEN")
       this.$router.push("/login");
-      // delelte the token from local storage
     },
   },
   computed: {

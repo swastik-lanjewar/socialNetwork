@@ -5,11 +5,13 @@
         <img
           v-if="user?.profilePicture != ''"
           :src="user?.profilePicture"
+          loading="lazy"
         />
         <img
         v-else
           src="../assets/noAvatar.png"
-        />
+          loading="lazy"
+          />
       </div>
       <div class="ml-5">
         <h2 class="font-bold">{{ user.username }}</h2>

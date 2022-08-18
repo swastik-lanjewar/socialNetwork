@@ -1,4 +1,12 @@
 export default {
+    SET_TOKEN(state, token) {
+        state.token = token
+    },
+
+    REMOVE_TOKEN(state) { 
+        state.token = null
+    },
+
     SET_USER(state, user) {
         state.user = user
     },
@@ -12,13 +20,33 @@ export default {
     },
 
     SET_CONVERSATIONS(state, conversations) {
-        state.conversations = conversations
+        if (state.conversations.length <= 0) {
+            state.conversations = conversations
+            state.conversations.forEach(conv => {
+                conv['messages'] = []
+            })
+        } else {
+            conversations.forEach(conv => {
+                let index = state.conversations.findIndex(c => c.id === conv.id)
+                if (index === -1) {
+                    state.conversations.push(conv)
+                    conv['messages'] = []
+                }
+            })
+        }
     },
 
     SET_CURRENT_CONVERSATION(state, conversation) {
         state.currentConversation = conversation
     },
-
+        
+    ADD_NEW_MESSAGES(state, message) {
+        state.conversations.forEach(conversation => {
+            if (conversation._id !== message.conversationId) return 
+            conversation.messages.push(message)
+        })
+    },
+    
     SET_MESSAGES(state, {
         conversationId,
         messages
@@ -53,17 +81,6 @@ export default {
         state.timelinePosts.splice(index, 1, post)
         const index2 = state.posts.findIndex(p => p._id === post._id)
         state.posts.splice(index2, 1, post)
-    },
-
-    ADD_NEW_MESSAGES(state, {
-        conversationId,
-        message
-    }) {
-        const index = state.messages.findIndex(m => m.conversationId === conversationId)
-        state.messages.splice(index, 1, {
-            conversationId,
-            messages: [...state.messages[index].messages, message]
-        })
     },
 
     TOGGLE_SAVE_MESSAGES(state, value) {

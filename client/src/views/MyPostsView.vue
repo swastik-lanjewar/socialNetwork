@@ -1,11 +1,10 @@
 <template>
-  <main class="flex justify-between md:p-3">
-    <TheProfileSidebar />
+  <main class="w-3/4 flex justify-between md:p-3">
 
     <section
       class="
         w-full
-        md:w-1/2
+        md:w-3/4
         flex flex-col
         items-center
         px-1
@@ -30,7 +29,7 @@
 
     </section>
 
-    <aside class="w-1/4 mr-7 hidden md:block">
+    <aside class="w-1/3 mr-7 hidden md:block">
       <ThePeopleYouMayKnow />
       <TheDiscussions />
     </aside>
@@ -38,7 +37,6 @@
 </template>
 
 <script>
-import TheProfileSidebar from "@/components/TheProfileSidebar.vue";
 import TheNewPost from "@/components/TheNewPost.vue";
 import { mapGetters } from "vuex";
 import ThePost from "../components/ThePost.vue";
@@ -51,7 +49,6 @@ export default {
     ...mapGetters(["user", "posts"]),
   },
   components: {
-    TheProfileSidebar,
     TheNewPost,
     ThePost,
     TheDiscussions,

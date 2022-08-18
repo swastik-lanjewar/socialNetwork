@@ -7,7 +7,7 @@
         v-for="suggestion in peopleYouMayKnow"
         :key="suggestion.name"
       >
-        <img class="w-1/12 rounded-full" :src="suggestion.img" alt="" />
+        <img class="w-1/12 rounded-full" :src="suggestion.img" alt="" loading="lazy" />
         <h2 class="font-semibold mx-4 w-full">{{ suggestion.name }}</h2>
         <button class="bg-blue-200 rounded p-1 text-blue-600 font-semibold">
           Connect

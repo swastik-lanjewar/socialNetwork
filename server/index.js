@@ -18,8 +18,6 @@ app.use(cors({
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
 }))
 
-// uncomment if you want to run in localhost
-// app.use(cors()) 
 app.use(express.json())
 app.use(express.urlencoded({
     extended: true
@@ -62,21 +60,20 @@ io.on("connection", (socket) => {
     socket.on("addUser", ({userId}) => {
         addUser(userId, socket.id)
         io.emit("getUsers", users)
-        console.log(`${userId} connected`)
+        console.log(`${userId} connected`, users)
     })
 
-
-    socket.on('message', ({senderId, receiverId, message, time}) => {
+    socket.on('message', ({receiverId, ...otherData}) => {
         const user = getUser(receiverId)
         if(user){
-            io.to(user.socketId).emit('message', {senderId, receiverId, message, time})
+            io.to(user.socketId).emit('message', {receiverId, ...otherData})
         }
     })
 
-    socket.on('typing', ({senderId, receiverId, typing}) => {
+    socket.on('typing', ({receiverId, ...otherData}) => {
         const user = getUser(receiverId)
         if (user) { 
-            io.to(user.socketId).emit('typing', {senderId, receiverId, typing})
+            io.to(user.socketId).emit('typing', {receiverId, ...otherData})
         }
     })
 

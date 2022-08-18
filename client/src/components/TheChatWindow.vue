@@ -1,18 +1,10 @@
 <template>
-  <section class="w-full md:w-1/2 md:px-6 relative">
+  <section class="w-full md:w-3/4 md:px-6 relative">
     <div
       class="w-full rounded-md shadow-md h-full flex flex-col justify-evenly"
     >
       <div
-        class="
-          px-4
-          py-2
-          flex
-          justify-between
-          border-b
-          items-center
-          border-gray-400
-        "
+        class="px-4 py-2 flex justify-between border-b items-center border-gray-400"
       >
         <div class="flex justify-between items-center w-full">
           <div class="flex grow">
@@ -20,12 +12,14 @@
               v-if="user.profilePicture != ''"
               class="w-9 aspect-square rounded-full mr-4"
               :src="receiver?.profilePicture"
+              loading="lazy"
               alt=""
             />
             <img
               v-else
               class="w-9 aspect-square rounded-full mr-4"
               src="../assets/noAvatar.png"
+              loading="lazy"
               alt=""
             />
             <h2 class="w-full font-semibold text-xl">
@@ -49,24 +43,28 @@
 
       <section class="p-2 flex-row overflow-auto flex-grow" ref="chatWindow">
         <div
-          :class="{ 'flex w-full justify-end': message.received !== true }"
-          v-for="(message, index) in conversation"
-          :key="index"
+          :class="{ 'flex w-full justify-end': m.received !== true }"
+          v-for="(m, i) in messages(currentConversation._id)"
+          :key="i"
         >
           <div
             class="rounded-lg bg-blue-100 w-fit p-1 px-4 my-2"
-            :class="{ 'text-right': message.received !== true }"
+            :class="{ 'text-right': m.received !== true }"
           >
-            <TheImg :blob="message.data.image" v-if="message.data.image" />
-            <p class="text-left" v-if="message.data.image">
-              {{ message.data.caption }}
+            <TheImg :blob="m.message.image" v-if="m.message.image" />
+            <p class="text-left" v-if="m.message.image">
+              {{ m.message.caption }}
             </p>
-            <p class="text-left" v-else>{{ message.data }}</p>
-            <p class="text-xs">{{ timeAgo(message.time) }}</p>
+            <p class="text-left" v-else>{{ m.message }}</p>
+            <p class="text-xs">{{ timeAgo(m.time) }}</p>
           </div>
         </div>
-
-        <p v-show="isTyping" class="text-green-500 font-semibold">Typing...</p>
+        <p
+          v-show="isTyping"
+          class="text-green-500 font-semibold w-fit py-2 px-4 rounded-full"
+        >
+          Typing...
+        </p>
       </section>
 
       <div class="p-2 border-t border-gray-400">
@@ -75,35 +73,16 @@
           <div v-if="previewImage" class="w-fit relative">
             <img class="w-40 rounded-md shadow-md mb-2" :src="previewImage" />
             <button
-              class="
-                absolute
-                -top-2
-                left-full
-                transform
-                -translate-x-4
-                bg-red-500
-                px-2
-                rounded-full
-                text-white
-              "
+              class="absolute -top-2 left-full transform -translate-x-4 bg-red-500 px-2 rounded-full text-white"
               @click="(image = null), (previewImage = null)"
             >
               <i class="-mt-4 fa fa-times"></i>
             </button>
           </div>
-          <!-- <img class="w-40 rounded-md shadow-md mb-2"  src="https://source.unsplash.com/random/200x200/?girl" /> -->
         </div>
         <label class="flex items-center">
           <label
-            class="
-              hover:cursor-pointer
-              bg-blue-500
-              text-center
-              p-1
-              mr-2
-              rounded-lg
-              text-white
-            "
+            class="hover:cursor-pointer bg-blue-500 text-center p-1 mr-2 rounded-lg text-white"
           >
             <i class="ml-2 fas fa-image mr-2"></i>
             <input
@@ -119,7 +98,7 @@
             placeholder="Write Something..."
             class="w-full focus:outline-none"
             v-model="message"
-            @keypress="typing"
+            @keydown="typing"
           />
           <button
             class="bg-blue-400 px-4 py-1 rounded-full text-white"
@@ -134,20 +113,23 @@
 </template>
 
 <script>
-import io from "socket.io-client";
 import { mapGetters } from "vuex";
 import TheImg from "@/components/utils/TheImg.vue";
 export default {
   name: "TheChatWindow",
   components: {
     TheImg,
-},
+  },
+  props: {
+    isTyping: {
+      type: Boolean,
+      default: false,
+    }
+  },
   data() {
     return {
       greeting: null,
       message: "",
-      conversation: [],
-      isTyping: false,
       image: null,
       previewImage: null,
       socket: {},
@@ -156,48 +138,44 @@ export default {
   },
   methods: {
     typing() {
-      this.socket.emit("typing", {
-        userid: this.userid,
+      this.$emit("typing", {
         senderId: this.user._id,
         receiverId: this.receiver._id,
+        conversationId: this.currentConversation._id,
       });
     },
+    
     sendMessage() {
+      let msgObject;
       if (this.image) {
-        this.conversation.push({
-          received: false,
-          data: {
-            caption: this.message,
+        msgObject = {
+          message: {
             image: this.image,
+            caption: this.message,
           },
-          userid: this.user._id,
-          time: new Date(),
-        });
-
-        this.socket.emit("message", {
           senderId: this.user._id,
           receiverId: this.receiver._id,
-          message: {
-            caption: this.message,
-            image: this.image,
-          },
+          conversationId: this.currentConversation._id,
           time: new Date(),
+        };
+        this.$emit("sendMessage", msgObject);
+        this.$store.commit("ADD_NEW_MESSAGES", {
+          ...msgObject,
+          received: false,
         });
       } else {
         if (this.message.length <= 0) return;
-
-        this.socket.emit("message", {
-          senderId: this.user._id,
+        msgObject = {
+          conversationId: this.currentConversation._id,
           receiverId: this.receiver._id,
+          senderId: this.user._id,
           message: this.message,
           time: new Date(),
-        });
-
-        this.conversation.push({
+        };
+        this.$emit("sendMessage", msgObject);
+        this.$store.commit("ADD_NEW_MESSAGES", {
+          ...msgObject,
           received: false,
-          data: this.message,
-          userid: this.user._id,
-          time: new Date(),
         });
       }
       // this.saveMessage(this.user._id, this.currentConversation._id, this.message)
@@ -220,21 +198,6 @@ export default {
     },
 
     loadConversation() {
-      // sperad the messages in the conversation
-      this.conversation = this.messages
-        ?.filter(
-          (message) => message.conversationId === this.currentConversation._id
-        )[0]
-        .messages.map((msg) => {
-          return {
-            received: msg.sender !== this.user._id,
-            data: msg.text,
-            userid: msg.sender,
-            time: msg.createdAt,
-          };
-        })
-        .sort((a, b) => a.time - b.time);
-
       this.scrollToBottom();
     },
     // image selected
@@ -284,44 +247,6 @@ export default {
   },
   updated() {
     this.scrollToBottom();
-  },
-  created() {
-    // this.socket = io("https://letsbug-social-network.herokuapp.com/", {
-    //   transports: ["websocket"],
-    // });
-
-    this.socket = io("http://localhost:3000/", {
-      transports: ["websocket"],
-    });
-
-    this.socket.on("connect", () => {
-      console.log("connected");
-    });
-
-    this.socket.on("disconnect", () => {
-      console.log("disconnected");
-    });
-
-    this.socket.emit("addUser", { userId: this.user._id });
-    this.socket.on("getUsers", (data) => {
-      this.$store.commit("SET_ONLINE_USERS", data);
-    });
-
-    this.socket.on("message", (data) => {
-      this.conversation.push({
-        received: true,
-        data: data.message,
-        time: data.time,
-      });
-      this.scrollToBottom();
-    });
-
-    this.socket.on("typing", () => {
-      this.isTyping = true;
-      setTimeout(() => {
-        this.isTyping = false;
-      }, 500);
-    });
   },
   computed: {
     ...mapGetters([

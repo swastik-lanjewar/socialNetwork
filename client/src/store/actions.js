@@ -1,13 +1,9 @@
 import axios from '@/utils/http-common'
 export default {
     //action to create a new account of the user 
-    async createAccount({
-        commit
-    }, payload) {
+    async createAccount(state, payload) {
         try {
             const response = await axios.post('/auth/create-account/', payload)
-            localStorage.setItem('token', response.data.token)
-            commit('SET_USER', response.data.user)
             return response
         } catch (error) {
             return error
@@ -22,6 +18,7 @@ export default {
             axios.post('/auth/login/', payload)
                 .then(response => {
                     localStorage.setItem('token', response.data.token)
+                    commit('SET_TOKEN', response.data.token)
                     commit('SET_USER', response.data.user)
                     resolve(response)
                 })
@@ -190,7 +187,7 @@ export default {
             commit("SET_POSTS", [...state.posts, response.data.post])
             commit("SET_TIMELINE_POSTS", [...state.timelinePosts, response.data.post])
         } catch (error) {
-            console.error(error.messages)
+            console.error(error.message)
         }
     },
 
@@ -206,7 +203,7 @@ export default {
             commit("DELETE_POST", payload)
             commit("DELETE_TIMELINE_POST", payload)
         } catch (error) {
-            console.error(error.messages)
+            console.error(error.message)
         }
     },
 
@@ -223,7 +220,7 @@ export default {
             })
             commit("SET_TIMELINE_POSTS", response.data.timeline)
         } catch (error) {
-            console.error(error.messages)
+            console.error(error.message)
         }
     },
 

@@ -13,7 +13,7 @@ const routes = [
   {
     path: '/login',
     name: 'LoginView',
-    component: () => import('../views/LoginView.vue'),
+    component: () => import(/* webpackChunkName: "LoginView" */'../views/LoginView.vue'),
     meta: {
       requiresGuest: true
     }
@@ -21,7 +21,7 @@ const routes = [
   {
     path: '/create-account',
     name: 'CreateAccountView',
-    component: () => import('../views/CreateAccountView.vue'),
+    component: () => import(/* webpackChunkName: "CreateAccount" */'../views/CreateAccountView.vue'),
     meta: {
       requiresGuest: true
     }
@@ -29,7 +29,7 @@ const routes = [
   {
     path: '/message',
     name: 'ChatView',
-    component: () => import('../views/ChatView.vue'),
+    component: () => import(/* webpackChunkName: "ChatView" */'../views/ChatView.vue'),
     meta: {
       requiresAuth: true
     }
@@ -37,7 +37,7 @@ const routes = [
   {
     path: '/settings',
     name: 'SettingsView',
-    component: () => import('../views/SettingsView.vue'),
+    component: () => import(/* webpackChunkName: "SettingsView" */'../views/SettingsView.vue'),
     meta: {
       requiresAuth: true
     }
@@ -45,7 +45,7 @@ const routes = [
   {
     path: '/people',
     name: 'PeopleView',
-    component: () => import('../views/PeopleView.vue'),
+    component: () => import(/* webpackChunkName: "PeopleView" */'../views/PeopleView.vue'),
     meta: {
       requiresAuth: true
     }
@@ -53,7 +53,7 @@ const routes = [
   {
     path: '/my-posts',
     name: 'MyPostsView',
-    component: () => import('../views/MyPostsView.vue'),
+    component: () => import(/* webpackChunkName: "MyPostsView" */'../views/MyPostsView.vue'),
     meta: {
       requiresAuth: true
     }
@@ -61,7 +61,7 @@ const routes = [
   {
     path: '/profile/:id',
     name: 'ProfileView',
-    component: () => import('../views/ProfileView.vue'),
+    component: () => import(/* webpackChunkName: "ProfileView" */'../views/ProfileView.vue'),
     props:true,
     meta: {
       requiresAuth: true
@@ -71,7 +71,7 @@ const routes = [
   {
     path:'/:catchall(.*)',
     name:'Error404View',
-    component: () => import('../views/ErrorView.vue')
+    component: () => import(/* webpackChunkName: "Error404" */ '../views/ErrorView.vue')
   }
 ]
 

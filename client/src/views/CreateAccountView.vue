@@ -87,7 +87,7 @@ export default {
           this.clearInputs();
           this.loading = false;
           this.$refs.alertSnackbar.show("success", "Account Created ");
-          this.$router.push("/");
+          this.$router.push("/login");
         } catch (error) {
           this.clearInputs();
           this.loading = false;
