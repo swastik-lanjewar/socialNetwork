@@ -10,7 +10,7 @@ export default createStore({
     user: {},
     users: [],
     connections: [],
-    conversations: {},
+    conversations: [],
     currentConversation: null,
     messages: [],
     onlineUsers: [],

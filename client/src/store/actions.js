@@ -1,14 +1,9 @@
 import axios from '@/utils/http-common'
 export default {
     //action to create a new account of the user 
-    async createAccount({
-        commit
-    }, payload) {
+    async createAccount(state, payload) {
         try {
             const response = await axios.post('/auth/create-account/', payload)
-            localStorage.setItem('token', response.data.token)
-            commit('SET_TOKEN', response.data.token)
-            commit('SET_USER', response.data.user)
             return response
         } catch (error) {
             return error

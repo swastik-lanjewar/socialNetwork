@@ -29,10 +29,7 @@ export default {
   },
   async created() {
     try {
-      if(this.conversations.length <= 0) {
-        await this.$store.dispatch("getConversations");
-        // this.currentConversation = this.conversations[0];
-      }
+      await this.$store.dispatch("getConversations");
     } catch (error) {
       console.log(error);
     }

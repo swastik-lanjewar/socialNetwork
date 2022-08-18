@@ -20,10 +20,20 @@ export default {
     },
 
     SET_CONVERSATIONS(state, conversations) {
-        state.conversations = conversations
-        state.conversations.forEach(conv => {
-            conv['messages'] = []
-        })
+        if (state.conversations.length <= 0) {
+            state.conversations = conversations
+            state.conversations.forEach(conv => {
+                conv['messages'] = []
+            })
+        } else {
+            conversations.forEach(conv => {
+                let index = state.conversations.findIndex(c => c.id === conv.id)
+                if (index === -1) {
+                    state.conversations.push(conv)
+                    conv['messages'] = []
+                }
+            })
+        }
     },
 
     SET_CURRENT_CONVERSATION(state, conversation) {
