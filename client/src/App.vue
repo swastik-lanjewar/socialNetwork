@@ -1,6 +1,6 @@
 <template>
   <div class="relative">
-    <TheNavbar></TheNavbar>
+    <TheNavbar @removeUser="removeUser"></TheNavbar>
 
     <main class="flex justify-between md:p-3">
       <TheProfileSidebar v-if="token" />
@@ -18,7 +18,7 @@
       </router-view>
     </main>
 
-    <TheNavbarBottom></TheNavbarBottom>
+    <TheNavbarBottom @removeUser="removeUser"></TheNavbarBottom>
   </div>
 </template>
 
@@ -93,6 +93,10 @@ export default {
 
     typing(data) {
       this.socket.emit("typing", data);
+    },
+
+    removeUser() {
+      this.socket.emit("removeUser", { userId: this.user._id });
     }
 
   },

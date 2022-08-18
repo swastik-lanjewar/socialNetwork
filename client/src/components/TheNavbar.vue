@@ -59,6 +59,7 @@ export default {
       // delete the token from local storage
       localStorage.removeItem("token");
       this.$store.commit("REMOVE_TOKEN")
+      this.$emit("removeUser")
       // redirect to login page
       this.$router.push("/login");
     },
