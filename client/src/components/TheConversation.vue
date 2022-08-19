@@ -1,8 +1,10 @@
 <template>
   <div class="rounded-md shadow-md p-2 overflow-y-auto">
     <h3 class="font-semibold m-2">Conversations</h3>
-    <ul>
-      <li v-for="(item, index) in conversations" :key="index" class="
+    <ul  v-if="conversations.length > 0" >
+      <li
+       
+        v-for="(item, index) in conversations" :key="index" class="
           p-2
           flex
           justify-start
@@ -42,6 +44,9 @@
         </div>
       </li>
     </ul>
+    <div v-else class="text-center text-gray-500">
+      <p>No conversations yet</p>
+    </div>
   </div>
 </template>
 

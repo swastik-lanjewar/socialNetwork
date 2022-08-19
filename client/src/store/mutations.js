@@ -29,15 +29,31 @@ export default {
             conversations.forEach(conv => {
                 let index = state.conversations.findIndex(c => c.id === conv.id)
                 if (index === -1) {
-                    state.conversations.push(conv)
                     conv['messages'] = []
+                    state.conversations.push(conv)
                 }
             })
         }
     },
 
+    NEW_CONVERSATIONS(state, conversation) {
+        conversation['messages'] = []
+        state.conversations.push(conversation)
+    }, 
+
+    DELETE_CONVERSATION(state, conversationId) {
+        let index = state.conversations.findIndex(c => c._id === conversationId)
+        if (index !== -1) {
+            state.conversations.splice(index, 1)
+        }
+    },
+
     SET_CURRENT_CONVERSATION(state, conversation) {
         state.currentConversation = conversation
+    },
+
+    REMOVE_CURRENT_CONVERSATION(state) {
+        state.currentConversation = null
     },
         
     ADD_NEW_MESSAGES(state, message) {
