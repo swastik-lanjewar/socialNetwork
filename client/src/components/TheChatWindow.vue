@@ -31,7 +31,7 @@
             <button class="px-2">
               <i class="fa fa-phone"></i>
             </button>
-            <button class="px-2" @click="videoCall = true">
+            <button class="px-2" @click="$emit('videoCall')">
               <i class="fa fa-video"></i>
             </button>
           </div>

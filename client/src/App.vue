@@ -2,6 +2,8 @@
   <div class="relative">
     <TheNavbar @removeUser="removeUser"></TheNavbar>
 
+    <TheVideoCallWindow :videoCall="videoCall" :inStream="true" :outStream="true" @cancel="videoCall = !videoCall" />
+
     <main class="flex justify-between md:p-3">
       <TheProfileSidebar v-if="token" />
 
@@ -13,6 +15,7 @@
             @sendMessage="sendMessage"
             @typing="typing"
             :isTyping="isTyping"
+            @videoCall="handleVideoCall"
           />
         </transition>
       </router-view>
@@ -28,13 +31,15 @@ import TheProfileSidebar from "@/components/TheProfileSidebar.vue";
 import TheNavbar from "@/components/TheNavbar.vue";
 import TheNavbarBottom from "./components/TheNavbarBottom.vue";
 import { mapGetters } from "vuex";
+import TheVideoCallWindow from "./components/TheVideoCallWindow.vue";
 export default {
-  components: { TheNavbar, TheNavbarBottom, TheProfileSidebar },
+  components: { TheNavbar, TheNavbarBottom, TheProfileSidebar, TheVideoCallWindow },
   name: "App",
   data() {
     return {
       socket: {},
-      isTyping:false,
+      isTyping: false,
+      videoCall:false,
     };
   },
   computed: {
@@ -97,6 +102,10 @@ export default {
 
     removeUser() {
       this.socket.emit("removeUser", { userId: this.user._id });
+    }, 
+
+    handleVideoCall() {
+      this.videoCall = true
     }
 
   },
