@@ -2,21 +2,15 @@
   <div class="relative">
     <TheNavbar @removeUser="removeUser"></TheNavbar>
 
-    <TheVideoCallWindow :videoCall="videoCall" :inStream="true" :outStream="true" @cancel="videoCall = !videoCall" />
+    <TheVideoCallWindow v-if="videoCall" :inStream="true" :outStream="true" @cancel="videoCall = !videoCall" />
 
     <main class="flex justify-between md:p-3">
       <TheProfileSidebar v-if="token" />
 
       <router-view v-slot="{ Component }">
         <transition name="fade" mode="out-in">
-          <component 
-            :is="Component" 
-            @connect="connect" 
-            @sendMessage="sendMessage"
-            @typing="typing"
-            :isTyping="isTyping"
-            @videoCall="handleVideoCall"
-          />
+          <component :is="Component" @connect="connect" @sendMessage="sendMessage" @typing="typing" :isTyping="isTyping"
+            @videoCall="handleVideoCall" />
         </transition>
       </router-view>
     </main>
@@ -39,7 +33,7 @@ export default {
     return {
       socket: {},
       isTyping: false,
-      videoCall:false,
+      videoCall: false,
     };
   },
   computed: {
@@ -102,7 +96,7 @@ export default {
 
     removeUser() {
       this.socket.emit("removeUser", { userId: this.user._id });
-    }, 
+    },
 
     handleVideoCall() {
       this.videoCall = true

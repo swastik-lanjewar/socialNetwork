@@ -2,25 +2,53 @@
   <section
     ref="draggableContainer"
     id="draggable-container"
-    :class="{ 'hidden': !videoCall }"
     class="absolute top-0 left-0 aspect-video w-fit z-50 bg-white text-white rounded-lg pl-1 drop-shadow-lg"
   >
-    <header class="p-2 px-4 hover:cursor-grab flex justify-between text-black font-semibold text-xl" id="draggable-header" @mousedown="dragMouseDown">
-        Hacker101
+    <header
+      class="p-2 px-4 hover:cursor-grab flex justify-between text-black font-semibold text-xl"
+      id="draggable-header"
+      @mousedown="dragMouseDown"
+    >
+      Hacker101
     </header>
     <main class="relative">
       <!-- <img class="absolute inset w-20" src="https://source.unsplash.com/random/200x200/" alt=""> -->
-      <video id="video-preview" class=" max-h-96" autoplay loop v-show="file != ''" />
+      <video
+        ref="video-preview"
+        class="max-h-96"
+        autoplay
+        loop
+        v-show="file != ''"
+      />
     </main>
     <footer class="flex justify-evenly py-2">
-      <button class="p-2 bg-white text-gray-900 font-bold w-10 h-10 rounded-full">
-        <i class="fas fa-video"></i>
+      <button
+        class="p-2 bg-white text-gray-900 font-bold w-10 h-10 rounded-full bg-gray-200"
+        @click="options.video = !options.video"
+      >
+        <span v-if="!options.video">
+          <i class="fas fa-video"></i>
+        </span>
+        <span v-else>
+          <i class="fas fa-video-slash"></i> 
+        </span>
       </button>
-      <button @click="handleCancel" class="p-2 bg-red-500 text-white font-bold w-10 h-10 rounded-full">
+      <button
+        @click="handleCancel"
+        class="p-2 bg-red-500 text-white font-bold w-10 h-10 rounded-full"
+      >
         <i class="fas fa-phone"></i>
       </button>
-      <button class="p-2 bg-white text-gray-900 font-bold w-10 h-10 rounded-full">
-        <i class="fas fa-microphone"></i>
+      <button
+        class="p-2 bg-white text-gray-900 font-bold w-10 h-10 rounded-full bg-gray-200"
+        @click="options.audio = !options.audio"
+      >
+        <span v-if="!options.audio">
+          <i class="fas fa-microphone"></i>
+        </span>
+        <span v-else>
+          <i class="fas fa-microphone-slash"></i>
+        </span>
       </button>
     </footer>
     <!-- <input type="file" accept="video/*" @change="handleFileUpload($event)" /> -->
@@ -31,10 +59,6 @@
 export default {
   name: "TheVideoCallWindow",
   props: {
-    videoCall: {
-      type: Boolean,
-      default: false,
-    },
     inStream: {
       type: Boolean,
       default: false,
@@ -53,22 +77,39 @@ export default {
         movementX: 0,
         movementY: 0,
       },
+      options: {
+        audio: true,
+        video: true,
+      },
     };
   },
-  methods: {
-    handleFileUpload(event) {
-      this.file = event.target.files[0];
-      this.previewVideo();
-    },
-    previewVideo() {
-      let video = document.getElementById("video-preview");
-      let reader = new FileReader();
-
-      reader.readAsDataURL(this.file);
-      reader.addEventListener("load", function () {
-        video.src = reader.result;
+  mounted() {
+    navigator.mediaDevices
+      .getUserMedia({ video: this.options.video, audio: this.options.audio })
+      .then((stream) => {
+        // set the video stream to the video element
+        this.$refs.videoPreview.srcObject = stream;
+      })
+      .catch((err) => {
+        console.log(err);
+        alert("Something went wrong!");
+        this.handleCancel()
       });
-    },
+  },
+  methods: {
+    // handleFileUpload(event) {
+    //   this.file = event.target.files[0];
+    //   this.previewVideo();
+    // },
+    // previewVideo() {
+    //   let video = document.getElementById("video-preview");
+    //   let reader = new FileReader();
+
+    //   reader.readAsDataURL(this.file);
+    //   reader.addEventListener("load", function () {
+    //     video.src = reader.result;
+    //   });
+    // },
 
     dragMouseDown(event) {
       event.preventDefault();
