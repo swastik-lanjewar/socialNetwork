@@ -1,6 +1,6 @@
 <template>
   <section
-    class="w-full h-screen flex justify-center content-center bg-gray-50"
+    class="w-full h-screen flex justify-center content-center"
   >
     <form
       @submit.prevent="login"

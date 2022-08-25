@@ -13,24 +13,18 @@
     </header>
     <main class="relative">
       <!-- <img class="absolute inset w-20" src="https://source.unsplash.com/random/200x200/" alt=""> -->
-      <video
-        ref="video-preview"
-        class="max-h-96"
-        autoplay
-        loop
-        v-show="file != ''"
-      />
+      <video ref="videoPreview" class="max-h-96 min-h-96" autoplay />
     </main>
     <footer class="flex justify-evenly py-2">
       <button
-        class="p-2 bg-white text-gray-900 font-bold w-10 h-10 rounded-full bg-gray-200"
+        class="p-2 text-gray-900 font-bold w-10 h-10 rounded-full bg-gray-200"
         @click="options.video = !options.video"
       >
         <span v-if="!options.video">
           <i class="fas fa-video"></i>
         </span>
         <span v-else>
-          <i class="fas fa-video-slash"></i> 
+          <i class="fas fa-video-slash"></i>
         </span>
       </button>
       <button
@@ -40,7 +34,7 @@
         <i class="fas fa-phone"></i>
       </button>
       <button
-        class="p-2 bg-white text-gray-900 font-bold w-10 h-10 rounded-full bg-gray-200"
+        class="p-2 bg-white text-gray-900 font-bold w-10 h-10 rounded-full"
         @click="options.audio = !options.audio"
       >
         <span v-if="!options.audio">
@@ -51,7 +45,6 @@
         </span>
       </button>
     </footer>
-    <!-- <input type="file" accept="video/*" @change="handleFileUpload($event)" /> -->
   </section>
 </template>
 
@@ -80,36 +73,39 @@ export default {
       options: {
         audio: true,
         video: true,
+        front: true,
       },
     };
   },
   mounted() {
-    navigator.mediaDevices
-      .getUserMedia({ video: this.options.video, audio: this.options.audio })
-      .then((stream) => {
-        // set the video stream to the video element
-        this.$refs.videoPreview.srcObject = stream;
-      })
-      .catch((err) => {
-        console.log(err);
-        alert("Something went wrong!");
-        this.handleCancel()
-      });
+    this.stream();
+  },
+  watch: {
+    options() {
+      this.stream();
+    },
   },
   methods: {
-    // handleFileUpload(event) {
-    //   this.file = event.target.files[0];
-    //   this.previewVideo();
-    // },
-    // previewVideo() {
-    //   let video = document.getElementById("video-preview");
-    //   let reader = new FileReader();
-
-    //   reader.readAsDataURL(this.file);
-    //   reader.addEventListener("load", function () {
-    //     video.src = reader.result;
-    //   });
-    // },
+    async stream() {
+      let stream = null;
+      let videoConstraints = {
+        width: { min: 1024, ideal: 1280, max: 1920 },
+        height: { min: 576, ideal: 720, max: 1080 },
+        facingMode: this.options.front ? "user" : "environment",
+        frameRate: { ideal: 10, max: 15 },
+      };
+      let constraints = {
+        audio: this.options.audio,
+        video: this.options.video ? videoConstraints : false,
+      };
+      try {
+        stream = await navigator.mediaDevices.getUserMedia(constraints);
+        this.$refs.videoPreview.srcObject = stream;
+      } catch (err) {
+        alert("Something went wrong");
+        this.handleCancel();
+      }
+    },
 
     dragMouseDown(event) {
       event.preventDefault();

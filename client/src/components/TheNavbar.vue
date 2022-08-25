@@ -2,7 +2,7 @@
   <nav class="hidden md:flex justify-between p-3 shadow mb-3 max-h-10">
     <div class="ml-7">
       <h3 class="font-bold text-blue-800 tracking-wide">
-        SOCIAL NETWORK  <span class="text-gray-400">v1.0</span>
+        SOCIAL NETWORK <span class="text-gray-400">v1.0</span>
       </h3>
     </div>
     <div class="w-1/5 hidden md:block">
@@ -13,7 +13,13 @@
           </router-link>
         </li>
         <li>
-          <button>
+          <button
+            type="button"
+            class="inline-flex justify-center w-full"
+            @click="showNotification = !showNotification"
+            aria-expanded="true"
+            aria-haspopup="true"
+          >
             <i class="fas fa-solid fa-bell"></i>
           </button>
         </li>
@@ -52,14 +58,15 @@ export default {
           link: "/message",
         },
       ],
+      showNotification: false,
     };
   },
   methods: {
     logout() {
       // delete the token from local storage
       localStorage.removeItem("token");
-      this.$store.commit("REMOVE_TOKEN")
-      this.$emit("removeUser")
+      this.$store.commit("REMOVE_TOKEN");
+      this.$emit("removeUser");
       // redirect to login page
       this.$router.push("/login");
     },

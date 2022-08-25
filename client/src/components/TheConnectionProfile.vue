@@ -5,7 +5,6 @@
       rounded-lg
       border border-gray-200
       shadow-md
-      dark:bg-gray-800 dark:border-gray-700
       w-full
       p-4
       my-1
@@ -24,10 +23,10 @@
         src="../assets/noAvatar.png"
         alt="Bonnie image"
       />
-      <h5 class="mb-1 text-xl font-medium text-gray-900 dark:text-white">
+      <h5 class="mb-1 text-xl font-medium text-gray-900">
         {{ people?.username }}
       </h5>
-      <span class="text-sm text-gray-500 dark:text-gray-400">{{
+      <span class="text-sm text-gray-500">{{
         people?.name
       }}</span>
       <div class="flex mt-4 space-x-3 lg:mt-6 items-center">

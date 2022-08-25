@@ -1,5 +1,5 @@
 <template>
-  <main class="w-3/4 flex justify-between p-3">
+  <main class="w-3/4 flex justify-between md:p-3">
 
     <section class="
         w-full

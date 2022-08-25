@@ -1,5 +1,5 @@
 <template>
-  <section class="w-full h-screen flex justify-center content-center bg-gray-50">
+  <section class="w-full h-screen flex justify-center content-center">
     <form @submit.prevent="createAccount" ref="createAccountForm" class="rounded bg-white w-fit h-fit p-6 shadow-md">
       <h1 class="text-2xl mb-4">Social Network | Create Account</h1>
       <div class="mb-4">
