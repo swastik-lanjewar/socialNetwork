@@ -9,7 +9,7 @@
         <div class="flex justify-between items-center w-full">
           <div class="flex grow">
             <img
-              v-if="user.profilePicture != ''"
+              v-if="receiver?.profilePicture !== ''"
               class="w-9 aspect-square rounded-full mr-4"
               :src="receiver?.profilePicture"
               loading="lazy"
@@ -17,7 +17,7 @@
             />
             <img
               v-else
-              class="w-9 aspect-square rounded-full mr-4"
+              class="rounded-full w-9 aspect-square mr-4"
               src="../assets/noAvatar.png"
               loading="lazy"
               alt=""
@@ -237,12 +237,12 @@ export default {
     },
 
     async deleteConversation(conversationId) {
-        try{
-          await this.$store.dispatch("deleteConversation", conversationId)
-          this.$store.commit("REMOVE_CURRENT_CONVERSATION")
-        } catch (error) {
-          console.log(error.message)
-        }
+      try {
+        await this.$store.dispatch("deleteConversation", conversationId);
+        this.$store.commit("REMOVE_CURRENT_CONVERSATION");
+      } catch (error) {
+        console.log(error.message);
+      }
     },
 
     loadConversation() {

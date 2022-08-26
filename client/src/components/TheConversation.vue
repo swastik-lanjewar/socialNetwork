@@ -1,39 +1,38 @@
 <template>
   <div class="rounded-md shadow-md p-2 overflow-y-auto">
     <h3 class="font-semibold m-2">Conversations</h3>
-    <ul  v-if="conversations.length > 0" >
+    <ul v-if="conversations.length > 0">
       <li
-       
-        v-for="(item, index) in conversations" :key="index" class="
-          p-2
-          flex
-          justify-start
-          items-center
-          hover:bg-sky-400 hover:text-white
-          cursor-pointer
-          rounded-md
-          border-b border-gray-100
-        " :class="{ 'bg-sky-400 text-white': item._id === currentConversation?._id }"
-        @click="selectConversation(item)">
-        <div class="relative w-14 ">
-          <img 
-          v-if="receiver(item.participants)?.profilePicture !== ''"
-          class="rounded-full  w-10 h-10 object-cover" 
-          :src="receiver(item.participants)?.profilePicture" 
-          loading="lazy"
-          alt="" />
-          <img 
-          v-else
-          class="rounded-full  w-10 h-10 object-cover" 
-          src="../assets/noAvatar.png" 
-          loading="lazy"
-          alt="" />
+        v-for="(item, index) in conversations"
+        :key="index"
+        class="p-2 flex justify-start items-center hover:bg-sky-400 hover:text-white cursor-pointer rounded-md border-b border-gray-100"
+        :class="{
+          'bg-sky-400 text-white': item._id === currentConversation?._id,
+        }"
+        @click="selectConversation(item)"
+      >
+        <div class="relative w-14">
+          <img
+            v-if="receiver(item.participants)?.profilePicture !== ''"
+            class="rounded-full w-10 h-10 object-cover"
+            :src="receiver(item.participants)?.profilePicture"
+            loading="lazy"
+            alt=""
+          />
+          <img
+            v-else
+            class="rounded-full w-10 h-10 object-cover"
+            src="../assets/noAvatar.png"
+            loading="lazy"
+            alt=""
+          />
           <div
             class="absolute -right-3 bottom-5 h-4 w-4 sm:top-2 rounded-full border-2 border-white bg-green-400 sm:invisible md:visible"
-            :title="`${receiver(item.participants)?.username} is online`" 
-            v-show="onlineConnections.includes(receiver(item.participants)?._id)"
-            >
-            </div>
+            :title="`${receiver(item.participants)?.username} is online`"
+            v-show="
+              onlineConnections.includes(receiver(item.participants)?._id)
+            "
+          ></div>
         </div>
         <div class="w-full ml-4">
           <button>{{ receiver(item.participants)?.username }}</button>
@@ -58,20 +57,28 @@ export default {
     conversations: Object,
   },
   computed: {
-    ...mapGetters(['user','users', 'connections', 'currentConversation', 'onlineUsers']),
-    onlineConnections(){
-      const online = []
-       this.onlineUsers.forEach(user => {
-        if(this.user.connections.includes(user.userId)) online.push(user.userId)
-      })
-      return online
-    }
+    ...mapGetters([
+      "user",
+      "users",
+      "connections",
+      "currentConversation",
+      "onlineUsers",
+    ]),
+    onlineConnections() {
+      const online = [];
+      this.onlineUsers.forEach((user) => {
+        if (this.user.connections.includes(user.userId))
+          online.push(user.userId);
+      });
+      return online;
+    },
   },
   methods: {
-
     receiver(participants) {
-      const receiverId = participants.filter(participant => participant !== this.user._id);
-      return this.users.find(connection => connection._id === receiverId[0])
+      const receiverId = participants.filter(
+        (participant) => participant !== this.user._id
+      );
+      return this.users.find((connection) => connection._id === receiverId[0]);
     },
 
     selectConversation(conversation) {
@@ -85,9 +92,8 @@ export default {
     // loadMessages(id) {
     //   this.$store.dispatch("getMessages", { id })
     // }
-  }
+  },
 };
 </script>
 
-<style>
-</style>
+<style></style>
