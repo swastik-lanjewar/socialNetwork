@@ -23,9 +23,9 @@ Social Network is my 2<sup>nd</sup> year college project. Social Network is as i
 
 ### Backend 
 1. Node.js 
-Using node.js with express server
+Using node.js with express.js
 1. mongodb
-Using mongodb is the only database
+Using mongodb database
 1. heroku
 Using heroku to host the server
 
