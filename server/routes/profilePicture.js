@@ -20,7 +20,7 @@ conn.once("open", () => {
 router.post("/upload", jwtAuth, upload.single("profilePicture"), async (req, res) => {
     if (req.user) {
         try {
-            const profilePictureUrl = `https://letsbug-social-network.herokuapp.com/profile-picture/${req.file.filename}`
+            const profilePictureUrl = `http://localhost:3000/profile-picture/${req.file.filename}`
             const updatedProfile = await User.findByIdAndUpdate(req.user.id, {
                 profilePicture: profilePictureUrl
             }, { new: true })
