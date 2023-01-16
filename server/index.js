@@ -32,6 +32,7 @@ mongoose.connect(db.mongoURI, {
     .then(() => console.log("connected to mongodb"))
     .catch(err => console.log(err))
 
+// socket implementation below
 const http = require('http').Server(app)
 const io = require('socket.io')(http)
 
