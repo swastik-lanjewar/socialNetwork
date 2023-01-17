@@ -2,7 +2,7 @@
   <nav class="hidden md:flex justify-between p-3 shadow mb-3 max-h-10">
     <div class="ml-7">
       <h3 class="font-bold text-blue-800 tracking-wide">
-        SOCIAL NETWORK <span class="text-gray-400">v1.0</span>
+        SOCIAL NETWORK <span class="text-gray-400">v0.01</span>
       </h3>
     </div>
     <div class="w-1/5 hidden md:block">

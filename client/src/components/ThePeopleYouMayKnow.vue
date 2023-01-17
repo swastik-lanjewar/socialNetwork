@@ -25,7 +25,7 @@ export default {
       peopleYouMayKnow: [
         {
           img: "https://source.unsplash.com/random/200x200/?profile",
-          name: "Aniket Singh",
+          name: "Random Person",
           link: "",
         },
         {
@@ -35,12 +35,12 @@ export default {
         },
         {
           img: "https://source.unsplash.com/random/200x200/?profile",
-          name: "Suyash bhalerao",
+          name: "Suyash Bhalerao",
           link: "",
         },
         {
           img: "https://source.unsplash.com/random/200x200/?profile",
-          name: "pranav jaid",
+          name: "Pranav Jaid",
           link: "",
         },
       ],

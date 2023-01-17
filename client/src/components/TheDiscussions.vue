@@ -83,22 +83,22 @@ export default {
         {
           title: "#javacript",
           posts: 500,
-          link: "https://source.unsplash.com/random/200x200/?profile",
+          link: "https://source.unsplash.com/random/200x200/?programming",
         },
         {
-          title: "#globawarming",
+          title: "#globalwarming",
           posts: 20,
-          link: "https://source.unsplash.com/random/200x200/?profile",
+          link: "https://source.unsplash.com/random/200x200/?globalwarming",
         },
         {
-          title: "#tech_bubble_bursting",
+          title: "#tech_hashmap",
           posts: 530,
-          link: "https://source.unsplash.com/random/200x200/?profile",
+          link: "https://source.unsplash.com/random/200x200/?tech",
         },
         {
-          title: "#puppu_pagal_hai",
+          title: "#randomHashtag",
           posts: 675,
-          link: "https://source.unsplash.com/random/200x200/?profile",
+          link: "https://source.unsplash.com/random/200x200/?hashtag",
         },
       ],
     };
