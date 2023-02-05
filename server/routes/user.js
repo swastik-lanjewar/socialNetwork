@@ -119,8 +119,9 @@ router.post("/:id/connect", jwtAuth, async (req, res) => {
             // check if the user is already connected to the other user
             const user = await User.findById(req.user.id);
             const isConnected = user.connections.find(
-                (connection) => connection.userId === req.params.id
-            );
+                connection => connection.toString() === req.params.id
+            );   
+
             if (isConnected) {
                 return res.status(400).json({
                     message: "User already connected",
@@ -152,7 +153,7 @@ router.post("/:id/connect", jwtAuth, async (req, res) => {
 });
 
 // disconnect from a user
-router.post("/:id/disconnect", jwtAuth, async (req, res) => {
+router.delete("/:id/disconnect", jwtAuth, async (req, res) => {
     if (req.user) {
         try {
             const updatedUser = await User.findByIdAndUpdate(
@@ -168,7 +169,6 @@ router.post("/:id/disconnect", jwtAuth, async (req, res) => {
             });
 
             const { password, updatedAt, ...other } = updatedUser._doc;
-
             return res.status(200).json({
                 message: "User disconnected",
                 user: other,

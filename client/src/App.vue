@@ -2,18 +2,15 @@
   <div class="relative">
     <TheNavbar @removeUser="removeUser"></TheNavbar>
 
+    <TheVideoCallWindow v-if="videoCall" :inStream="true" :outStream="true" @cancel="videoCall = !videoCall" />
+
     <main class="flex justify-between md:p-3">
       <TheProfileSidebar v-if="token" />
 
       <router-view v-slot="{ Component }">
         <transition name="fade" mode="out-in">
-          <component 
-            :is="Component" 
-            @connect="connect" 
-            @sendMessage="sendMessage"
-            @typing="typing"
-            :isTyping="isTyping"
-          />
+          <component :is="Component" @connect="connect" @sendMessage="sendMessage" @typing="typing" :isTyping="isTyping"
+            @videoCall="handleVideoCall" />
         </transition>
       </router-view>
     </main>
@@ -28,13 +25,15 @@ import TheProfileSidebar from "@/components/TheProfileSidebar.vue";
 import TheNavbar from "@/components/TheNavbar.vue";
 import TheNavbarBottom from "./components/TheNavbarBottom.vue";
 import { mapGetters } from "vuex";
+import TheVideoCallWindow from "./components/TheVideoCallWindow.vue";
 export default {
-  components: { TheNavbar, TheNavbarBottom, TheProfileSidebar },
+  components: { TheNavbar, TheNavbarBottom, TheProfileSidebar, TheVideoCallWindow },
   name: "App",
   data() {
     return {
       socket: {},
-      isTyping:false,
+      isTyping: false,
+      videoCall: false,
     };
   },
   computed: {
@@ -45,7 +44,6 @@ export default {
       // this.socket = io("https://letsbug-social-network.herokuapp.com/", {
       //   transports: ["websocket"],
       // });
-
       this.socket = io("http://localhost:3000/", {
         transports: ["websocket"],
       });
@@ -97,6 +95,10 @@ export default {
 
     removeUser() {
       this.socket.emit("removeUser", { userId: this.user._id });
+    },
+
+    handleVideoCall() {
+      this.videoCall = true
     }
 
   },

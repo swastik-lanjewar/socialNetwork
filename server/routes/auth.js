@@ -1,11 +1,11 @@
 const router = require("express").Router()
-const user = require("../models/user")
+const User = require("../models/user")
 const bcrypt = require("bcryptjs")
 const jwt = require("jsonwebtoken")
 
 router.post('/create-account', (req, res) => {
     const { name, username, email, password } = req.body;
-    const newUser = new user({
+    const newUser = new User({
         name,
         username,
         email,
@@ -23,18 +23,18 @@ router.post('/create-account', (req, res) => {
         user.password = undefined;
         res.status(200).json({
             message: "User created successfully",
-            token, 
+            token,
             user
         })
 
     }).catch(err => {
         // error of duplicate email 
         if (err.code === 11000) {
-            if(err.errmsg.includes("email")){
+            if (err.errmsg.includes("email")) {
                 res.status(400).json({
                     message: "Email already exists"
                 })
-            } else if(err.errmsg.includes("username")){
+            } else if (err.errmsg.includes("username")) {
                 res.status(400).json({
                     message: "Username already exists"
                 })
@@ -47,19 +47,17 @@ router.post('/create-account', (req, res) => {
     })
 })
 
-router.post('/login', (req, res) => {
+router.post('/login', async (req, res) => {
     const { email, password } = req.body;
-    user.findOne({ email }).then(user => { 
-        if(!user) {
-            return res.status(400).json({
-                message: "Invalid User Credentials"
-            })
+
+    try {
+        const user = await User.findOne({ email })
+        if (!user) {
+            throw new Error("Email not found")
         }
         // check if password is correct
-        if(!bcrypt.compareSync(password, user.password)) {
-            return res.status(400).json({
-                message: "Invalid User Credentials"
-            })
+        if (!bcrypt.compareSync(password, user.password)) {
+            throw new Error("Password did not match")
         }
         // generate a token
         const token = jwt.sign({
@@ -68,13 +66,19 @@ router.post('/login', (req, res) => {
             username: user.username,
             email: user.email
         }, process.env.SECRET_KEY, { expiresIn: '24h' })
-        user.password = undefined;
+
+        user.password = undefined
+        
         res.status(200).json({
             message: "User logged in successfully",
-            token, 
+            token,
             user
         })
-    })
+
+    } catch (err) {
+        res.status(400).json({message:err.message})
+    }
+
 })
 
 module.exports = router

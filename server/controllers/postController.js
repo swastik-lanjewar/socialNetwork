@@ -20,7 +20,7 @@ const createPostController = async (req, res) => {
         try {
             let postImageUrl = ""
             if (req.file) {
-                postImageUrl = `https://letsbug-social-network.herokuapp.com/post/image/${req.file.filename}`
+                postImageUrl = `http://localhost:3000/post/image/${req.file.filename}`
             }
             
             const post = await Post.create({

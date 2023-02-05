@@ -9,7 +9,7 @@
         <div class="flex justify-between items-center w-full">
           <div class="flex grow">
             <img
-              v-if="user.profilePicture != ''"
+              v-if="receiver?.profilePicture !== ''"
               class="w-9 aspect-square rounded-full mr-4"
               :src="receiver?.profilePicture"
               loading="lazy"
@@ -17,7 +17,7 @@
             />
             <img
               v-else
-              class="w-9 aspect-square rounded-full mr-4"
+              class="rounded-full w-9 aspect-square mr-4"
               src="../assets/noAvatar.png"
               loading="lazy"
               alt=""
@@ -31,14 +31,53 @@
             <button class="px-2">
               <i class="fa fa-phone"></i>
             </button>
-            <button class="px-2" @click="videoCall = true">
+            <button class="px-2" @click="$emit('videoCall')">
               <i class="fa fa-video"></i>
             </button>
           </div>
         </div>
-        <button>
-          <i class="fab fa-solid fa-ellipsis-vertical"></i>
-        </button>
+        <div class="relative inline-block text-left">
+          <div>
+            <button
+              type="button"
+              class="inline-flex justify-center w-full"
+              @click="showMenu = !showMenu"
+              aria-expanded="true"
+              aria-haspopup="true"
+            >
+              <i class="fab fa-solid fa-ellipsis-vertical"></i>
+            </button>
+          </div>
+
+          <div
+            class="origin-top-right absolute right-0 mt w-40 rounded-md shadow-lg bg-white border"
+            :class="{ hidden: !showMenu }"
+            role="menu"
+            aria-orientation="vertical"
+            aria-labelledby="menu-button"
+            tabindex="-1"
+          >
+            <div class="py-1" role="none">
+              <button
+                class="text-gray-700 block px-4 py-2 text-sm hover:bg-gray-100 w-full text-left"
+                role="menuitem"
+                tabindex="-1"
+                @click="deleteConversation(currentConversation._id)"
+              >
+                <i class="fab fa-solid fa-trash mr-2"></i>
+                Delete Conversation
+              </button>
+              <button
+                class="text-gray-700 block px-4 py-2 text-sm hover:bg-gray-100 w-full text-left"
+                role="menuitem"
+                tabindex="-1"
+              >
+                <i class="fab fa-regular fa-file mr-2"></i>
+                Support
+              </button>
+            </div>
+          </div>
+        </div>
       </div>
 
       <section class="p-2 flex-row overflow-auto flex-grow" ref="chatWindow">
@@ -124,7 +163,7 @@ export default {
     isTyping: {
       type: Boolean,
       default: false,
-    }
+    },
   },
   data() {
     return {
@@ -132,8 +171,8 @@ export default {
       message: "",
       image: null,
       previewImage: null,
-      socket: {},
       videoCall: false,
+      showMenu: false,
     };
   },
   methods: {
@@ -144,7 +183,7 @@ export default {
         conversationId: this.currentConversation._id,
       });
     },
-    
+
     sendMessage() {
       let msgObject;
       if (this.image) {
@@ -194,6 +233,15 @@ export default {
         });
       } catch (error) {
         console.log(error);
+      }
+    },
+
+    async deleteConversation(conversationId) {
+      try {
+        await this.$store.dispatch("deleteConversation", conversationId);
+        this.$store.commit("REMOVE_CURRENT_CONVERSATION");
+      } catch (error) {
+        console.log(error.message);
       }
     },
 

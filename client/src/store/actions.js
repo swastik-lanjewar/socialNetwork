@@ -76,7 +76,7 @@ export default {
     }, payload) {
         const token = localStorage.getItem('token')
         try {
-            const response = await axios.post(`/user/${payload.userId}/disconnect`, payload, {
+            const response = await axios.delete(`/user/${payload.userId}/disconnect`, {
                 headers: {
                     Authorization: `Bearer ${token}`
                 }
@@ -88,7 +88,7 @@ export default {
 
             return response
         } catch (error) {
-            console.log(error)
+            console.log(error.message)
             return error
         }
     },
@@ -112,7 +112,7 @@ export default {
     },
 
     // action to create a new conversation
-    async createConversation(state, payload) {
+    async createConversation({ commit }, payload) {
         const token = localStorage.getItem('token')
         try {
             const response = await axios.post('/conversation/', {
@@ -122,8 +122,26 @@ export default {
                     Authorization: `Bearer ${token}`
                 }
             })
+            commit("NEW_CONVERSATIONS", response.data.conversation)
             return response
         } catch (error) {
+            return error
+        }
+    },
+
+    // action to delete a conversation with a given id
+    async deleteConversation({ commit }, payload) {
+        const token = localStorage.getItem('token')
+        try {
+            const response = await axios.delete(`/conversation/${payload}`, {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            })
+            commit("DELETE_CONVERSATION", response.data.conversation._id)
+            return response
+        } catch (error) {
+            console.log(error.message)
             return error
         }
     },

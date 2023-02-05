@@ -32,6 +32,7 @@ mongoose.connect(db.mongoURI, {
     .then(() => console.log("connected to mongodb"))
     .catch(err => console.log(err))
 
+// socket implementation below
 const http = require('http').Server(app)
 const io = require('socket.io')(http)
 
@@ -60,7 +61,6 @@ io.on("connection", (socket) => {
     socket.on("addUser", ({userId}) => {
         addUser(userId, socket.id)
         io.emit("getUsers", users)
-        console.log(`${userId} connected`, users)
     })
 
     socket.on('message', ({receiverId, ...otherData}) => {
@@ -90,7 +90,6 @@ io.on("connection", (socket) => {
     })
 
     socket.on('disconnect', () => {
-        console.log(`${socket.id} disconnected`)
         removeUser(socket.id)
         io.emit("getUsers", users)
     })

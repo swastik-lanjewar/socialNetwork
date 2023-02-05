@@ -4,11 +4,22 @@
     <ul>
       <li
         class="flex w-full justify-start my-2 items-center px-2"
-        v-for="suggestion in peopleYouMayKnow"
-        :key="suggestion.name"
+        v-for="people in users"
+        :key="people.email"
       >
-        <img class="w-1/12 rounded-full" :src="suggestion.img" alt="" loading="lazy" />
-        <h2 class="font-semibold mx-4 w-full">{{ suggestion.name }}</h2>
+        <img
+          v-if="people?.profilePicture != ''"
+          class="w-1/12 rounded-full"
+          :src="people?.profilePicture"
+          alt="Bonnie image"
+        />
+        <img
+          v-else
+          class="w-1/12 rounded-full"
+          src="../assets/noAvatar.png"
+          alt="Bonnie image"
+        />
+        <h2 class="font-semibold mx-4 w-full">{{ people.name }}</h2>
         <button class="bg-blue-200 rounded p-1 text-blue-600 font-semibold">
           Connect
         </button>
@@ -18,36 +29,13 @@
 </template>
 
 <script>
+import { mapGetters } from "vuex";
 export default {
   name: "ThePeopleYouMayKnow",
-  data() {
-    return {
-      peopleYouMayKnow: [
-        {
-          img: "https://source.unsplash.com/random/200x200/?profile",
-          name: "Aniket Singh",
-          link: "",
-        },
-        {
-          img: "https://source.unsplash.com/random/200x200/?profile",
-          name: "Swastik Lanjewar",
-          link: "",
-        },
-        {
-          img: "https://source.unsplash.com/random/200x200/?profile",
-          name: "Suyash bhalerao",
-          link: "",
-        },
-        {
-          img: "https://source.unsplash.com/random/200x200/?profile",
-          name: "pranav jaid",
-          link: "",
-        },
-      ],
-    };
+  computed: {
+    ...mapGetters(["users", "user"]),
   },
 };
 </script>
 
-<style>
-</style>
+<style></style>
