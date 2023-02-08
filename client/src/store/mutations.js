@@ -115,5 +115,9 @@ export default {
     DELETE_TIMELINE_POST(state, postId) {
         const index = state.timelinePosts.findIndex(p => p._id === postId)
         state.timelinePosts.splice(index, 1)
+    },
+
+    NEW_NOTIFICATION(state, data) {
+        state.newNotification.push(data)
     }
 }

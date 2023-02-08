@@ -1,16 +1,30 @@
 <template>
   <div class="relative">
-    <TheNavbar @removeUser="removeUser"></TheNavbar>
+    <TheNavbar 
+    @removeUser="removeUser"
+    ></TheNavbar>
 
-    <TheVideoCallWindow v-if="videoCall" :inStream="true" :outStream="true" @cancel="videoCall = !videoCall" />
+    <TheVideoCallWindow
+      v-if="videoCall"
+      :inStream="true"
+      :outStream="true"
+      @cancel="videoCall = !videoCall"
+    />
 
     <main class="flex justify-between md:p-3">
       <TheProfileSidebar v-if="token" />
 
       <router-view v-slot="{ Component }">
         <transition name="fade" mode="out-in">
-          <component :is="Component" @connect="connect" @sendMessage="sendMessage" @typing="typing" :isTyping="isTyping"
-            @videoCall="handleVideoCall" />
+          <component
+            :is="Component"
+            @connect="connect"
+            @sendMessage="sendMessage"
+            @typing="typing"
+            :isTyping="isTyping"
+            @videoCall="handleVideoCall"
+            @newNotification="newNotification"
+          />
         </transition>
       </router-view>
     </main>
@@ -27,7 +41,12 @@ import TheNavbarBottom from "./components/TheNavbarBottom.vue";
 import { mapGetters } from "vuex";
 import TheVideoCallWindow from "./components/TheVideoCallWindow.vue";
 export default {
-  components: { TheNavbar, TheNavbarBottom, TheProfileSidebar, TheVideoCallWindow },
+  components: {
+    TheNavbar,
+    TheNavbarBottom,
+    TheProfileSidebar,
+    TheVideoCallWindow,
+  },
   name: "App",
   data() {
     return {
@@ -57,16 +76,21 @@ export default {
       });
 
       this.socket.emit("addUser", { userId: this.user._id });
-      this.socket.on("getUsers", data => {
+      this.socket.on("getUsers", (data) => {
         this.$store.commit("SET_ONLINE_USERS", data);
       });
 
-      this.socket.on("message", data => {
+      this.socket.on("message", (data) => {
         this.$store.commit("ADD_NEW_MESSAGES", {
           ...data,
           received: true,
         });
       });
+
+      this.socket.on('notification', (data) => {
+        console.log(data)
+        this.$store.commit("NEW_NOTIFICATION", data)
+      })
 
       this.socket.on("typing", ({ conversationId }) => {
         if (conversationId === this.currentConversation._id) {
@@ -93,14 +117,17 @@ export default {
       this.socket.emit("typing", data);
     },
 
+    newNotification(payload) {
+      this.socket.emit("notification", payload);
+    },
+
     removeUser() {
       this.socket.emit("removeUser", { userId: this.user._id });
     },
 
     handleVideoCall() {
-      this.videoCall = true
-    }
-
+      this.videoCall = true;
+    },
   },
 };
 </script>

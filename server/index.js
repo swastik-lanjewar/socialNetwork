@@ -77,12 +77,13 @@ io.on("connection", (socket) => {
         }
     })
 
-    socket.on('notification', ({ senderId, receiverId, notification }) => { 
+    socket.on('notification', ({ senderId, receiverId, ...notification }) => { 
         const user = getUser(receiverId)
         if (user) { 
-            io.to(user.socketId).emit('notification', { senderId, receiverId, notification })
+            io.to(user.socketId).emit('notification', { senderId, receiverId, ...notification })
         }
     })
+
 
     socket.on('removeUser', () => {
         removeUser(socket.id)

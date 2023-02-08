@@ -20,6 +20,7 @@ export default createStore({
       saveMessages: false
     },
     currentProfile: null,
+    newNotification:[],
   },
   mutations,
   actions,

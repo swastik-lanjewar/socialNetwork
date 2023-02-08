@@ -9,6 +9,7 @@
           v-for="(post, index) in timelinePosts"
           :key="index"
           :post="post"
+          @newNotification="newNotification"
         />
       </div>
       <div v-else class="text-center">
@@ -60,5 +61,10 @@ export default {
     }
     this.$emit("connect");
   },
+  methods: {
+    newNotification(payload) {
+      this.$emit("newNotification", payload)  
+    }
+  }
 };
 </script>

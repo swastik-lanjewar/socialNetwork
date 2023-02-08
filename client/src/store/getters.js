@@ -28,4 +28,6 @@ export default {
     }, 
 
     token: state => state.token,
+    
+    newNotification: state => state.newNotification,
 }

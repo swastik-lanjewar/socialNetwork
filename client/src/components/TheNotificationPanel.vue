@@ -27,13 +27,13 @@
           <li
             class="flex border-b last:border-b-0 py-1 my-1 hover:cursor-pointer hover:bg-gray-200"
             v-for="n in newNotification"
-            :key="n.text"
+            :key="n.notification"
           >
             <div class="w-10 h-10 rounded-full overflow-hidden">
-              <img :src="n.picture" alt="" />
+              <img :src="n?.picture" alt="" />
             </div>
             <div class="pl-2 flex items-center">
-              <p>{{ n.text }}</p>
+              <p>{{ n.notification }}</p>
             </div>
           </li>
         </ul>
@@ -60,6 +60,8 @@
 </template>
 
 <script>
+import { mapGetters } from "vuex";
+
 export default {
   name: "TheNotificationPanel",
   data() {
@@ -74,18 +76,11 @@ export default {
           picture: "https://source.unsplash.com/random/200x200/?girl",
           text: "Hacker101 liked you picture.",
         },
-      ],
-      newNotification: [
-        {
-          picture: "https://source.unsplash.com/random/200x200/?girl",
-          text: "Dharm texted you, Hi!",
-        },
-        {
-          picture: "https://source.unsplash.com/random/200x200/?girl",
-          text: "Hacker101 liked you picture.",
-        },
-      ],
+      ]
     };
+  },
+  computed: {
+    ...mapGetters(["newNotification"])
   },
 };
 </script>
