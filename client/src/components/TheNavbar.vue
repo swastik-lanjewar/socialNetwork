@@ -13,15 +13,8 @@
           </router-link>
         </li>
         <li>
-          <button
-            type="button"
-            class="inline-flex justify-center w-full"
-            @click="showNotification = !showNotification"
-            aria-expanded="true"
-            aria-haspopup="true"
-          >
-            <i class="fas fa-solid fa-bell"></i>
-          </button>
+          
+          <TheNotificationPanel />
         </li>
       </ul>
     </div>
@@ -31,11 +24,15 @@
         <i class="fas fa-solid fa-sign-out text-blue-600"></i>
       </button>
     </div>
+    <div>
+      
+    </div>
   </nav>
 </template>
 
 <script>
 import TheSearchBar from "./utils/TheSearchBar.vue";
+import TheNotificationPanel from "./TheNotificationPanel.vue";
 export default {
   name: "TheNavbar",
   data() {
@@ -74,7 +71,7 @@ export default {
       console.log(this.searchText);
     },
   },
-  components: { TheSearchBar },
+  components: { TheSearchBar, TheNotificationPanel },
 };
 </script>
 

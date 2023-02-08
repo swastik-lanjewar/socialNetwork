@@ -12,8 +12,8 @@
     </div>
 
     <aside class="w-1/3 mr-7 hidden md:block">
-      <div>
-        <button class="bg-blue-700 text-white p-2 rounded-md shadow-lg font-semibold">Create Discussion</button>
+      <div class="flex justify-between">
+        <button class="bg-blue-700 text-white p-2 rounded-md shadow-lg font-semibold">New Discussion</button>
       </div>
       <div class="rounded-md shadow-md p-2 overflow-y-auto">
         <h3 class="font-semibold m-2">Discussions</h3>
