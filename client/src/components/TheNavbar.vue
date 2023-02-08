@@ -13,7 +13,6 @@
           </router-link>
         </li>
         <li>
-          
           <TheNotificationPanel />
         </li>
       </ul>

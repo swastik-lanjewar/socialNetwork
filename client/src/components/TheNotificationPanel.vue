@@ -25,7 +25,7 @@
         <h3>New</h3>
         <ul>
           <li
-            class="flex border-b last:border-b-0 py-1 my-1"
+            class="flex border-b last:border-b-0 py-1 my-1 hover:cursor-pointer hover:bg-gray-200"
             v-for="n in newNotification"
             :key="n.text"
           >
@@ -42,7 +42,7 @@
         <h3>Read</h3>
         <ul>
           <li
-            class="flex border-b last:border-b-0 py-1 my-1"
+            class="flex border-b last:border-b-0 py-1 my-1 hover:cursor-pointer hover:bg-gray-200"
             v-for="n in readNotification"
             :key="n.text"
           >
