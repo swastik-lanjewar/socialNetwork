@@ -366,6 +366,13 @@ export default {
         await this.$store.dispatch("unlikePost", this.post._id);
       } else {
         await this.$store.dispatch("likePost", this.post._id);
+        this.$emit("newNotification", {
+          senderId:this.user._id,
+          receiverId: this.post.userId,
+          picture: this.users.find(u => u._id == this.post.userId).profilePicture,
+          notification: `${this.user.username} liked your post`,
+          time: Date.now()
+        })
       }
     },
     async deletePost() {
